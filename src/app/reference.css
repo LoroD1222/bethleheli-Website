@@ -1397,18 +1397,6 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 @media(max-width:700px){.plan-main{min-height:0;padding:72px 0}.plan-main>.shell>.section-intro h2{font-size:36px}.plan-main>.shell>.section-intro>p:last-child{font-size:14px}.plan-layout{margin-top:32px}.enquiry-form .progress{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px}.enquiry-form .progress button{min-height:75px;padding:10px}.enquiry-form .progress button span{font-size:11px}.enquiry-form .progress p{font-size:11px}.enquiry-form fieldset{padding:20px}.enquiry-form legend{font-size:23px}.enquiry-form legend small{font-size:11px}.enquiry-form .input-row{grid-template-columns:1fr;gap:16px}.enquiry-form .chips{gap:8px}.enquiry-form .chips button{min-height:44px;padding:10px 14px;font-size:12px}.planning-aside{display:block}.planning-aside>img{height:260px}.planning-aside>.eyebrow{margin-top:24px}.planning-aside h2{font-size:28px}.planning-aside>div{padding:17px 0}.ref-climb-cards{display:grid;grid-template-columns:1fr;gap:16px;overflow:visible;padding:0}.ref-climb-cards .ref-image-card{width:100%;height:440px;min-height:440px;flex:none}.ref-climb-card-head h3{font-size:23px}.ref-climb-card-details>span{font-size:15px}}
 @media(max-width:400px){.enquiry-form .progress{grid-template-columns:repeat(2,minmax(0,1fr))}.enquiry-form fieldset{padding:18px}.ref-climb-cards .ref-image-card{height:410px;min-height:410px}.ref-climb-cards .ref-image-card-copy{padding:18px}}
 
-/* Match the site's Kilimanjaro FAQ card treatment while preserving Zanzibar's content. */
-.ref-zanzibar-faq .accordion{display:flex;flex-direction:column;gap:12px}
-.ref-zanzibar-faq .accordion details{margin:0;border:1px solid rgba(36,49,56,.05);border-radius:12px;background:#f2f3f3}
-.ref-zanzibar-faq .accordion details[open]{border-color:rgba(36,49,56,.14);background:#fff}
-.ref-zanzibar-faq .accordion summary,.ref-zanzibar-faq .accordion details[open] summary{min-height:72px;padding:24px 28px;color:#243138;font-size:17px;line-height:1.5;transition:color .2s ease,background-color .2s ease}
-.ref-zanzibar-faq .accordion summary span{display:block;flex:none;width:18px;height:18px;background:url('/images/figma-home-faq-chevron.svg') center / 10px 18px no-repeat;color:transparent;font-size:0;transform:rotate(90deg)}
-.ref-zanzibar-faq .accordion details[open] summary span{font-size:0;transform:rotate(-90deg)}
-.ref-zanzibar-faq .accordion details[open] summary span::before{content:none}
-.ref-zanzibar-faq .accordion details p{max-width:960px;padding:0 28px 24px;border:0;font-size:15px;line-height:1.8}
-.ref-zanzibar-faq .accordion details:not([open]) summary:hover{color:#ea4729;background:rgba(234,71,41,.04)}
-@media(max-width:700px){.ref-zanzibar-faq .accordion summary,.ref-zanzibar-faq .accordion details[open] summary{min-height:66px;padding:20px;font-size:15px}.ref-zanzibar-faq .accordion details p{padding:0 20px 20px;font-size:14px}}
-
 .groups-page .year-tabs button,.groups-page .months button{cursor:pointer;transition:background-color .2s,color .2s,transform .2s}
 .groups-page .year-tabs button:hover:not(.active),.groups-page .months button:hover:not(.active){background:#fff0eb;color:#243138}
 .groups-page .year-tabs button:focus-visible,.groups-page .months button:focus-visible{outline:2px solid #ea4729;outline-offset:-3px}

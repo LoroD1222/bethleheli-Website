@@ -37,7 +37,9 @@ h3 { font-size:1.1rem; }
 .logo { display:block; flex:none; height:64px; position:relative; width:142px; }
 .logo img { height:100%; object-fit:contain; object-position:left center; width:100%; }
 .main-nav { align-items:center; background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.48); border-radius:999px; display:flex; gap:18px; padding:10px 14px; }
-.main-nav a { color:white; font-size:.7rem; font-weight:500; white-space:nowrap; }
+.main-nav a { border-radius:999px; color:white; font-size:.7rem; font-weight:500; padding:8px 10px; margin:-8px -10px; transition:background-color .2s ease,color .2s ease; white-space:nowrap; }
+.main-nav a:hover:not(.active) { background:rgba(255,255,255,.2); }
+.main-nav a:focus-visible { outline:2px solid #fff; outline-offset:5px; }
 .menu-toggle { background:none; border:0; display:none; min-width:44px; min-height:44px; padding:8px; }
 .menu-toggle span { background:#fff; display:block; height:2px; margin:5px 0; width:24px; }
 .mobile-menu { display:none; }

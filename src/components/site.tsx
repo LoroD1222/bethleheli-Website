@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { PageKey } from "@/lib/routes";
 import { sendEnquiry } from "@/lib/enquiry";
+import { whatsappHref, whatsappNumber } from "@/lib/whatsapp";
 import { HomeFooter } from "@/components/home-footer";
 
 const navItems = [
@@ -13,6 +15,10 @@ const navItems = [
 ] as const;
 const classicNavItems = [
   ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Zanzibar", "/zanzibar"], ["Gallery", "/#moments"], ["Contact", "/contact"],
+] as const;
+const mobileNavItems = [
+  ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"],
+  ["Tanzania Packages", "/trips"], ["Group Climbs", "/groups"], ["About", "/#team"], ["Contact", "/contact"],
 ] as const;
 
 const photos = {
@@ -60,6 +66,7 @@ export function TripadvisorLogo({ light = false, compact = false }: { light?: bo
 
 export function Header({ overlay = true, active, variant = "destinations" }: { overlay?: boolean; active?: string; variant?: "destinations" | "classic" }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -99,19 +106,21 @@ export function Header({ overlay = true, active, variant = "destinations" }: { o
     };
     document.addEventListener("keydown", onKeyDown);
     window.addEventListener("resize", onResize);
+    window.addEventListener("popstate", closeMenu);
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("popstate", closeMenu);
     };
   }, [open]);
 
   return <><header className={`site-header ${overlay ? "site-header-overlay" : "site-header-solid"}`}>
     <div className="shell header-inner">
       <Logo />
-      <button ref={toggleRef} type="button" className="menu-toggle" aria-label="Open navigation" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(true)}><span /><span /><span /></button>
+      <button ref={toggleRef} type="button" className="menu-toggle" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(value => !value)}><span /><span /><span /></button>
       <nav id="main-nav" className="main-nav" aria-label="Main navigation">
-        {items.map(([label, href]) => <Link key={href} href={href} className={active === label ? "active" : undefined}>{label}</Link>)}
+        {items.map(([label, href]) => <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined} className={active === label || pathname === href ? "active" : undefined}>{label}</Link>)}
       </nav>
       <PrimaryLink href="/plan-your-trip">{variant === "classic" ? "Start planning" : "Plan Your Trip"}</PrimaryLink>
     </div>
@@ -121,7 +130,7 @@ export function Header({ overlay = true, active, variant = "destinations" }: { o
       <div className="mobile-menu-head"><Logo onClick={() => setOpen(false)} /><button ref={closeRef} type="button" className="mobile-menu-close" aria-label="Close navigation" onClick={() => { setOpen(false); toggleRef.current?.focus(); }}><span /><span /></button></div>
       <p className="mobile-menu-eyebrow">Explore Betheli</p>
       <nav className="mobile-menu-links" aria-label="Mobile navigation links">
-        {items.map(([label, href], index) => <Link key={href} href={href} aria-current={active === label ? "page" : undefined} className={active === label ? "active" : undefined} onClick={() => setOpen(false)}><span className="mobile-menu-number">0{index + 1}</span><span>{label}</span><ArrowIcon /></Link>)}
+        {mobileNavItems.map(([label, href], index) => <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined} className={pathname === href ? "active" : undefined} onClick={() => setOpen(false)}><span className="mobile-menu-number">{String(index + 1).padStart(2, "0")}</span><span>{label}</span><ArrowIcon /></Link>)}
       </nav>
       <div className="mobile-menu-footer"><PrimaryLink href="/plan-your-trip" onClick={() => setOpen(false)}>{variant === "classic" ? "Start planning" : "Plan Your Trip"}</PrimaryLink><p>Your journey, your pace. Planned with a local team.</p></div>
     </div>
@@ -183,34 +192,36 @@ export function Testimonials() {
   const scroller = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState(0);
   const [activeReview, setActiveReview] = useState(0);
+  const activeReviewRef = useRef(0);
   const updatePosition = () => {
     const viewport = scroller.current;
     if (!viewport) return;
     const maxScroll = Math.max(1, viewport.scrollWidth - viewport.clientWidth);
-    const firstCard = viewport.querySelector<HTMLElement>(".review-card");
-    const gap = parseFloat(getComputedStyle(viewport).columnGap) || 0;
-    const cardStep = firstCard ? firstCard.getBoundingClientRect().width + gap : 1;
-    setPosition(viewport.scrollLeft / maxScroll);
-    setActiveReview(Math.min(reviews.length - 1, Math.round(viewport.scrollLeft / cardStep)));
+    const nextPosition = viewport.scrollLeft / maxScroll;
+    const nextReview = Math.round(nextPosition * (reviews.length - 1));
+    setPosition(nextPosition);
+    activeReviewRef.current = nextReview;
+    setActiveReview(nextReview);
   };
   const seek = (percent: number) => {
     const viewport = scroller.current;
     if (!viewport) return;
     const next = Math.max(0, Math.min(100, percent)) / 100;
     setPosition(next);
+    activeReviewRef.current = Math.round(next * (reviews.length - 1));
+    setActiveReview(activeReviewRef.current);
     viewport.scrollTo({ left: next * Math.max(0, viewport.scrollWidth - viewport.clientWidth), behavior: "instant" });
   };
-  const goToReview = (index: number) => {
+  const goToReview = (direction: number) => {
     const viewport = scroller.current;
-    const card = viewport?.querySelector<HTMLElement>(".review-card");
-    if (!viewport || !card) return;
-    const next = Math.max(0, Math.min(reviews.length - 1, index));
-    const gap = parseFloat(getComputedStyle(viewport).columnGap) || 0;
+    if (!viewport) return;
+    const next = Math.max(0, Math.min(reviews.length - 1, activeReviewRef.current + direction));
+    activeReviewRef.current = next;
     setActiveReview(next);
-    viewport.scrollTo({ left: next * (card.getBoundingClientRect().width + gap), behavior: "smooth" });
+    viewport.scrollTo({ left: (next / (reviews.length - 1)) * Math.max(0, viewport.scrollWidth - viewport.clientWidth), behavior: "instant" });
   };
   const progress = 25 + position * 75;
-  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title="What our customers say" text="Real stories from travelers who climbed, explored, and relaxed with Betheli Expeditions." align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid" ref={scroller} onScroll={updatePosition}>{reviews.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt="" /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt="" /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><span>Read full review on Trip Advisor</span></footer></div></article>)}</div><div className="review-controls"><button type="button" aria-label="Previous review" disabled={activeReview === 0} onClick={() => goToReview(activeReview - 1)}>←</button><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Review slider position" aria-valuetext={`${activeReview + 1} of ${reviews.length} reviews`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.3) ${progress}% 100%)` }} /><span className="review-count">{activeReview + 1} of {reviews.length} reviews</span><button type="button" aria-label="Next review" disabled={activeReview === reviews.length - 1} onClick={() => goToReview(activeReview + 1)}>→</button></div></div></section>;
+  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title="What our customers say" text="Real stories from travelers who climbed, explored, and relaxed with Betheli Expeditions." align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid" ref={scroller} onScroll={updatePosition}>{reviews.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt="" /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt="" /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><span>Read full review on Trip Advisor</span></footer></div></article>)}</div><div className="review-controls"><button type="button" aria-label="Previous review" disabled={activeReview === 0} onClick={() => goToReview(-1)}>←</button><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Review slider position" aria-valuetext={`${activeReview + 1} of ${reviews.length} reviews`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.3) ${progress}% 100%)` }} /><span className="review-count">{activeReview + 1} of {reviews.length} reviews</span><button type="button" aria-label="Next review" disabled={activeReview === reviews.length - 1} onClick={() => goToReview(1)}>→</button></div></div></section>;
 }
 
 const commonFaqs = [
@@ -339,12 +350,12 @@ function PlanPage() {
       <fieldset {...stage(3)}><legend><small>STEP 4 OF 6</small>How Much Time Do You Have?</legend><label>Number of days<input type="text" inputMode="numeric" name="days" placeholder="Your available days, or ‘not sure yet’" /></label></fieldset>
       <fieldset {...stage(4)}><legend><small>STEP 5 OF 6</small>What’s Your Travel Style?</legend><ChipSet options={["Private", "Small Group", "Solo", "Flexible"]} selected={travelStyle} onSelect={setTravelStyle} figmaCheck label="Travel style" /></fieldset>
       <fieldset {...stage(5)}><legend><small>STEP 6 OF 6</small>Anything Else We Should Know?</legend><label>Your ideas, questions or needs<textarea name="notes" placeholder="Interests, comfort preferences, children’s ages, access needs or anything that matters to you…" /></label><div className="input-row"><label>Name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label><label>Email *<input name="email" required type="email" autoComplete="email" placeholder="Your email address" /></label></div><div className="input-row"><label>WhatsApp (optional)<input name="whatsapp" type="tel" autoComplete="tel" placeholder="Include country code" /></label><label>Country<input name="country" autoComplete="country-name" placeholder="Your country of residence" /></label></div><small>We’ll use these details to respond to your trip enquiry. Please don’t include passport numbers or sensitive medical information.</small><button className="submit-button" disabled={sending}>{sending ? "Sending…" : "Send My Trip Request"} <Arrow /></button><p className="plan-payment-note">No payment is requested here.</p><FormNotice text={notice} /></fieldset>
-    </form><aside className="planning-aside"><Photo src={photos.climbers} alt="Kilimanjaro climbing group" /><p className="eyebrow">YOUR FIRST CONVERSATION</p><h2>Let’s Shape It Together</h2>{reassurance.map(([icon, title, copy]) => <div key={title}><div className="planning-aside-heading"><Image src={`/images/${icon}`} alt="" width={24} height={24} /><b>{title}</b></div><p>{copy}</p></div>)}<Link className="whatsapp" href="/contact">Prefer WhatsApp? <Arrow /></Link><small>WhatsApp number to be supplied. Response timing will be confirmed by the team.</small></aside></div>
+    </form><aside className="planning-aside"><Photo src={photos.climbers} alt="Kilimanjaro climbing group" /><p className="eyebrow">YOUR FIRST CONVERSATION</p><h2>Let’s Shape It Together</h2>{reassurance.map(([icon, title, copy]) => <div key={title}><div className="planning-aside-heading"><Image src={`/images/${icon}`} alt="" width={24} height={24} /><b>{title}</b></div><p>{copy}</p></div>)}<a className="whatsapp" href={whatsappHref} target="_blank" rel="noopener noreferrer">Prefer WhatsApp? <Arrow /></a><small>Chat with our team on WhatsApp at +{whatsappNumber}. Response timing will be confirmed by the team.</small></aside></div>
   </div></main><Footer /></>;
 }
 
 function ContactPage() { const [topic, setTopic] = useState("Custom trip"); const [notice, setNotice] = useState(""); const [sending, setSending] = useState(false); async function submit(e: FormEvent<HTMLFormElement>) { e.preventDefault(); if (!e.currentTarget.reportValidity()) return setNotice("Please complete the required fields with a valid email address."); setSending(true); setNotice("Sending your message…"); const result = await sendEnquiry("contact", e.currentTarget, { topic }); setNotice(result.message); setSending(false); }
-  return <><Hero eyebrow="CONTACT BATHIEL EXPEDITIONS" title="Let’s Start Planning" text="A question, a rough idea or a whole adventure in mind? Start a conversation with the Bathiel team." image={photos.summit} short><></></Hero><main className="contact-main shell"><div className="contact-layout"><form onSubmit={submit} noValidate><p className="eyebrow">Let’s talk about your trip.</p><div className="input-row"><label>Name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label><label>Email *<input type="email" name="email" required autoComplete="email" placeholder="Your email address" /></label></div><label>What can we help you with?</label><ChipSet options={["Kilimanjaro", "Safari", "Zanzibar", "Custom trip", "Other"]} selected={topic} onSelect={setTopic} figmaCheck label="What can we help you with?" /><label>Your message *<textarea name="message" required placeholder="Tell us a little about your plans, or ask your question..." /></label><p className="privacy">We’ll use these details to respond to your enquiry. Please don’t include passport numbers or sensitive personal information.</p><button className="submit-button small-submit" disabled={sending}>{sending ? "Sending…" : "Send My Message"} <Arrow /></button><FormNotice text={notice} /></form><aside className="contact-aside"><section><h2>Prefer a Conversation?</h2><p>WhatsApp is another way to share your ideas and questions. The contact number is pending confirmation.</p><Link className="whatsapp" href="/plan-your-trip">WhatsApp Us <Arrow /></Link><small>WhatsApp: Number to be supplied</small></section>{[["Email", "Address to be supplied", "Send your questions or trip ideas in your own time."], ["Phone", "Number to be supplied", "Calling details and availability to be confirmed."], ["Office location", "Location to be supplied", "Address, visiting arrangements and office hours to be confirmed."]].map(([t, a, c]) => <div key={t}><h3>{t}</h3><b>{a}</b><p>{c}</p></div>)}<p>Have a fuller trip brief? Use Plan Your Trip to share dates, interests and traveller numbers.</p></aside></div></main><Footer /></>; }
+  return <><Hero eyebrow="CONTACT BATHIEL EXPEDITIONS" title="Let’s Start Planning" text="A question, a rough idea or a whole adventure in mind? Start a conversation with the Bathiel team." image={photos.summit} short><></></Hero><main className="contact-main shell"><div className="contact-layout"><form onSubmit={submit} noValidate><p className="eyebrow">Let’s talk about your trip.</p><div className="input-row"><label>Name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label><label>Email *<input type="email" name="email" required autoComplete="email" placeholder="Your email address" /></label></div><label>What can we help you with?</label><ChipSet options={["Kilimanjaro", "Safari", "Zanzibar", "Custom trip", "Other"]} selected={topic} onSelect={setTopic} figmaCheck label="What can we help you with?" /><label>Your message *<textarea name="message" required placeholder="Tell us a little about your plans, or ask your question..." /></label><p className="privacy">We’ll use these details to respond to your enquiry. Please don’t include passport numbers or sensitive personal information.</p><button className="submit-button small-submit" disabled={sending}>{sending ? "Sending…" : "Send My Message"} <Arrow /></button><FormNotice text={notice} /></form><aside className="contact-aside"><section><h2>Prefer a Conversation?</h2><p>WhatsApp is another way to share your ideas and questions with our team.</p><a className="whatsapp" href={whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp Us <Arrow /></a><small>WhatsApp: +{whatsappNumber}</small></section>{[["Email", "info@betheliexpeditions.com", "Send your questions or trip ideas in your own time."], ["Phone", "+255 754 411 965", "Call our Tanzanian team to discuss your plans."], ["Office location", "Saba Saba, Arusha, Tanzania", "Please contact us before visiting the office."]].map(([t, a, c]) => <div key={t}><h3>{t}</h3><b>{a}</b><p>{c}</p></div>)}<p>Have a fuller trip brief? Use Plan Your Trip to share dates, interests and traveller numbers.</p></aside></div></main><Footer /></>; }
 
 export const faqCategories = [
   ["KILIMANJARO", "Climbing the mountain", ["How difficult is Kilimanjaro?", "Which route should I choose?", "What equipment do I need?", "What altitude support is provided?", "When is the best time to climb?"]],
@@ -375,7 +386,7 @@ function FaqPage() {
     .filter(([category]) => filter === "All" || category.toLowerCase() === filter.toLowerCase())
     .map(([category, title, questions]) => [category, title, questions.filter(q => q.toLowerCase().includes(search.toLowerCase()))] as const)
     .filter(([, , questions]) => questions.length > 0), [filter, search]);
-  return <><Hero eyebrow="FREQUENTLY ASKED QUESTIONS" title="Good Questions. Honest Answers." text="Practical guidance for your Tanzania adventure. Most questions can be answered in a conversation — use Plan Your Trip to start." image={photos.trail} short><PrimaryLink>Plan Your Trip</PrimaryLink><Link className="ghost-button" href="/contact">WhatsApp Us <Arrow /></Link></Hero><main className="faq-page"><section className="faq-filters shell"><label className="search"><span>⌕</span><input aria-label="Search your question" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search your question..." /></label><div className="filter-buttons">{filterItems.map((item) => <button type="button" aria-pressed={filter === item} className={filter === item ? "active" : ""} onClick={() => setFilter(item)} key={item}>{item}</button>)}</div></section><section className="shell category-grid">{current.map(([eyebrow, title, questions]) => <div className="faq-category" key={eyebrow}><p className="eyebrow">{eyebrow}</p><h2>{title}</h2><Accordion items={questions.map(q => [q, faqAnswers[q] || "Please ask the Bathiel team to confirm this detail for your proposed trip."])} /></div>)}{current.length===0 && <p>No questions match your search. Try another term or contact the team.</p>}</section><CtaBanner title="Still Have Questions?" text="Tell us what you have in mind. We’ll help you explore the options and shape a journey around you." image={photos.safari3} /></main><Footer /></>;
+  return <><Hero eyebrow="FREQUENTLY ASKED QUESTIONS" title="Good Questions. Honest Answers." text="Practical guidance for your Tanzania adventure. Most questions can be answered in a conversation — use Plan Your Trip to start." image={photos.trail} short><PrimaryLink>Plan Your Trip</PrimaryLink><a className="ghost-button" href={whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp Us <Arrow /></a></Hero><main className="faq-page"><section className="faq-filters shell"><label className="search"><span>⌕</span><input aria-label="Search your question" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search your question..." /></label><div className="filter-buttons">{filterItems.map((item) => <button type="button" aria-pressed={filter === item} className={filter === item ? "active" : ""} onClick={() => setFilter(item)} key={item}>{item}</button>)}</div></section><section className="shell category-grid">{current.map(([eyebrow, title, questions]) => <div className="faq-category" key={eyebrow}><p className="eyebrow">{eyebrow}</p><h2>{title}</h2><Accordion items={questions.map(q => [q, faqAnswers[q] || "Please ask the Bathiel team to confirm this detail for your proposed trip."])} /></div>)}{current.length===0 && <p>No questions match your search. Try another term or contact the team.</p>}</section><CtaBanner title="Still Have Questions?" text="Tell us what you have in mind. We’ll help you explore the options and shape a journey around you." image={photos.safari3} /></main><Footer /></>;
 }
 
 function GroupsPage() {
@@ -402,7 +413,7 @@ function GroupsPage() {
   </section><AdvisorCard /></main>;
 }
 
-function AdvisorCard() { return <section className="advisor-card"><Photo src={photos.guide} alt="Victoria, local trip advisor" /><div><header><h2>Victoria</h2><span>Online</span></header><p className="eyebrow">🇹🇿 BASED IN TANZANIA</p><h3>Want to plan a memorable Tanzanian adventure?</h3><p>Contact us. We are always here to help</p><div><Link href="/contact" className="button">◉ WhatsApp</Link><Link href="/contact" className="button">☏ Chat Online</Link></div></div></section>; }
+function AdvisorCard() { return <section className="advisor-card"><Photo src={photos.guide} alt="Victoria, local trip advisor" /><div><header><h2>Victoria</h2><span>Online</span></header><p className="eyebrow">🇹🇿 BASED IN TANZANIA</p><h3>Want to plan a memorable Tanzanian adventure?</h3><p>Contact us. We are always here to help</p><div><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="button">◉ WhatsApp</a><Link href="/contact" className="button">✉ Send an enquiry</Link></div></div></section>; }
 
 export function SitePage({ page }: { page: PageKey }) {
   switch (page) {
