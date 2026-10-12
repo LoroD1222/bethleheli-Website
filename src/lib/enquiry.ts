@@ -7,8 +7,8 @@ export async function sendEnquiry(kind: "contact" | "trip", form: HTMLFormElemen
       body: JSON.stringify({ ...fields, ...extras, kind }),
     });
     const result: { message?: string } = await response.json();
-    return result.message || "Your enquiry could not be sent. Please try again later.";
+    return { ok: response.ok, message: result.message || "Your enquiry could not be sent. Please try again later." };
   } catch {
-    return "Your enquiry could not be sent. Please try again later.";
+    return { ok: false, message: "Your enquiry could not be sent. Please try again later." };
   }
 }

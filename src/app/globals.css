@@ -18,7 +18,7 @@ h3 { font-size:1.1rem; }
 .eyebrow { color:var(--coral); font-size:.7rem; font-weight:700; letter-spacing:.14em; line-height:1.3; text-transform:uppercase; }
 .eyebrow.light { color:rgba(255,255,255,.7); }
 .button { align-items:center; background:var(--coral); border:0; border-radius:999px; color:white; display:inline-flex; font-size:.82rem; font-weight:700; gap:13px; justify-content:center; min-height:47px; padding:6px 8px 6px 18px; transition:transform .2s, background .2s; }
-.button:hover,.submit-button:hover { background:#cf351b; transform:translateY(-2px); }
+.button:hover,.submit-button:hover:not(:disabled) { background:#cf351b; transform:translateY(-2px); }
 .button-dark { background:var(--ink); }
 .arrow { align-items:center; background:#fff; border-radius:50%; color:var(--coral); display:inline-flex; height:33px; justify-content:center; line-height:1; width:33px; }
 .arrow-icon { display:block; fill:none; height:14px; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:2.2; width:14px; }
@@ -269,6 +269,7 @@ input::placeholder,textarea::placeholder { color:#9aa0a3; }
 .input-row { display:grid; gap:15px; grid-template-columns:1fr 1fr; }
 .enquiry-form fieldset>small { color:var(--muted); display:block; font-size:.58rem; line-height:1.5; margin-top:15px; }
 .submit-button { align-items:center; background:var(--coral); border:0; border-radius:999px; color:#fff; display:flex; font-size:.7rem; font-weight:700; gap:10px; justify-content:center; margin-top:17px; min-height:48px; padding:7px 8px 7px 18px; transition:.2s; width:100%; }
+.submit-button:disabled { cursor:wait; opacity:.65; }
 .submit-button .arrow { height:29px; width:29px; }
 .form-notice { color:var(--muted); font-size:.62rem; line-height:1.5; margin-top:8px; min-height:18px; }
 .planning-aside { position:sticky; top:18px; }
