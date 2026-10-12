@@ -1,0 +1,26 @@
+{
+  "name": "betheli-expeditions",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "16.4.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "source-map-js": "1.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.30",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "eslint": "9.28.0",
+    "eslint-config-next": "16.4.0",
+    "typescript": "5.8.3"
+  }
+}
