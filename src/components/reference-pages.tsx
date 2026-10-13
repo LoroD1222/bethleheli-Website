@@ -365,6 +365,7 @@ function HomeRouteExplorer() {
 function HomeMoments() {
   const scroller = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState(0);
+  const [hasOverflow, setHasOverflow] = useState(false);
   const moments = [
     ["figma-kili-routes-route-landscape.png", "Climbers crossing a snow-covered Kilimanjaro slope"],
     ["figma-kili-routes-route-landscape4.png", "Climbers crossing Kilimanjaro's alpine desert"],
@@ -387,8 +388,25 @@ function HomeMoments() {
     setPosition(next);
     viewport.scrollTo({ left: next * Math.max(0, viewport.scrollWidth - viewport.clientWidth), behavior: "auto" });
   };
+  useEffect(() => {
+    const viewport = scroller.current;
+    if (!viewport) return;
+    const updateOverflow = () => {
+      const scrollable = viewport.scrollWidth - viewport.clientWidth > 4;
+      setHasOverflow(scrollable);
+      if (!scrollable) setPosition(0);
+    };
+    updateOverflow();
+    const observer = new ResizeObserver(updateOverflow);
+    observer.observe(viewport);
+    window.addEventListener("resize", updateOverflow);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateOverflow);
+    };
+  }, []);
 
-  return <section className="home-ref-moments" id="moments"><div className="shell"><Intro eyebrow="" title="Unforgettable Moments in the Heart of Mount Kilimanjaro" copy="Experience breathtaking sunrises, explore volcanic landscapes, and create memories at one of Africa’s most iconic destinations." /></div><div className="home-ref-moment-viewport" ref={scroller} onScroll={event => setPosition(event.currentTarget.scrollLeft / Math.max(1, event.currentTarget.scrollWidth - event.currentTarget.clientWidth))}><div className="home-ref-moment-images">{moments.map(([src, alt], index) => <figure key={src} className={index === 3 ? "featured" : ""}><Photo src={image(src)} alt={alt} />{index === 3 && <figcaption><span>Sea of Sand Exploration</span><b aria-hidden="true"><ArrowIcon /></b><small>Cross the vast volcanic desert by 4×4 jeep or on foot.</small></figcaption>}</figure>)}</div></div><div className="home-ref-moment-controls"><button type="button" onClick={() => move(-1)} aria-label="Previous moments" disabled={position <= 0}>←</button><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Moments slider position" aria-valuetext={`${Math.round(position * 100)}% through the moments gallery`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${Math.max(12, position * 100)}%,rgba(255,255,255,.25) ${Math.max(12, position * 100)}% 100%)` }} /><button type="button" onClick={() => move(1)} aria-label="Next moments" disabled={position >= .99}>→</button></div></section>;
+  return <section className="home-ref-moments" id="moments"><div className="shell"><Intro eyebrow="" title="Unforgettable Moments in the Heart of Mount Kilimanjaro" copy="Experience breathtaking sunrises, explore volcanic landscapes, and create memories at one of Africa’s most iconic destinations." /></div><div className="home-ref-moment-viewport" ref={scroller} onScroll={event => setPosition(event.currentTarget.scrollLeft / Math.max(1, event.currentTarget.scrollWidth - event.currentTarget.clientWidth))}><div className="home-ref-moment-images">{moments.map(([src, alt], index) => <figure key={src} className={index === 3 ? "featured" : ""}><Photo src={image(src)} alt={alt} />{index === 3 && <figcaption><span>Sea of Sand Exploration</span><b aria-hidden="true"><ArrowIcon /></b><small>Cross the vast volcanic desert by 4×4 jeep or on foot.</small></figcaption>}</figure>)}</div></div>{hasOverflow && <div className="home-ref-moment-controls" aria-label="Moments gallery controls"><button type="button" onClick={() => move(-1)} aria-label="Previous moments" disabled={position <= 0}>←</button><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Moments slider position" aria-valuetext={`${Math.round(position * 100)}% through the moments gallery`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${Math.max(12, position * 100)}%,rgba(255,255,255,.25) ${Math.max(12, position * 100)}% 100%)` }} /><button type="button" onClick={() => move(1)} aria-label="Next moments" disabled={position >= .99}>→</button></div>}</section>;
 }
 
 export function HomeReferencePage() {
@@ -411,47 +429,70 @@ export function HomeReferencePage() {
 
 function TripAccommodation({ day, mealPlan, signature, premium }: { day: number; mealPlan: string; signature?: string; premium?: string }) {
   const confirmed = Boolean(signature && premium);
+  const [selectedTier, setSelectedTier] = useState<"signature" | "premium">("signature");
+  const [mealInfoOpen, setMealInfoOpen] = useState(false);
+  const options = {
+    signature: {
+      label: "Signature",
+      property: signature ?? "Property to be confirmed",
+      icon: "figma-trips-signature-star.svg",
+      image: "figma-trips-lodge-photo.png",
+      alt: "Signature lodge accommodation",
+    },
+    premium: {
+      label: "Premium",
+      property: premium ?? "Property to be confirmed",
+      icon: "figma-trips-premium-crown.svg",
+      image: day % 2 === 0 ? "figma-trips-day2.png" : "figma-trips-day1.png",
+      alt: "Premium safari accommodation",
+    },
+  } as const;
+  const selected = options[selectedTier];
   return <>
     <div className="trip-ref-day-meta">
       <span className="trip-ref-accommodation-label"><Image src={image("figma-trips-accommodation.svg")} alt="" width={45} height={45} />Day {day} | Accommodation</span>
-      <span className="trip-ref-meal"><Image src={image("figma-trips-meal.png")} alt="" width={20} height={20} />Meal Plan: {mealPlan}<Image src={image("figma-trips-meal-info.svg")} alt="" width={20} height={20} /></span>
+      <button className="trip-ref-meal" type="button" aria-expanded={mealInfoOpen} aria-controls={`meal-note-${day}`} onClick={() => setMealInfoOpen(open => !open)}><Image src={image("figma-trips-meal.png")} alt="" width={20} height={20} />Meal Plan: {mealPlan}<Image src={image("figma-trips-meal-info.svg")} alt="More information" width={20} height={20} /></button>
     </div>
+    {mealInfoOpen && <p className="trip-ref-meal-note" id={`meal-note-${day}`}>The daily meal plan and any dietary arrangements are confirmed in your final trip proposal.</p>}
     <div className="trip-ref-lodge">
-      <div className="trip-ref-lodge-options">
+      <div className="trip-ref-lodge-options" role="group" aria-label={`Day ${day} accommodation options`}>
         <p>Options based on your packages:</p>
-        <p><span className="trip-ref-lodge-tier"><span className="trip-ref-lodge-tier-icon"><Image src={image("figma-trips-signature-star.svg")} alt="" width={28} height={28} /></span>Signature</span><span className="trip-ref-lodge-name">{signature ?? "Property to be confirmed"}</span></p>
-        <p><span className="trip-ref-lodge-tier"><span className="trip-ref-lodge-tier-icon"><Image src={image("figma-trips-premium-crown.svg")} alt="" width={26} height={20} /></span>Premium</span><span className="trip-ref-lodge-name">{premium ?? "Property to be confirmed"}</span></p>
+        {(Object.keys(options) as Array<keyof typeof options>).map((tier) => {
+          const option = options[tier];
+          const selectedOption = selectedTier === tier;
+          return <button type="button" className={`trip-ref-lodge-option${selectedOption ? " active" : ""}`} aria-pressed={selectedOption} onClick={() => setSelectedTier(tier)} key={tier}><span className="trip-ref-lodge-tier"><span className="trip-ref-lodge-tier-icon"><Image src={image(option.icon)} alt="" width={28} height={28} /></span>{option.label}</span><span className="trip-ref-lodge-name">{option.property}</span></button>;
+        })}
         {!confirmed && <small>Accommodation options will be confirmed in your trip proposal.</small>}
       </div>
-      <figure><Photo src={image("figma-trips-lodge-photo.png")} alt={confirmed ? "Lodge shown in the trip design" : "Illustrative accommodation photograph from the trip design"} />{!confirmed && <figcaption>Illustrative accommodation</figcaption>}</figure>
+      <figure aria-live="polite"><Photo key={selected.image} src={image(selected.image)} alt={selected.alt} /><figcaption>{confirmed ? `${selected.label} accommodation option` : `Illustrative ${selected.label.toLowerCase()} accommodation`}</figcaption></figure>
     </div>
   </>;
 }
 
 const tripInclusionChapters = [
   {
-    marker: "01 / PREPARATION", title: "Before the climb", description: "Get ready for the trail ahead.",
+    marker: "01 / PREPARATION", title: "Before your safari", description: "Get ready for the journey ahead.",
     items: [
       { icon: "route", title: "Arrival and departure transfers", description: "Transfers at the start and end of your trip." },
-      { icon: "clipboard", title: "Pre-climb briefing and gear check", description: "Review the plan and your equipment before setting off." },
+      { icon: "clipboard", title: "Pre-safari briefing", description: "Review your day-by-day plan and practical arrangements before setting off." },
     ],
   },
   {
-    marker: "02 / CLIMB & CAMP", title: "On the mountain", description: "The team, camp and daily essentials.",
+    marker: "02 / SAFARI DAYS", title: "On safari", description: "The vehicle, guiding and daily essentials.",
     items: [
-      { icon: "ticket", title: "Mountain park and camping fees", description: "Park access and camping fees included." },
-      { icon: "mountain", title: "Experienced mountain guides", description: "Guidance throughout the climb." },
-      { icon: "backpack", title: "Porters and mountain crew", description: "Support on the trail and at camp." },
-      { icon: "tent", title: "Mountain tents and communal dining setup", description: "Your sleeping and shared dining spaces." },
-      { icon: "utensils", title: "Freshly prepared meals on the mountain", description: "Meals prepared for your days on the trail." },
-      { icon: "droplets", title: "Drinking water preparation", description: "Water prepared for drinking on the mountain." },
+      { icon: "ticket", title: "Park and conservation fees", description: "Entry fees listed in your confirmed proposal." },
+      { icon: "mountain", title: "Professional safari guide", description: "Local guiding throughout the route." },
+      { icon: "backpack", title: "4×4 safari vehicle", description: "A vehicle arranged for the group and itinerary." },
+      { icon: "tent", title: "Accommodation as confirmed", description: "Lodge or camp nights selected for your package." },
+      { icon: "utensils", title: "Meals as listed", description: "Meal plans confirmed for each overnight stay." },
+      { icon: "droplets", title: "Drinking water", description: "Water provisions for safari days as confirmed." },
     ],
   },
   {
-    marker: "03 / ONGOING CARE", title: "Support & safety", description: "Care and coordination along the way.",
+    marker: "03 / ONGOING CARE", title: "Support throughout", description: "Care and coordination along the way.",
     items: [
-      { icon: "heart", title: "Daily health monitoring and emergency oxygen", description: "Daily checks, with oxygen available for emergencies." },
-      { icon: "message", title: "On-trip coordination and support", description: "Help with the day-to-day details of your climb." },
+      { icon: "heart", title: "Thoughtful pacing and practical support", description: "Help with the day-to-day details of your journey." },
+      { icon: "message", title: "On-trip coordination and support", description: "Help with the day-to-day details of your safari." },
     ],
   },
 ];
@@ -474,19 +515,19 @@ function TripFactIcon({ type }: { type: "route" | "calendar" | "guests" }) {
 }
 
 const tripEnvironments = [
-  { icon: "🌱", title: "Cultivation Zone", altitude: "1,000–1,800m", photo: "figma-kili-journey-journey-landscape.png", copy: "The lower slopes are green and settled, with farms and villages around the mountain before the climb begins." },
-  { icon: "🌳", title: "Montane Forest", altitude: "1,800–3,000m", photo: "safari-06.jpg", copy: "The Lemosho Route begins on the quieter western side of Kilimanjaro and is known for its spectacular scenery and excellent acclimatization. With a longer itinerary and lower traffic during the first days, it is one of the most enjoyable ways to experience the mountain." },
-  { icon: "🌿", title: "Heath & Moorland", altitude: "3,000–4,000m", photo: "figma-kili-journey-journey-landscape1.png", copy: "Forest gives way to open moorland, rocky trails and distinctive high-altitude plants as the views widen." },
-  { icon: "🪨", title: "Alpine Desert", altitude: "4,000–5,000m", photo: "figma-kili-journey-journey-landscape2.png", copy: "The air is thinner and the landscape becomes spare and volcanic. Days here are exposed to strong sun, wind and cold." },
-  { icon: "❄️", title: "Arctic / Summit Zone", altitude: "5,000–5,895m", photo: "figma-kili-journey-summit-panorama.png", copy: "The final ascent reaches Kilimanjaro’s coldest and highest terrain, where your guide sets a careful pace." },
+  { icon: "🌳", title: "Tarangire", altitude: "Baobabs & elephants", photo: "figma-safari-destinations-destination-photograph2.png", copy: "Tarangire combines open savannah, ancient baobabs and seasonal wildlife around the river. Game drives are paced around the day’s conditions and your group’s interests." },
+  { icon: "⛰️", title: "Ngorongoro", altitude: "Crater floor", photo: "figma-safari-destinations-destination-photograph1.png", copy: "The crater’s grasslands, woodland and soda lake create a compact wildlife landscape. Your guide helps shape the day around the best conditions and a respectful pace." },
+  { icon: "🦓", title: "Central Serengeti", altitude: "Open plains", photo: "figma-safari-packages-trip-card1.png", copy: "Central Serengeti offers long horizons, resident wildlife and a strong base for game drives as the route moves north." },
+  { icon: "🌾", title: "Northern Serengeti", altitude: "Migration country", photo: "figma-trips-lion-photo.png", copy: "Northern Serengeti is shaped by the seasonal movement of wildebeest and zebra. Exact sightings and river crossings can never be guaranteed." },
+  { icon: "🌊", title: "Mara River", altitude: "Seasonal crossings", photo: "figma-trips-hero.png", copy: "The Mara River is a dramatic landscape to explore with your guide. Wildlife movements, water levels and road conditions guide the day’s plan." },
 ];
 
 function TripEnvironments() {
   const [selected, setSelected] = useState(1);
   const current = tripEnvironments[selected];
   return <section className="ref-section ref-dark trip-ref-environments" aria-labelledby="trip-environments-title"><div className="shell trip-ref-environments-grid">
-    <div className="trip-ref-environment-photo" aria-live="polite"><Photo src={image(current.photo)} alt={`${current.title} on Kilimanjaro`} /></div>
-    <div className="trip-ref-environment-content"><h2 id="trip-environments-title">Environments of Kilimanjaro</h2><div className="trip-ref-environment-options">{tripEnvironments.map((zone, index) => <div className="trip-ref-environment-option" key={zone.title}><button type="button" aria-expanded={selected === index} aria-controls={`trip-environment-detail-${index}`} onClick={() => setSelected(index)}><span aria-hidden="true">{zone.icon}</span>{zone.title} {zone.altitude}</button>{selected === index && <p id={`trip-environment-detail-${index}`}>{zone.copy}</p>}</div>)}</div></div>
+    <div className="trip-ref-environment-photo" aria-live="polite"><Photo src={image(current.photo)} alt={`${current.title} on safari`} /></div>
+    <div className="trip-ref-environment-content"><h2 id="trip-environments-title">Landscapes of Northern Tanzania</h2><div className="trip-ref-environment-options">{tripEnvironments.map((zone, index) => <div className="trip-ref-environment-option" key={zone.title}><button type="button" aria-expanded={selected === index} aria-controls={`trip-environment-detail-${index}`} onClick={() => setSelected(index)}><span aria-hidden="true">{zone.icon}</span>{zone.title} <small>{zone.altitude}</small></button>{selected === index && <p id={`trip-environment-detail-${index}`}>{zone.copy}</p>}</div>)}</div></div>
   </div></section>;
 }
 
@@ -507,30 +548,24 @@ function TripFaq() {
 }
 
 export function TripsReferencePage() {
-  const [openDays, setOpenDays] = useState<Set<number>>(() => new Set([0, 3]));
+  const [openDays, setOpenDays] = useState<Set<number>>(() => new Set([0]));
   const days = [
-    ["Arrival","The group arrives at Kilimanjaro International Airport (JRO). Participants are met by a Betheli Expeditions representative and transferred to a hotel in Arusha."],
-    ["Tarangire National Park","Spend the day in Tarangire National Park. Timing and activities are confirmed with your guide."],
-    ["Ngorongoro Crater","Discover the landscapes and habitats of Ngorongoro Crater."],
-    ["Central Serengeti","Travel into the Serengeti, with time for game viewing along the way."],
-    ["Northern Serengeti","Explore northern Serengeti and the Mara River region."],
-    ["Northern Serengeti to Arusha","Make the return journey and discuss onward arrangements with the team."],
+    { title: "Arrival", copy: "The group arrives at Kilimanjaro International Airport (JRO). A Betheli Expeditions representative meets you and transfers you to your hotel in Arusha.", image: "figma-trips-day1.png", alt: "Arrival in Arusha", experience: "Settle in, meet your travel team and take time to rest after your flight. Your guide will confirm the following morning’s departure, luggage arrangements and the rhythm of the safari ahead.", mealPlan: "Half Board", signature: "Ngare Sero Mountain Lodge 4*", premium: "Elewana Arusha Coffee Lodge 5*" },
+    { title: "Tarangire National Park", copy: "Leave Arusha for Tarangire National Park, a landscape of baobabs, open grassland and elephant herds. Timings and activities are confirmed with your guide.", image: "figma-trips-day2.png", alt: "Safari wildlife in Tarangire", experience: "Enjoy an unhurried first game drive as you get used to the vehicle and the pace of safari days. Tarangire’s river and ancient baobabs create a beautiful setting for watching wildlife in the afternoon light.", mealPlan: "Full Board" },
+    { title: "Ngorongoro Crater", copy: "Travel to the Ngorongoro Conservation Area and descend into the crater to explore one of East Africa’s most remarkable wildlife habitats.", image: "figma-safari-destinations-destination-photograph1.png", alt: "Ngorongoro Crater landscape", experience: "The crater floor brings grassland, woodland and lake edges into one extraordinary day. Your guide follows wildlife movement and road conditions, leaving room for quiet observation as well as classic big-game sightings.", mealPlan: "Full Board" },
+    { title: "Central Serengeti", copy: "Continue into the Serengeti, with game viewing along the way as the landscape opens into long horizons and kopjes.", image: "figma-trips-lion-photo.png", alt: "Lion in the Central Serengeti", experience: "Arriving in the central plains is part of the experience: every transfer can become a game drive. Keep your camera ready for lions, giraffe, zebra and the smaller moments that make the Serengeti feel alive.", mealPlan: "Full Board" },
+    { title: "Northern Serengeti", copy: "Explore Northern Serengeti and the Mara River region, where seasonal migration movements shape the day’s route.", image: "figma-safari-packages-trip-card1.png", alt: "Wildebeest and zebra in Northern Serengeti", experience: "Spend time around the northern plains and river country with the flexibility to follow wildlife. From July to October, wildebeest and zebra may gather near the Mara River, but crossings and sightings are always guided by nature rather than a timetable.", mealPlan: "Full Board" },
+    { title: "Northern Serengeti to Arusha", copy: "Take a final morning in the north before beginning the return journey to Arusha. Your exact travel arrangement is confirmed with the team.", image: "figma-trips-hero.png", alt: "Northern Tanzania safari landscape", experience: "Use the final drive to reflect on the landscapes, wildlife and people you have met along the way. Your team can help with onward travel details and a smooth connection to the next part of your journey.", mealPlan: "Breakfast" },
   ];
   const allDaysOpen = openDays.size === days.length;
-  const extraDayPhotos: Record<number, [string, string]> = {
-    1: ["figma-safari-destinations-destination-photograph2.png", "Tarangire landscape"],
-    2: ["figma-safari-destinations-destination-photograph1.png", "Ngorongoro Crater landscape"],
-    4: ["figma-safari-packages-trip-card1.png", "Zebras on the Serengeti plains"],
-    5: ["figma-safari-hero.png", "Tanzania safari landscape"],
-  };
   return <><section className="trip-ref-hero" id="general"><Photo src={image("figma-trips-hero.png")} alt="" priority sizes="100vw" /><div className="trip-ref-hero-shade" /><Header active="Home" variant="classic" /><div className="shell trip-ref-hero-copy"><p>From <b>$1,732</b></p><h1>6-Day Northern Serengeti River Crossing Safari</h1><p>A migration-focused safari through Tarangire, Central Serengeti, Northern Serengeti and Ngorongoro, with a full day at the Mara River.</p><div className="trip-ref-rating"><TripadvisorLogo light compact /><small>5.0 <RatingStars size={14} /></small></div></div></section>
     <TripSectionNav />
-    <main><section className="ref-section ref-dark trip-ref-overview" id="overview"><div className="shell"><div><h2>6-Day Northern Serengeti River Crossing Safari</h2><p>Experience Tanzania’s Great Migration on this 6-day safari through Tarangire, Central Serengeti, Northern Serengeti and Ngorongoro Crater. Designed around the river-crossing season, the journey includes a full day exploring Northern Serengeti and the Mara River, where wildebeest and zebra gather in dramatic numbers.</p><p>From the elephant-filled plains of Tarangire to the dramatic Mara River and the endless Serengeti, this safari brings together Tanzania’s unforgettable landscapes, diverse wildlife and the extraordinary spectacle of the Great Migration.</p><TripFacts /></div><Photo src={image("zanzibar-16.jpg")} alt="Group on a mountain above the clouds" /></div></section>
-<section className="ref-section trip-ref-itinerary" id="itinerary"><div className="shell"><aside><span className="trip-ref-map-hint">Tap for a closer look <Image src={image("figma-trips-map-search.svg")} alt="" width={20} height={20} /></span><Photo src={image("figma-trips-map-photo.png")} alt="Illustrative Lemosho route map" /><h3>Destinations Included</h3><ul><li>Tarangire National Park</li><li>Ngorongoro Crater</li><li>Central Serengeti</li><li>Northern Serengeti – Mara River</li></ul><div className="trip-ref-quote"><div className="trip-ref-quote-heading"><Image src={image("figma-trips-quote-plan.svg")} alt="" width={20} height={18} /><span>Plan Trip</span></div><h3>Experience the 6-Day Northern Circuit Classic Safari for yourself.</h3><p>Speak with a senior planner, usually a same-day reply, always with a thoughtful first proposal.</p><div className="trip-ref-quote-actions"><Link href="/plan-your-trip" className="trip-ref-quote-button">Request a Quote<Image src={image("figma-trips-quote-arrow.svg")} alt="" width={34} height={34} /></Link><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="trip-ref-quote-whatsapp"><Image src={image("figma-trips-quote-whatsapp.svg")} alt="" width={31} height={31} />WhatsApp Us</a></div></div></aside><div><div className="trip-ref-itinerary-title"><h2>Itinerary</h2><button type="button" aria-expanded={allDaysOpen} onClick={()=>setOpenDays(allDaysOpen ? new Set() : new Set(days.map((_, index) => index)))}>{allDaysOpen ? "Collapse All Days" : "Show All Days"}</button></div>{days.map(([title,copy],i)=><details key={title} open={openDays.has(i)}><summary onClick={(event)=>{event.preventDefault();setOpenDays(current=>{const next=new Set(current);if(next.has(i))next.delete(i);else next.add(i);return next;});}}><span className="trip-ref-day-number">Day {i+1}</span><span className="trip-ref-day-dot" aria-hidden="true" /><span className="trip-ref-day-name">{title}</span><Image className="trip-ref-day-chevron" src={image("figma-trips-itinerary-chevron.svg")} alt="" width={50} height={50} /></summary><p>{copy}</p>{i===0&&<TripAccommodation day={1} mealPlan="Half Board" signature="Ngare Sero Mountain Lodge 4*" premium="Elewana Arusha Coffee Lodge 5*" />}{i===3&&<div className="trip-ref-day-four"><Photo className="trip-ref-lion" src={image("figma-trips-lion-photo.png")} alt="Lion in the Serengeti" /><p>Northern Serengeti is where the Great Migration reaches the dramatic Mara River, creating one of Tanzania’s most spectacular wildlife experiences. From July to October, migrating wildebeest and zebras move through the region in search of fresh grazing, gathering along the river and surrounding plains. The area also offers excellent opportunities to encounter lions, elephants, giraffes and other wildlife across the northern Serengeti landscape.</p><p>Northern Serengeti offers an incredible variety of wildlife, from large herds of wildebeest and zebra to elephants, giraffes, buffaloes and graceful antelopes. Around the Mara River, animals gather to drink and graze, creating opportunities to observe natural interactions across the plains. Your guide will help you understand the behaviour, habitats and seasonal movements of the wildlife you encounter.</p><TripAccommodation day={4} mealPlan="Full Board" /></div>}{extraDayPhotos[i]&&<div className="trip-ref-day-extra"><Photo src={image(extraDayPhotos[i][0])} alt={extraDayPhotos[i][1]} /><TripAccommodation day={i+1} mealPlan="To be confirmed" /></div>}</details>)}</div></div></section>
+    <main><section className="ref-section ref-dark trip-ref-overview" id="overview"><div className="shell"><div><h2>6-Day Northern Serengeti River Crossing Safari</h2><p>Experience Tanzania’s Great Migration on this 6-day safari through Tarangire, Central Serengeti, Northern Serengeti and Ngorongoro Crater. Designed around the river-crossing season, the journey includes a full day exploring Northern Serengeti and the Mara River, where wildebeest and zebra gather in dramatic numbers.</p><p>From the elephant-filled plains of Tarangire to the dramatic Mara River and the endless Serengeti, this safari brings together Tanzania’s unforgettable landscapes, diverse wildlife and the extraordinary spectacle of the Great Migration.</p><TripFacts /></div><Photo src={image("figma-trips-day2.png")} alt="Safari travellers in Northern Tanzania" /></div></section>
+<section className="ref-section trip-ref-itinerary" id="itinerary"><div className="shell"><aside><span className="trip-ref-map-hint">Tap for a closer look <Image src={image("figma-trips-map-search.svg")} alt="" width={20} height={20} /></span><Photo src={image("figma-trips-map-photo.png")} alt="Illustrative Northern Tanzania safari route map" /><h3>Destinations Included</h3><ul><li>Tarangire National Park</li><li>Ngorongoro Crater</li><li>Central Serengeti</li><li>Northern Serengeti – Mara River</li></ul><div className="trip-ref-quote"><div className="trip-ref-quote-heading"><Image src={image("figma-trips-quote-plan.svg")} alt="" width={20} height={18} /><span>Plan Trip</span></div><h3>Experience the 6-Day Northern Serengeti Safari for yourself.</h3><p>Speak with a senior planner for a thoughtful first proposal built around your dates and priorities.</p><div className="trip-ref-quote-actions"><Link href="/plan-your-trip" className="trip-ref-quote-button">Request a Quote<Image src={image("figma-trips-quote-arrow.svg")} alt="" width={34} height={34} /></Link><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="trip-ref-quote-whatsapp"><Image src={image("figma-trips-quote-whatsapp.svg")} alt="" width={31} height={31} />WhatsApp Us</a></div></div></aside><div><div className="trip-ref-itinerary-title"><h2>Itinerary</h2><button type="button" aria-expanded={allDaysOpen} onClick={()=>setOpenDays(allDaysOpen ? new Set() : new Set(days.map((_, index) => index)))}>{allDaysOpen ? "Collapse All Days" : "Show All Days"}</button></div>{days.map((day,i)=><details key={day.title} open={openDays.has(i)}><summary onClick={(event)=>{event.preventDefault();setOpenDays(current=>{const next=new Set(current);if(next.has(i))next.delete(i);else next.add(i);return next;});}}><span className="trip-ref-day-number">Day {i+1}</span><span className="trip-ref-day-dot" aria-hidden="true" /><span className="trip-ref-day-name">{day.title}</span><Image className="trip-ref-day-chevron" src={image("figma-trips-itinerary-chevron.svg")} alt="" width={50} height={50} /></summary><p>{day.copy}</p><div className="trip-ref-day-experience"><Photo src={image(day.image)} alt={day.alt} /><p>{day.experience}</p></div><TripAccommodation day={i+1} mealPlan={day.mealPlan} signature={day.signature} premium={day.premium} /></details>)}</div></div></section>
       <TripEnvironments />
-      <section className="ref-section trip-ref-inclusions" id="inclusions"><div className="shell"><Intro eyebrow="YOUR CLIMB, TAKEN CARE OF" title="What’s included in your Kilimanjaro climb" copy="Use this checklist when planning your enquiry. All package details are subject to confirmation in your quote." /><div className="trip-ref-chapters">{tripInclusionChapters.map(chapter=><article className="trip-ref-chapter" key={chapter.title}><div className="trip-ref-chapter-heading"><span>{chapter.marker}</span><h3>{chapter.title}</h3><p>{chapter.description}</p></div><div className="trip-ref-chapter-items">{chapter.items.map(item=><div className="trip-ref-chapter-item" key={item.title}><Image src={image(`figma-trips-inclusion-${item.icon}.svg`)} alt="" width={24} height={24} /><h4>{item.title}</h4><p>{item.description}</p></div>)}</div></article>)}</div></div></section>
+      <section className="ref-section trip-ref-inclusions" id="inclusions"><div className="shell"><Intro eyebrow="YOUR SAFARI, TAKEN CARE OF" title="What’s included in your safari" copy="Use this checklist when planning your enquiry. All package details are subject to confirmation in your quote." /><div className="trip-ref-chapters">{tripInclusionChapters.map(chapter=><article className="trip-ref-chapter" key={chapter.title}><div className="trip-ref-chapter-heading"><span>{chapter.marker}</span><h3>{chapter.title}</h3><p>{chapter.description}</p></div><div className="trip-ref-chapter-items">{chapter.items.map(item=><div className="trip-ref-chapter-item" key={item.title}><Image src={image(`figma-trips-inclusion-${item.icon}.svg`)} alt="" width={24} height={24} /><h4>{item.title}</h4><p>{item.description}</p></div>)}</div></article>)}</div></div></section>
       <section className="ref-section trip-ref-exclusions" id="exclusions"><div className="shell"><Intro eyebrow="BEFORE YOU BOOK" title="Exclusions" copy="Every trip is planned around your dates and group. Ask us for a written quote confirming exactly what is and is not included." /></div></section>
-      <CtaBanner title="Unforgettable Moments in the Heart of Mount Kilimanjaro" image={image("figma-kili-group-trip-landscape3.png")} />
+      <CtaBanner title="Ready to experience Northern Serengeti?" text="Share your dates and travel style, then let’s shape a safari with the right pace, accommodation and time in the places that matter to you." image={image("figma-trips-cta.png")} />
       <Testimonials />
       <ImageCards eyebrow="Related Trips" title="You Might Also Like" cards={relatedTrips} variant="climbs" className="trip-ref-related" />
       <TripFaq /></main><Footer /></>;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./reference.css";
+import { ScrollMotion } from "@/components/site";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://betheliexpeditions.com";
 
@@ -32,8 +33,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     url: siteUrl,
   };
   return (
-    <html lang="en">
-      <body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />{children}</body>
+    <html lang="en" data-scroll-behavior="smooth">
+      <body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} /><ScrollMotion />{children}</body>
     </html>
   );
 }

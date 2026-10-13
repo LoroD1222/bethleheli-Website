@@ -1436,3 +1436,72 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 .trip-ref-facts .trip-ref-fact-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.07);color:#ea4729}
 .trip-ref-fact-icon svg{display:block;width:23px;height:23px}
 @media(max-width:700px){.trip-ref-fact-icon{width:44px;height:44px}}
+
+/* Final shared interaction pass: one calm carousel language, full-bleed home
+   hero media, and motion that remains optional for reduced-motion visitors. */
+.home-ref-hero{width:100vw;max-width:none;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);isolation:isolate}
+.home-ref-hero-image,.home-ref-hero-scrim{max-width:none}
+.home-ref-hero .home-ref-hero-copy{width:min(1204px,calc(100% - 48px));margin-left:auto;margin-right:auto}
+.home-ref-hero .home-ref-floating{right:max(24px,calc((100vw - 1204px) / 2))}
+
+.testimonial-section .review-controls{display:flex;align-items:center;gap:14px;width:100%;max-width:1204px;min-height:24px;margin-top:28px}
+.testimonial-section .review-controls input[type="range"]{appearance:none;-webkit-appearance:none;display:block;flex:1;min-width:0;width:auto;height:6px;margin:0;padding:0;border:0;border-radius:99px;cursor:grab}
+.testimonial-section .review-controls input[type="range"]:active{cursor:grabbing}
+.testimonial-section .review-controls input[type="range"]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:24px;height:24px;border:0;border-radius:50%;background:transparent;box-shadow:none}
+.testimonial-section .review-controls input[type="range"]::-moz-range-thumb{width:24px;height:24px;border:0;border-radius:50%;background:transparent;box-shadow:none}
+.testimonial-section .review-count{flex:none;color:rgba(255,255,255,.68);font-family:Poppins,Arial,sans-serif;font-size:14px;font-weight:500;line-height:21px;white-space:nowrap}
+
+.trip-ref-day-experience{margin:0 0 28px;padding-top:4px}
+.trip-ref-day-experience>img{display:block;width:100%;height:300px;border-radius:15px;object-fit:cover}
+.trip-ref-itinerary .trip-ref-day-experience>p{max-width:760px;margin:16px 0 0;color:#454c51;font-family:Poppins,Arial,sans-serif;font-size:15px;font-weight:400;line-height:1.75}
+.trip-ref-meal{border:0;cursor:pointer;text-align:left;transition:box-shadow .2s,transform .2s}
+.trip-ref-meal:hover,.trip-ref-meal:focus-visible{box-shadow:0 3px 10px rgba(0,0,0,.18);transform:translateY(-1px)}
+.trip-ref-meal:focus-visible{outline:2px solid #ea4729;outline-offset:2px}
+.trip-ref-meal-note{max-width:500px;margin:-13px 0 22px;color:#667178;font-family:Poppins,Arial,sans-serif;font-size:13px;line-height:1.65}
+.trip-ref-lodge-option{display:block;width:100%;margin:0 0 14px;padding:8px 10px;border:1px solid transparent;border-radius:12px;background:transparent;color:#111;cursor:pointer;text-align:left;transition:border-color .2s,background-color .2s,transform .2s}
+.trip-ref-lodge-option:hover,.trip-ref-lodge-option:focus-visible,.trip-ref-lodge-option.active{border-color:rgba(234,71,41,.38);background:#fff7f4}
+.trip-ref-lodge-option:hover{transform:translateX(2px)}
+.trip-ref-lodge-option:focus-visible{outline:2px solid #ea4729;outline-offset:2px}
+.trip-ref-lodge-option .trip-ref-lodge-tier{font-family:Inter,Arial,sans-serif;font-size:18px;font-weight:500;line-height:28px}
+.trip-ref-lodge-option .trip-ref-lodge-name{margin-top:2px}
+.trip-ref-lodge figure{position:relative;overflow:hidden;border-radius:15px;background:#edf1f3}
+.trip-ref-lodge figure img{transition:transform .35s ease}
+.trip-ref-lodge figure:hover img{transform:scale(1.025)}
+.trip-ref-lodge figcaption{padding:7px 2px 1px}
+
+.ref-zanzibar-faq{background:#fafafa!important}
+.ref-zanzibar-faq>.shell{width:min(1200px,calc(100% - 96px))}
+.ref-zanzibar-faq-head{align-items:flex-end;margin-bottom:48px}
+.ref-zanzibar-faq-head h2{font-size:52px;line-height:1.12;letter-spacing:-.035em}
+.ref-zanzibar-faq .accordion details{background:transparent!important}
+.ref-zanzibar-faq .accordion details[open]:first-child{background:#fff!important}
+.ref-zanzibar-faq .accordion summary{min-height:82px;padding:27px 0;font-size:18px;font-weight:500}
+.ref-zanzibar-faq .accordion details p{max-width:850px;padding-bottom:28px;font-size:15px;line-height:1.75}
+
+@media (prefers-reduced-motion:no-preference){
+  .scroll-reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease var(--reveal-delay,0ms),transform .55s cubic-bezier(.22,1,.36,1) var(--reveal-delay,0ms)}
+  .scroll-reveal.is-revealed{opacity:1;transform:translateY(0)}
+}
+@media (prefers-reduced-motion:reduce){.scroll-reveal{opacity:1!important;transform:none!important;transition:none!important}}
+
+@media(max-width:900px){
+  .home-ref-hero .home-ref-hero-copy{width:min(100% - 48px,760px)}
+  .trip-ref-day-experience>img{height:260px}
+  .ref-zanzibar-faq>.shell{width:min(100% - 48px,760px)}
+}
+@media(max-width:700px){
+  .home-ref-hero{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw)}
+  .home-ref-hero .home-ref-hero-copy{width:calc(100% - 40px)}
+  .home-ref-hero .home-ref-floating{right:auto;margin-right:auto;margin-left:20px;width:min(282px,calc(100% - 40px))}
+  .testimonial-section .review-controls{gap:10px;margin-top:22px}
+  .testimonial-section .review-count{font-size:11px}
+  .trip-ref-day-experience>img{height:210px;border-radius:12px}
+  .trip-ref-itinerary .trip-ref-day-experience>p{font-size:14px;line-height:1.7}
+  .trip-ref-lodge-option .trip-ref-lodge-tier{font-size:16px}
+  .ref-zanzibar-faq{padding:72px 0}
+  .ref-zanzibar-faq>.shell{width:calc(100% - 40px)}
+  .ref-zanzibar-faq-head{margin-bottom:30px}
+  .ref-zanzibar-faq-head h2{font-size:38px}
+  .ref-zanzibar-faq .accordion summary{min-height:68px;padding:20px 0;font-size:15px}
+  .ref-zanzibar-faq .accordion details p{font-size:14px}
+}

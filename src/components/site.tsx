@@ -13,9 +13,6 @@ import { HomeFooter } from "@/components/home-footer";
 const navItems = [
   ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"], ["Tanzania Packages", "/trips"], ["About", "/#team"],
 ] as const;
-const classicNavItems = [
-  ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Zanzibar", "/zanzibar"], ["Gallery", "/#moments"], ["Contact", "/contact"],
-] as const;
 const mobileNavItems = [
   ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"],
   ["Tanzania Packages", "/trips"], ["Group Climbs", "/groups"], ["About", "/#team"], ["Contact", "/contact"],
@@ -64,13 +61,22 @@ export function TripadvisorLogo({ light = false, compact = false }: { light?: bo
   return <Image className={`tripadvisor-logo${light ? " tripadvisor-logo-light" : ""}${compact ? " tripadvisor-logo-compact" : ""}`} src="/images/tripadvisor-logo.svg" alt="Tripadvisor" width={211} height={34} />;
 }
 
-export function Header({ overlay = true, active, variant = "destinations" }: { overlay?: boolean; active?: string; variant?: "destinations" | "classic" }) {
+function navigationItemIsCurrent(pathname: string, href: string) {
+  if (href.includes("#")) return false;
+  if (href === "/kilimanjaro") return pathname === href || pathname.startsWith("/kilimanjaro/");
+  return pathname === href;
+}
+
+export function Header({ overlay = true }: { overlay?: boolean; active?: string; variant?: "destinations" | "classic" }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const items = variant === "classic" ? classicNavItems : navItems;
+  // All pages use the same route map. The previous classic/destinations split
+  // made the menu appear to change from page to page and could mark the wrong
+  // item as active after a client-side transition.
+  const items = navItems;
 
   useEffect(() => {
     if (!open) return;
@@ -120,9 +126,12 @@ export function Header({ overlay = true, active, variant = "destinations" }: { o
       <Logo />
       <button ref={toggleRef} type="button" className="menu-toggle" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(value => !value)}><span /><span /><span /></button>
       <nav id="main-nav" className="main-nav" aria-label="Main navigation">
-        {items.map(([label, href]) => <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined} className={active === label || pathname === href ? "active" : undefined}>{label}</Link>)}
+        {items.map(([label, href]) => {
+          const current = navigationItemIsCurrent(pathname, href);
+          return <Link key={href} href={href} aria-current={current ? "page" : undefined} className={current ? "active" : undefined}>{label}</Link>;
+        })}
       </nav>
-      <PrimaryLink href="/plan-your-trip">{variant === "classic" ? "Start planning" : "Plan Your Trip"}</PrimaryLink>
+      <PrimaryLink href="/plan-your-trip">Plan Your Trip</PrimaryLink>
     </div>
   </header>{open && createPortal(<div className="mobile-menu">
     <button type="button" className="mobile-menu-backdrop" aria-label="Close navigation" tabIndex={-1} onClick={() => { setOpen(false); toggleRef.current?.focus(); }} />
@@ -130,11 +139,55 @@ export function Header({ overlay = true, active, variant = "destinations" }: { o
       <div className="mobile-menu-head"><Logo onClick={() => setOpen(false)} /><button ref={closeRef} type="button" className="mobile-menu-close" aria-label="Close navigation" onClick={() => { setOpen(false); toggleRef.current?.focus(); }}><span /><span /></button></div>
       <p className="mobile-menu-eyebrow">Explore Betheli</p>
       <nav className="mobile-menu-links" aria-label="Mobile navigation links">
-        {mobileNavItems.map(([label, href], index) => <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined} className={pathname === href ? "active" : undefined} onClick={() => setOpen(false)}><span className="mobile-menu-number">{String(index + 1).padStart(2, "0")}</span><span>{label}</span><ArrowIcon /></Link>)}
+        {mobileNavItems.map(([label, href], index) => {
+          const current = navigationItemIsCurrent(pathname, href);
+          return <Link key={href} href={href} aria-current={current ? "page" : undefined} className={current ? "active" : undefined} onClick={() => setOpen(false)}><span className="mobile-menu-number">{String(index + 1).padStart(2, "0")}</span><span>{label}</span><ArrowIcon /></Link>;
+        })}
       </nav>
-      <div className="mobile-menu-footer"><PrimaryLink href="/plan-your-trip" onClick={() => setOpen(false)}>{variant === "classic" ? "Start planning" : "Plan Your Trip"}</PrimaryLink><p>Your journey, your pace. Planned with a local team.</p></div>
+      <div className="mobile-menu-footer"><PrimaryLink href="/plan-your-trip" onClick={() => setOpen(false)}>Plan Your Trip</PrimaryLink><p>Your journey, your pace. Planned with a local team.</p></div>
     </div>
   </div>, document.body)}</>;
+}
+
+/** Adds a restrained entrance treatment after an element enters the viewport.
+ * Keeping the class client-only means the page remains fully readable without
+ * JavaScript or for visitors who prefer reduced motion. */
+export function ScrollMotion() {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const selectors = [
+      ".ref-section .ref-intro", ".ref-section .ref-intro-split", ".ref-section .ref-image-card",
+      ".home-ref-styles article", ".home-ref-select-card", ".home-ref-story > .shell",
+      ".testimonial-section .testimonials-heading", ".testimonial-section .review-card", ".cta-banner",
+      ".contact-layout", ".plan-layout",
+    ].join(",");
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>(selectors));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-revealed");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -36px" });
+
+    nodes.forEach((node, index) => {
+      node.classList.remove("is-revealed");
+      node.classList.add("scroll-reveal");
+      node.style.setProperty("--reveal-delay", `${Math.min(index % 5, 3) * 55}ms`);
+      observer.observe(node);
+    });
+    return () => {
+      observer.disconnect();
+      nodes.forEach((node) => {
+        node.classList.remove("scroll-reveal", "is-revealed");
+        node.style.removeProperty("--reveal-delay");
+      });
+    };
+  }, [pathname]);
+
+  return null;
 }
 
 export function Footer() {
@@ -192,6 +245,7 @@ export function Testimonials() {
   const scroller = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState(0);
   const [activeReview, setActiveReview] = useState(0);
+  const [hasOverflow, setHasOverflow] = useState(false);
   const activeReviewRef = useRef(0);
   const updatePosition = () => {
     const viewport = scroller.current;
@@ -203,6 +257,27 @@ export function Testimonials() {
     activeReviewRef.current = nextReview;
     setActiveReview(nextReview);
   };
+  useEffect(() => {
+    const viewport = scroller.current;
+    if (!viewport) return;
+    const updateOverflow = () => {
+      const scrollable = viewport.scrollWidth - viewport.clientWidth > 4;
+      setHasOverflow(scrollable);
+      if (!scrollable) {
+        setPosition(0);
+        setActiveReview(0);
+        activeReviewRef.current = 0;
+      }
+    };
+    updateOverflow();
+    const observer = new ResizeObserver(updateOverflow);
+    observer.observe(viewport);
+    window.addEventListener("resize", updateOverflow);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateOverflow);
+    };
+  }, []);
   const seek = (percent: number) => {
     const viewport = scroller.current;
     if (!viewport) return;
@@ -210,18 +285,10 @@ export function Testimonials() {
     setPosition(next);
     activeReviewRef.current = Math.round(next * (reviews.length - 1));
     setActiveReview(activeReviewRef.current);
-    viewport.scrollTo({ left: next * Math.max(0, viewport.scrollWidth - viewport.clientWidth), behavior: "instant" });
-  };
-  const goToReview = (direction: number) => {
-    const viewport = scroller.current;
-    if (!viewport) return;
-    const next = Math.max(0, Math.min(reviews.length - 1, activeReviewRef.current + direction));
-    activeReviewRef.current = next;
-    setActiveReview(next);
-    viewport.scrollTo({ left: (next / (reviews.length - 1)) * Math.max(0, viewport.scrollWidth - viewport.clientWidth), behavior: "instant" });
+    viewport.scrollTo({ left: next * Math.max(0, viewport.scrollWidth - viewport.clientWidth), behavior: "smooth" });
   };
   const progress = 25 + position * 75;
-  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title="What our customers say" text="Real stories from travelers who climbed, explored, and relaxed with Betheli Expeditions." align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid" ref={scroller} onScroll={updatePosition}>{reviews.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt="" /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt="" /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><span>Read full review on Trip Advisor</span></footer></div></article>)}</div><div className="review-controls"><button type="button" aria-label="Previous review" disabled={activeReview === 0} onClick={() => goToReview(-1)}>←</button><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Review slider position" aria-valuetext={`${activeReview + 1} of ${reviews.length} reviews`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.3) ${progress}% 100%)` }} /><span className="review-count">{activeReview + 1} of {reviews.length} reviews</span><button type="button" aria-label="Next review" disabled={activeReview === reviews.length - 1} onClick={() => goToReview(1)}>→</button></div></div></section>;
+  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title="What our customers say" text="Real stories from travelers who climbed, explored, and relaxed with Betheli Expeditions." align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid" ref={scroller} onScroll={updatePosition}>{reviews.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt="" /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt="" /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><span>Read full review on Trip Advisor</span></footer></div></article>)}</div>{hasOverflow && <div className="review-controls" aria-label="Review carousel controls"><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Review slider position" aria-valuetext={`${activeReview + 1} of ${reviews.length} reviews`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.3) ${progress}% 100%)` }} /><span className="review-count">{activeReview + 1} of {reviews.length} reviews</span></div>}</div></section>;
 }
 
 const commonFaqs = [
