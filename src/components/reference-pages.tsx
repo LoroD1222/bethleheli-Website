@@ -512,10 +512,6 @@ function HomeAdventureSelector() {
         <Photo src={image(adventure.src)} alt="" />
         <div><h3>{adventure.title}</h3><p>{adventure.copy}</p><span>Explore <Image src={image("figma-kili-group-button-arrow.svg")} alt="" width={40} height={40} /></span></div>
       </Link>)}</div>
-      <div className="home-ref-select-mobile">{adventures.map((adventure, index) => <details key={adventure.title}>
-        <summary><span>{String(index + 1).padStart(2, "0")}</span><strong>{adventure.title}</strong><b aria-hidden="true">+</b></summary>
-        <div className="home-ref-select-mobile-panel"><Photo src={image(adventure.src)} alt="" /><p>{adventure.copy}</p><Link href={adventure.href}>Explore <Image src={image("figma-kili-group-button-arrow.svg")} alt="" width={40} height={40} /></Link></div>
-      </details>)}</div>
     </div>
   </section>;
 }
