@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SitePage } from "@/components/site";
-import { HomeReferencePage, KilimanjaroReferencePage, MachameReferencePage, SafariReferencePage, TripsReferencePage, ZanzibarReferencePage } from "@/components/reference-pages";
+import { HomeReferencePage, KilimanjaroReferencePage, KilimanjaroRouteDetailPage, SafariReferencePage, TripsReferencePage, ZanzibarReferencePage } from "@/components/reference-pages";
 import { pageMeta, routeKeyFromSlug } from "@/lib/routes";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug?: string[] }> }): Promise<Metadata> {
@@ -25,7 +25,12 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
   switch (key) {
     case "home": return <HomeReferencePage />;
     case "kilimanjaro": return <KilimanjaroReferencePage />;
-    case "machame": return <MachameReferencePage />;
+    case "machame": return <KilimanjaroRouteDetailPage route="machame" />;
+    case "lemosho": return <KilimanjaroRouteDetailPage route="lemosho" />;
+    case "marangu": return <KilimanjaroRouteDetailPage route="marangu" />;
+    case "rongai": return <KilimanjaroRouteDetailPage route="rongai" />;
+    case "northernCircuit": return <KilimanjaroRouteDetailPage route="northern-circuit" />;
+    case "umbwe": return <KilimanjaroRouteDetailPage route="umbwe" />;
     case "safari": return <SafariReferencePage />;
     case "zanzibar": return <ZanzibarReferencePage />;
     case "trips": return <TripsReferencePage />;

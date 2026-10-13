@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const paths = ["", "/kilimanjaro", "/kilimanjaro/machame-route", "/safari", "/zanzibar", "/plan-your-trip", "/contact", "/faq", "/trips", "/groups"];
+const paths = ["", "/kilimanjaro", "/kilimanjaro/machame-route", "/kilimanjaro/lemosho-route", "/kilimanjaro/marangu-route", "/kilimanjaro/rongai-route", "/kilimanjaro/northern-circuit", "/kilimanjaro/umbwe-route", "/safari", "/zanzibar", "/plan-your-trip", "/contact", "/faq", "/trips", "/groups"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://betheliexpeditions.com";

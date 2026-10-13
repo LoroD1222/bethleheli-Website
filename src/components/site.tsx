@@ -14,7 +14,7 @@ const navItems = [
   ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"], ["Tanzania Packages", "/trips"], ["About", "/#team"],
 ] as const;
 const navSubmenus: Record<string, readonly (readonly [string, string])[]> = {
-  Kilimanjaro: [["Kilimanjaro overview", "/kilimanjaro"], ["Machame Route", "/kilimanjaro/machame-route"], ["Group climbs", "/groups"]],
+  Kilimanjaro: [["Kilimanjaro overview", "/kilimanjaro"], ["Machame Route", "/kilimanjaro/machame-route"], ["Lemosho Route", "/kilimanjaro/lemosho-route"], ["Marangu Route", "/kilimanjaro/marangu-route"], ["Rongai Route", "/kilimanjaro/rongai-route"], ["Northern Circuit", "/kilimanjaro/northern-circuit"], ["Umbwe Route", "/kilimanjaro/umbwe-route"], ["Group climbs", "/groups"]],
   "Tanzania Packages": [["Safari itineraries", "/trips"], ["Plan a custom trip", "/plan-your-trip"], ["Contact our team", "/contact"]],
 };
 const mobileNavItems = [
@@ -43,7 +43,7 @@ const photos = {
 };
 
 export function Photo({ src, alt, className = "", priority = false, sizes }: { src: string; alt: string; className?: string; priority?: boolean; sizes?: string }) {
-  return <Image className={className} src={src} alt={alt} width={1200} height={800} sizes={sizes || (className.includes("hero") ? "100vw" : "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw")} priority={priority} />;
+  return <Image className={className} src={src} alt={alt} width={1200} height={800} sizes={sizes || (className.includes("hero") ? "100vw" : "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw")} loading={priority ? "eager" : "lazy"} />;
 }
 
 export function ArrowIcon() { return <svg className="arrow-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M6 5h9v9" /></svg>; }
@@ -58,7 +58,7 @@ export function PrimaryLink({ href = "/plan-your-trip", children = "Start planni
 }
 
 function Logo({ onClick }: { onClick?: () => void } = {}) {
-  return <Link href="/" className="logo" aria-label="Betheli Expeditions home" onClick={onClick}><Image src="/images/logo.png" alt="Betheli Expeditions" width={1672} height={940} priority /></Link>;
+  return <Link href="/" className="logo" aria-label="Betheli Expeditions home" onClick={onClick}><Image src="/images/logo.png" alt="Betheli Expeditions" width={1672} height={940} loading="eager" /></Link>;
 }
 
 export function TripadvisorLogo({ light = false, compact = false }: { light?: boolean; compact?: boolean }) {
@@ -155,6 +155,10 @@ export function Header({ overlay = true }: { overlay?: boolean; active?: string;
           return <Link key={href} href={href} aria-current={current ? "page" : undefined} className={current ? "active" : undefined} onClick={() => setOpen(false)}><span className="mobile-menu-number">{String(index + 1).padStart(2, "0")}</span><span>{label}</span><ArrowIcon /></Link>;
         })}
       </nav>
+      <details className="mobile-route-menu">
+        <summary>Kilimanjaro routes <span aria-hidden="true">⌄</span></summary>
+        <div>{navSubmenus.Kilimanjaro.slice(1, -1).map(([label, href]) => <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined} onClick={() => setOpen(false)}>{label}<ArrowIcon /></Link>)}</div>
+      </details>
       <div className="mobile-menu-footer"><PrimaryLink href="/plan-your-trip" onClick={() => setOpen(false)}>Plan Your Trip</PrimaryLink><p>Your journey, your pace. Planned with a local team.</p></div>
     </div>
   </div>, document.body)}</>;
@@ -235,7 +239,7 @@ export function StyleCards() { return <div className="style-grid">{styles.map((i
 function StatRow() { return <div className="stat-row"><div><strong>5,895 m</strong><span>Uhuru Peak, the Roof of Africa</span></div><div><strong>94 %</strong><span>of our travellers reach the summit</span></div><div><strong>7 - 9 day</strong><span>climbs for better acclimatisation</span></div><div><strong>$2,399</strong><span>guide price for a climb</span></div></div>; }
 
 const destinations = [
-  { title: "Lemosho Route", subtitle: "A wild beginning / 8 days", image: photos.trail, href: "/kilimanjaro/machame-route" },
+  { title: "Lemosho Route", subtitle: "A wild beginning / 8 days", image: photos.trail, href: "/kilimanjaro/lemosho-route" },
   { title: "Machame Route", subtitle: "The whisky route / 7 days", image: photos.summit, href: "/kilimanjaro/machame-route" },
   { title: "Serengeti", subtitle: "Wildlife in its element", image: photos.safari, href: "/safari" },
   { title: "Zanzibar Island", subtitle: "A slower, brighter finish", image: photos.zanzibar, href: "/zanzibar" },

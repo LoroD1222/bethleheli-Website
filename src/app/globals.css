@@ -384,6 +384,15 @@ input::placeholder,textarea::placeholder { color:#9aa0a3; }
   .mobile-menu-links a>span:nth-child(2) { font-family:Inter,Arial,sans-serif; font-size:clamp(1.08rem,3.6vw,1.4rem); font-weight:650; line-height:1.22; }
   .mobile-menu-number { color:rgba(255,255,255,.55); font-size:.68rem; font-weight:700; }
   .mobile-menu-links .arrow-icon { height:18px; justify-self:end; width:18px; }
+  .mobile-route-menu { border-bottom:1px solid rgba(255,255,255,.19); }
+  .mobile-route-menu summary { align-items:center; color:#fff; cursor:pointer; display:flex; font-size:.76rem; font-weight:700; justify-content:space-between; letter-spacing:.11em; min-height:52px; padding:10px 6px; text-transform:uppercase; }
+  .mobile-route-menu summary::-webkit-details-marker { display:none; }
+  .mobile-route-menu summary span { color:var(--coral); font-size:1rem; transition:transform .2s ease; }
+  .mobile-route-menu[open] summary span { transform:rotate(180deg); }
+  .mobile-route-menu>div { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px 10px; padding:0 4px 14px; }
+  .mobile-route-menu a { align-items:center; border:1px solid rgba(255,255,255,.16); border-radius:9px; color:rgba(255,255,255,.82); display:flex; font-size:.72rem; gap:7px; justify-content:space-between; min-height:42px; padding:8px 10px; }
+  .mobile-route-menu a:hover,.mobile-route-menu a:focus-visible,.mobile-route-menu a[aria-current="page"] { background:rgba(255,255,255,.09); color:var(--coral); outline:none; }
+  .mobile-route-menu a .arrow-icon { flex:none; height:13px; width:13px; }
   .mobile-menu-footer { margin-top:auto; padding-top:38px; }
   .mobile-menu-footer .button { font-size:.88rem; justify-content:space-between; min-height:54px; padding-left:22px; width:100%; }
   .mobile-menu-footer p { color:rgba(255,255,255,.63); font-size:.7rem; margin-top:15px; text-align:center; }

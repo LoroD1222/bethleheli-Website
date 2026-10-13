@@ -1,4 +1,4 @@
-export type PageKey = "home" | "kilimanjaro" | "machame" | "safari" | "zanzibar" | "plan" | "contact" | "faq" | "trips" | "groups";
+export type PageKey = "home" | "kilimanjaro" | "machame" | "lemosho" | "marangu" | "rongai" | "northernCircuit" | "umbwe" | "safari" | "zanzibar" | "plan" | "contact" | "faq" | "trips" | "groups";
 
 type Meta = { title: string; description: string; path: string; image: string };
 
@@ -6,6 +6,11 @@ export const pageMeta: Record<PageKey, Meta> = {
   home: { title: "Tanzania journeys made personal", description: "Kilimanjaro climbs, Tanzania safaris and Zanzibar journeys from Betheli Expeditions.", path: "/", image: "/images/figma-home-hero.png" },
   kilimanjaro: { title: "Climb Mount Kilimanjaro", description: "Explore Kilimanjaro routes, the journey and tailored climb planning.", path: "/kilimanjaro", image: "/images/figma-home-gallery3.png" },
   machame: { title: "Machame Route", description: "Explore the Machame Route on Mount Kilimanjaro.", path: "/kilimanjaro/machame-route", image: "/images/figma-machame-hero.png" },
+  lemosho: { title: "Lemosho Route", description: "Explore the scenic eight-day Lemosho Route on Mount Kilimanjaro.", path: "/kilimanjaro/lemosho-route", image: "/images/figma-kili-routes-route-landscape1.png" },
+  marangu: { title: "Marangu Route", description: "Explore the classic hut-based Marangu Route on Mount Kilimanjaro.", path: "/kilimanjaro/marangu-route", image: "/images/figma-kili-routes-route-landscape2.png" },
+  rongai: { title: "Rongai Route", description: "Explore the quieter northern Rongai Route on Mount Kilimanjaro.", path: "/kilimanjaro/rongai-route", image: "/images/figma-kili-routes-route-landscape3.png" },
+  northernCircuit: { title: "Northern Circuit Route", description: "Explore the long and panoramic Northern Circuit Route on Mount Kilimanjaro.", path: "/kilimanjaro/northern-circuit", image: "/images/figma-kili-routes-route-landscape4.png" },
+  umbwe: { title: "Umbwe Route", description: "Explore the steep and demanding Umbwe Route on Mount Kilimanjaro.", path: "/kilimanjaro/umbwe-route", image: "/images/figma-kili-routes-route-landscape5.png" },
   safari: { title: "Tanzania Safari", description: "Explore Tanzania safari parks, wildlife and itinerary ideas.", path: "/safari", image: "/images/figma-safari-hero.png" },
   zanzibar: { title: "Discover Zanzibar", description: "Explore Zanzibar beaches, Stone Town and island journeys.", path: "/zanzibar", image: "/images/figma-zanzibar-hero.png" },
   plan: { title: "Plan Your Tanzania Adventure", description: "Share your travel interests and begin planning a Tanzania journey.", path: "/plan-your-trip", image: "/images/figma-plan-hero.png" },
@@ -18,7 +23,7 @@ export const pageMeta: Record<PageKey, Meta> = {
 export function routeKeyFromSlug(slug?: string[]): PageKey | null {
   const path = `/${(slug || []).join("/")}`.replace(/\/$/, "") || "/";
   const routes: Record<string, PageKey> = {
-    "/": "home", "/kilimanjaro": "kilimanjaro", "/kilimanjaro/machame-route": "machame", "/safari": "safari", "/zanzibar": "zanzibar", "/plan-your-trip": "plan", "/contact": "contact", "/faq": "faq", "/trips": "trips", "/groups": "groups",
+    "/": "home", "/kilimanjaro": "kilimanjaro", "/kilimanjaro/machame-route": "machame", "/kilimanjaro/lemosho-route": "lemosho", "/kilimanjaro/marangu-route": "marangu", "/kilimanjaro/rongai-route": "rongai", "/kilimanjaro/northern-circuit": "northernCircuit", "/kilimanjaro/umbwe-route": "umbwe", "/safari": "safari", "/zanzibar": "zanzibar", "/plan-your-trip": "plan", "/contact": "contact", "/faq": "faq", "/trips": "trips", "/groups": "groups",
   };
   return routes[path] || null;
 }
