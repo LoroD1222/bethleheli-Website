@@ -1915,3 +1915,110 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 @media(min-width:801px) and (max-width:1100px){.route-overview>.shell,.route-benefits>.shell,.route-map>.shell,.route-itinerary>.shell,.route-environments>.shell,.route-fit>.shell,.route-faq>.shell{width:calc(100% - 64px)}.route-overview-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1fr);gap:44px}.route-overview-grid>img{height:550px}.route-map-grid{grid-template-columns:1.12fr .88fr;gap:42px}.route-map-image{height:520px}.route-itinerary-grid{grid-template-columns:280px minmax(0,1fr);gap:44px}.route-environment-grid{grid-template-columns:.95fr 1.05fr;gap:42px}.route-environment-photo{height:560px}.route-benefit-grid{gap:24px}.route-benefit-grid article{min-height:210px}}
 @media(max-width:800px){.route-overview>.shell,.route-benefits>.shell,.route-map>.shell,.route-itinerary>.shell,.route-environments>.shell,.route-fit>.shell,.route-faq>.shell{width:calc(100% - 40px)}.route-overview,.route-benefits,.route-map,.route-itinerary,.route-environments,.route-fit,.route-faq{padding:76px 0}.route-overview-grid,.route-map-grid,.route-itinerary-grid,.route-environment-grid{grid-template-columns:1fr;gap:38px}.route-overview-grid>img{height:460px}.route-overview-grid .ref-intro h2,.route-map .ref-intro h2,.route-environment-content .ref-intro h2,.route-fit>.shell>.ref-intro h2,.route-faq .ref-intro h2{font-size:39px}.route-map-image{height:500px}.route-itinerary aside{position:static}.route-itinerary aside>img{display:none}.route-environment-photo{height:460px}.route-fit-columns{gap:20px}}
 @media(max-width:600px){.route-overview-grid>img{height:360px}.route-overview-grid .ref-intro h2,.route-map .ref-intro h2,.route-itinerary aside .ref-intro h2,.route-environment-content .ref-intro h2,.route-fit>.shell>.ref-intro h2,.route-faq .ref-intro h2{font-size:34px}.route-detail-page .route-overview .route-facts{grid-template-columns:1fr}.route-detail-page .route-overview .route-facts>div{grid-template-columns:1fr;gap:4px}.route-facts dd{max-width:none;text-align:left}.route-benefit-grid{grid-template-columns:1fr}.route-benefit-grid article{min-height:0}.route-map-image{height:420px}.route-days article{grid-template-columns:40px minmax(0,1fr);gap:16px}.route-day-number{width:40px;height:40px;box-shadow:0 0 0 5px #f7f8f8}.route-days article:not(:last-child)::before{left:19px;top:40px}.route-days article img{height:220px}.route-environment-photo{height:360px}.route-environment-options button{min-height:70px;padding:15px 0}.route-fit-columns{grid-template-columns:1fr}.route-fit-columns>article{min-height:0;padding:24px 20px}.route-faq .accordion summary{min-height:68px;padding:19px 20px}.route-faq .accordion details p{padding:0 20px 21px}}
+
+/* Safari page: restore the layered Figma compositions and their interactive
+   states while keeping each frame fluid below the 1204px canvas. */
+.safari-page .ref-places{padding:104px 0 112px}
+.safari-page .ref-places .ref-intro{max-width:780px}
+.safari-page .ref-places .ref-intro h2,.safari-page .safari-vehicles .ref-intro h2,.safari-page .ref-stay .ref-intro h2{font-size:52px;letter-spacing:-.035em;line-height:1.08}
+.safari-page .ref-places .ref-intro p,.safari-page .ref-stay .ref-intro p{font-size:16px;line-height:1.75}
+.ref-safari-place-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:50px}
+.safari-page .ref-safari-place-grid .ref-place{min-height:526px;border:1px solid rgba(36,49,56,.12);border-radius:20px;background:#fff;box-shadow:0 8px 28px rgba(36,49,56,.035)}
+.safari-page .ref-safari-place-grid .ref-place>img{height:246px;transition:transform .35s ease}
+.safari-page .ref-safari-place-grid .ref-place:hover>img{transform:scale(1.035)}
+.safari-page .ref-safari-place-grid .ref-place-copy{min-height:280px;padding:24px}
+.safari-page .ref-safari-place-grid .ref-place h3{font-size:22px;line-height:1.25}
+.safari-page .ref-safari-place-grid .ref-place p{font-size:14px;line-height:1.72}
+.safari-page .ref-safari-place-grid .ref-place small{padding-top:18px;font-size:11px;line-height:1.55}
+.safari-page .ref-safari-place-grid .ref-place-copy>a{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:12px}
+
+.safari-story{padding:112px 0 122px;overflow:hidden}
+.safari-story-grid{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);align-items:center;gap:76px}
+.safari-story-copy{min-width:0}
+.safari-story-copy .eyebrow{color:#ea4729}
+.safari-story-copy h2{max-width:520px;margin-top:12px;color:#fff;font-size:50px;font-weight:500;letter-spacing:-.035em;line-height:1.08}
+.safari-story-copy>p:not(.eyebrow){max-width:520px;margin-top:22px;color:rgba(255,255,255,.7);font-size:15px;line-height:1.78}
+.safari-story-visual{position:relative;min-width:0;height:560px}
+.safari-story-main{position:absolute!important;top:0;right:0;width:calc(100% - 72px);height:505px;border-radius:20px;object-fit:cover}
+.safari-story-card{position:absolute;z-index:2;left:0;bottom:0;width:315px;padding:7px 7px 15px;border:1px solid rgba(36,49,56,.1);border-radius:18px;background:#fff;box-shadow:0 20px 50px rgba(8,15,18,.2)}
+.safari-story-card>img{display:block;width:100%;height:188px;border-radius:13px;object-fit:cover}
+.safari-story-card>span{display:block;padding:13px 12px 0;color:#243138;font-size:13px;font-weight:600;line-height:1.55}
+.safari-story-brand{position:absolute;z-index:3;top:24px;right:22px;width:154px;height:auto;object-fit:contain}
+
+.safari-vehicles{padding:104px 0 112px;background:#fff!important}
+.safari-vehicles .ref-intro{max-width:760px}
+.safari-page .safari-vehicles .ref-three-cards{gap:22px;margin-top:50px}
+.safari-page .safari-vehicles .ref-three-cards article{border:1px solid rgba(36,49,56,.13);border-radius:20px;background:#fafafa;box-shadow:none;overflow:hidden;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.safari-page .safari-vehicles .ref-three-cards article:hover{transform:translateY(-5px);border-color:rgba(36,49,56,.24);box-shadow:0 18px 42px rgba(36,49,56,.09)}
+.safari-vehicle-photo{position:relative;height:286px;overflow:hidden}
+.safari-page .safari-vehicles .safari-vehicle-photo>img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.safari-page .safari-vehicles article:hover .safari-vehicle-photo>img{transform:scale(1.035)}
+.safari-vehicle-photo>span{position:absolute;left:18px;top:18px;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#fff;color:#ea4729;font-size:11px;font-weight:700;box-shadow:0 8px 20px rgba(20,33,40,.14)}
+.safari-vehicle-copy{min-height:150px;padding:22px 22px 25px}
+.safari-page .safari-vehicles .ref-three-cards h3,.safari-page .safari-vehicles .ref-three-cards p{margin:0}
+.safari-page .safari-vehicles .ref-three-cards h3{font-size:19px;line-height:1.35}
+.safari-page .safari-vehicles .ref-three-cards p{margin-top:9px;color:#667178;font-size:14px;line-height:1.7}
+
+.safari-page .ref-stay{padding:108px 0 118px;background:#fafafa}
+.safari-page .ref-stay .ref-intro{max-width:820px}
+.safari-page .ref-stay-grid{grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr);align-items:start;gap:72px;margin-top:50px}
+.safari-page .ref-stay-options>div{padding:0;border-top:1px solid rgba(36,49,56,.16);border-bottom:0}
+.safari-page .ref-stay-options>div:last-child{border-bottom:1px solid rgba(36,49,56,.16)}
+.safari-page .ref-stay-options button{display:flex;align-items:center;gap:14px;min-height:78px;padding:12px 8px;color:#243138;font:600 20px/1.35 Inter,Arial,sans-serif;transition:color .2s ease}
+.safari-page .ref-stay-options>div.active button{color:#ea4729}
+.safari-page .ref-stay-icon{width:44px;height:44px;background:#eff2f2;transition:background .2s ease,transform .2s ease}
+.safari-page .ref-stay-options>div.active .ref-stay-icon{background:#ea4729;transform:scale(1.04)}
+.safari-page .ref-stay-options>div.active .ref-stay-icon img{filter:brightness(0) invert(1)}
+.safari-page .ref-stay-options p{margin:0;padding:0 34px 24px 66px;color:#667178;font-size:14px;line-height:1.75}
+.safari-page .ref-stay-photo>img{height:452px;border-radius:20px;object-fit:cover;animation:safari-photo-in .32s ease both}
+.safari-page .ref-thumbs{gap:12px;margin-top:14px}
+.safari-page .ref-thumbs button{width:82px;height:60px;border-radius:9px}
+.safari-page .ref-thumbs img{width:100%;height:100%;border-radius:7px;object-fit:cover}
+@keyframes safari-photo-in{from{opacity:.35;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.safari-faq{padding:112px 0 122px;background:#f2f4f4!important}
+.safari-faq-grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);align-items:start;gap:72px}
+.safari-faq-heading .eyebrow{color:#ea4729}
+.safari-faq-heading h2{margin-top:12px;color:#243138;font-size:50px;font-weight:500;letter-spacing:-.035em;line-height:1.08}
+.safari-faq-heading>p:not(.eyebrow){margin-top:18px;color:#667178;font-size:15px;line-height:1.75}
+.safari-faq-link{display:inline-flex;align-items:center;gap:16px;margin-top:30px;padding:6px 7px 6px 19px;border-radius:999px;background:#ea4729;color:#fff;font-size:13px;font-weight:700}
+.safari-faq-link>span{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#fff;color:#ea4729}
+.safari-faq-link .arrow-icon{width:14px;height:14px}
+.safari-faq .accordion{display:grid;gap:12px;margin:0}
+.safari-faq .accordion details{margin:0;border:1px solid rgba(36,49,56,.13);border-radius:14px;background:#fff!important;box-shadow:none;transition:border-color .2s ease,box-shadow .2s ease}
+.safari-faq .accordion details[open]{border-color:rgba(36,49,56,.22);box-shadow:0 12px 32px rgba(36,49,56,.055)}
+.safari-faq .accordion summary{min-height:76px;padding:21px 22px;color:#243138;font-size:15px;line-height:1.45}
+.safari-faq .accordion summary>span{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:50%;background:#f4f5f5;color:#ea4729;font-size:18px;transition:transform .2s ease,background .2s ease,color .2s ease}
+.safari-faq .accordion details[open] summary>span{background:#ea4729;color:#fff;transform:rotate(45deg)}
+.safari-faq .accordion details p{padding:0 72px 24px 22px;border:0;color:#667178;font-size:13px;line-height:1.75}
+
+@media(max-width:1000px){
+  .safari-story-grid{gap:44px}
+  .safari-story-copy h2{font-size:43px}
+  .safari-story-visual{height:500px}
+  .safari-story-main{height:455px}
+  .safari-story-card{width:270px}.safari-story-card>img{height:158px}
+  .safari-page .ref-stay-grid{gap:42px}
+  .safari-faq-grid{grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:44px}
+  .safari-faq-heading h2{font-size:43px}
+}
+@media(max-width:900px){
+  .ref-safari-place-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .safari-story-grid,.safari-faq-grid{grid-template-columns:1fr}
+  .safari-story-copy{max-width:680px}.safari-story-visual{width:min(100%,720px)}
+  .safari-page .ref-stay-grid{grid-template-columns:1fr;gap:36px}
+  .safari-page .ref-stay-photo{width:min(100%,720px)}
+  .safari-faq-heading{max-width:680px}
+}
+@media(max-width:700px){
+  .safari-page .ref-places,.safari-story,.safari-vehicles,.safari-page .ref-stay,.safari-faq{padding:74px 0 82px}
+  .safari-page .ref-places .ref-intro h2,.safari-page .safari-vehicles .ref-intro h2,.safari-page .ref-stay .ref-intro h2,.safari-story-copy h2,.safari-faq-heading h2{font-size:36px}
+  .safari-page .ref-places .ref-intro p,.safari-page .ref-stay .ref-intro p{font-size:14px}
+  .ref-safari-place-grid{grid-template-columns:1fr;gap:18px;margin-top:32px}
+  .safari-page .ref-safari-place-grid .ref-place{min-height:0}.safari-page .ref-safari-place-grid .ref-place>img{height:230px}.safari-page .ref-safari-place-grid .ref-place-copy{min-height:258px;padding:21px}
+  .safari-story-grid{gap:34px}.safari-story-copy>p:not(.eyebrow){font-size:14px}
+  .safari-story-visual{height:430px}.safari-story-main{left:34px;right:auto;width:calc(100% - 34px);height:360px}.safari-story-card{width:232px;padding-bottom:11px}.safari-story-card>img{height:132px}.safari-story-card>span{padding:10px 9px 0;font-size:11px}.safari-story-brand{top:16px;right:12px;width:110px}
+  .safari-page .safari-vehicles .ref-three-cards{display:flex;gap:16px;margin-top:32px;overflow-x:auto;padding:0 0 16px;scroll-snap-type:x mandatory}.safari-page .safari-vehicles .ref-three-cards article{flex:0 0 min(84vw,340px);scroll-snap-align:start}.safari-vehicle-photo{height:250px}
+  .safari-page .ref-stay-grid{margin-top:34px}.safari-page .ref-stay-options button{min-height:70px;padding:10px 4px;font-size:18px}.safari-page .ref-stay-icon{width:40px;height:40px}.safari-page .ref-stay-options p{padding:0 8px 20px 58px;font-size:13px}.safari-page .ref-stay-photo>img{height:310px}.safari-page .ref-thumbs button{width:64px;height:50px}
+  .safari-faq-grid{gap:34px}.safari-faq-heading>p:not(.eyebrow){font-size:14px}.safari-faq .accordion summary{min-height:68px;padding:18px;font-size:14px}.safari-faq .accordion details p{padding:0 56px 20px 18px;font-size:13px}
+}
