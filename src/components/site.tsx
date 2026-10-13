@@ -12,14 +12,14 @@ import { HomeFooter } from "@/components/home-footer";
 
 const navItems = [
   ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"],
-  ["Packages", "/trips"], ["Group Climbs", "/groups"], ["About", "/#team"], ["Contact", "/contact"],
+  ["Group Climbs", "/groups"], ["About", "/#team"], ["Contact", "/contact"],
 ] as const;
 const navSubmenus: Record<string, readonly (readonly [string, string])[]> = {
   Kilimanjaro: [["Kilimanjaro overview", "/kilimanjaro"], ["Machame Route", "/kilimanjaro/machame-route"], ["Lemosho Route", "/kilimanjaro/lemosho-route"], ["Marangu Route", "/kilimanjaro/marangu-route"], ["Rongai Route", "/kilimanjaro/rongai-route"], ["Northern Circuit", "/kilimanjaro/northern-circuit"], ["Umbwe Route", "/kilimanjaro/umbwe-route"], ["Group climbs", "/groups"]],
 };
 const mobileNavItems = [
   ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"],
-  ["Packages", "/trips"], ["Group Climbs", "/groups"], ["About", "/#team"], ["Contact", "/contact"],
+  ["Group Climbs", "/groups"], ["About", "/#team"], ["Contact", "/contact"],
 ] as const;
 
 const photos = {
