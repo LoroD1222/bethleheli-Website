@@ -13,6 +13,10 @@ import { HomeFooter } from "@/components/home-footer";
 const navItems = [
   ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"], ["Tanzania Packages", "/trips"], ["About", "/#team"],
 ] as const;
+const navSubmenus: Record<string, readonly (readonly [string, string])[]> = {
+  Kilimanjaro: [["Kilimanjaro overview", "/kilimanjaro"], ["Machame Route", "/kilimanjaro/machame-route"], ["Group climbs", "/groups"]],
+  "Tanzania Packages": [["Safari itineraries", "/trips"], ["Plan a custom trip", "/plan-your-trip"], ["Contact our team", "/contact"]],
+};
 const mobileNavItems = [
   ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"],
   ["Tanzania Packages", "/trips"], ["Group Climbs", "/groups"], ["About", "/#team"], ["Contact", "/contact"],
@@ -69,6 +73,7 @@ function navigationItemIsCurrent(pathname: string, href: string) {
 
 export function Header({ overlay = true }: { overlay?: boolean; active?: string; variant?: "destinations" | "classic" }) {
   const [open, setOpen] = useState(false);
+  const [desktopMenu, setDesktopMenu] = useState<string | null>(null);
   const pathname = usePathname();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -128,7 +133,13 @@ export function Header({ overlay = true }: { overlay?: boolean; active?: string;
       <nav id="main-nav" className="main-nav" aria-label="Main navigation">
         {items.map(([label, href]) => {
           const current = navigationItemIsCurrent(pathname, href);
-          return <Link key={href} href={href} aria-current={current ? "page" : undefined} className={current ? "active" : undefined}>{label}</Link>;
+          const submenu = navSubmenus[label];
+          if (!submenu) return <Link key={href} href={href} aria-current={current ? "page" : undefined} className={current ? "active" : undefined}>{label}</Link>;
+          return <div className="nav-menu-item" key={href} onMouseLeave={() => setDesktopMenu(value => value === label ? null : value)}>
+            <Link href={href} aria-current={current ? "page" : undefined} className={current ? "active" : undefined} onClick={() => setDesktopMenu(null)}>{label}</Link>
+            <button type="button" aria-label={`Show ${label} submenu`} aria-expanded={desktopMenu === label} onClick={() => setDesktopMenu(value => value === label ? null : label)}><span aria-hidden="true">⌄</span></button>
+            <div className={`nav-submenu ${desktopMenu === label ? "open" : ""}`}>{submenu.map(([childLabel, childHref]) => <Link key={childHref} href={childHref} aria-current={pathname === childHref ? "page" : undefined} onClick={() => setDesktopMenu(null)}>{childLabel}<ArrowIcon /></Link>)}</div>
+          </div>;
         })}
       </nav>
       <PrimaryLink href="/plan-your-trip">Plan Your Trip</PrimaryLink>
