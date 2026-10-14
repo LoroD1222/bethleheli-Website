@@ -260,7 +260,14 @@ export function Testimonials() {
     if (!viewport) return;
     const maxScroll = Math.max(1, viewport.scrollWidth - viewport.clientWidth);
     const nextPosition = viewport.scrollLeft / maxScroll;
-    const nextReview = Math.round(nextPosition * (reviews.length - 1));
+    const viewportCenter = viewport.scrollLeft + viewport.clientWidth / 2;
+    const cards = Array.from(viewport.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child.classList.contains("review-card"));
+    const nextReview = cards.reduce((closestIndex, card, index) => {
+      const closest = cards[closestIndex];
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const closestCenter = closest.offsetLeft + closest.offsetWidth / 2;
+      return Math.abs(cardCenter - viewportCenter) < Math.abs(closestCenter - viewportCenter) ? index : closestIndex;
+    }, 0);
     setPosition(nextPosition);
     activeReviewRef.current = nextReview;
     setActiveReview(nextReview);
@@ -295,8 +302,19 @@ export function Testimonials() {
     setActiveReview(activeReviewRef.current);
     viewport.scrollTo({ left: next * Math.max(0, viewport.scrollWidth - viewport.clientWidth), behavior: "smooth" });
   };
+  const showReview = (index: number) => {
+    const viewport = scroller.current;
+    if (!viewport) return;
+    const nextIndex = Math.max(0, Math.min(reviews.length - 1, index));
+    const card = viewport.querySelectorAll<HTMLElement>(".review-card")[nextIndex];
+    if (!card) return;
+    const left = card.offsetLeft - (viewport.clientWidth - card.offsetWidth) / 2;
+    activeReviewRef.current = nextIndex;
+    setActiveReview(nextIndex);
+    viewport.scrollTo({ left, behavior: "auto" });
+  };
   const progress = 25 + position * 75;
-  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title="What our customers say" text="Real stories from travelers who climbed, explored, and relaxed with Betheli Expeditions." align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid" ref={scroller} onScroll={updatePosition}>{reviews.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt="" /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt="" /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><span>Read full review on Trip Advisor</span></footer></div></article>)}</div>{hasOverflow && <div className="review-controls" aria-label="Review carousel controls"><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Review slider position" aria-valuetext={`${activeReview + 1} of ${reviews.length} reviews`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.3) ${progress}% 100%)` }} /><span className="review-count">{activeReview + 1} of {reviews.length} reviews</span></div>}</div></section>;
+  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title="What our customers say" text="Real stories from travelers who climbed, explored, and relaxed with Betheli Expeditions." align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid" ref={scroller} onScroll={updatePosition}>{reviews.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt="" /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt="" /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><span>Read full review on Trip Advisor</span></footer></div></article>)}</div>{hasOverflow && <div className="review-controls" aria-label="Review carousel controls"><button type="button" aria-label="Previous review" disabled={activeReview === 0} onClick={() => showReview(activeReview - 1)}>←</button><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Review slider position" aria-valuetext={`${activeReview + 1} of ${reviews.length} reviews`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.3) ${progress}% 100%)` }} /><div className="review-dots" role="group" aria-label="Choose a review">{reviews.map((review, index) => <button key={review.name} type="button" aria-label={`Show review ${index + 1}`} aria-current={activeReview === index ? "true" : undefined} onClick={() => showReview(index)} />)}</div><span className="review-count" aria-live="polite">{activeReview + 1} of {reviews.length}</span><button type="button" aria-label="Next review" disabled={activeReview === reviews.length - 1} onClick={() => showReview(activeReview + 1)}>→</button></div>}</div></section>;
 }
 
 const commonFaqs = [

@@ -1698,6 +1698,46 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 .testimonial-section .review-controls input[type="range"]::-moz-range-thumb{width:18px;height:18px;border:3px solid #243138;border-radius:50%;background:#fff;box-shadow:0 0 0 2px #fff}
 @media(max-width:700px){.testimonial-section .review-controls{gap:8px}.testimonial-section .review-controls>button{width:40px;height:40px;font-size:21px}.testimonial-section .review-count{font-size:11px}}
 
+/* Compact, touch-friendly testimonial carousel on phones. */
+.testimonial-section .review-dots{display:none}
+@media(max-width:700px){
+  .testimonial-section{padding:64px 0 70px}
+  .testimonial-section .shell{width:100%;max-width:none}
+  .testimonials-heading{width:calc(100% - 40px);margin-inline:auto}
+  .testimonials-heading .section-intro h2{font-size:32px;line-height:1.12}
+  .testimonials-heading .section-intro>p:last-child{font-size:13px;line-height:1.6}
+  .testimonials-heading>div.testimonial-rating-summary:last-child{gap:8px;padding:9px 12px}
+  .testimonial-rating-copy{min-width:0}
+  .testimonials-heading .testimonial-rating-copy strong{font-size:13px}
+  .testimonials-heading .testimonial-rating-copy small{font-size:11px}
+  .testimonials-heading .figma-review-stars{width:88px;height:auto}
+  .testimonial-section .review-grid{width:100%;gap:14px;margin-top:30px;padding:0 20px 8px;scroll-padding-inline:20px;scroll-snap-type:x mandatory;overscroll-behavior-inline:contain}
+  .testimonial-section .review-grid::after{flex-basis:6px}
+  .testimonial-section .review-card{flex:0 0 min(84vw,336px);min-height:0;overflow:hidden;scroll-snap-align:center;border-radius:16px}
+  .testimonial-section .review-visual,.testimonial-section .review-visual img{height:164px}
+  .testimonial-section .review-visual>span{left:13px;top:13px;padding:7px 10px;font-size:10px}
+  .testimonial-section .review-copy{min-height:0;padding:17px}
+  .testimonial-section .review-person{gap:10px}
+  .testimonial-section .review-person>img{width:44px;height:44px}
+  .testimonial-section .review-person strong{font-size:14px;margin-top:2px}
+  .testimonial-section .review-person small{font-size:10px;margin-top:2px}
+  .testimonial-section .review-stars .figma-review-stars{width:76px;height:auto}
+  .testimonial-section .review-copy h3{margin-top:18px;font-size:16px;line-height:1.4}
+  .testimonial-section .review-copy>p{margin-top:12px;font-size:12px;line-height:1.65}
+  .testimonial-section .review-tags{margin-top:14px;padding-top:0}
+  .testimonial-section .review-tags span{padding:5px 8px;font-size:9px}
+  .testimonial-section .review-copy footer{margin-top:14px;font-size:10px}
+  .testimonial-section .review-copy footer img{width:30px;height:30px}
+  .testimonial-section .review-controls{justify-content:center;width:calc(100% - 40px);margin:18px auto 0;gap:12px}
+  .testimonial-section .review-controls input[type="range"]{display:none}
+  .testimonial-section .review-dots{display:flex;align-items:center;justify-content:center;gap:7px;flex:1}
+  .testimonial-section .review-dots button{display:block;width:8px;height:8px;padding:0;border:0;border-radius:99px;background:rgba(255,255,255,.34);cursor:pointer;transition:width .2s ease,background-color .2s ease}
+  .testimonial-section .review-dots button[aria-current="true"]{width:25px;background:#ea4729}
+  .testimonial-section .review-dots button:focus-visible{outline:2px solid #fff;outline-offset:4px}
+  .testimonial-section .review-controls>button{width:42px;height:42px;border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.08);font-size:20px}
+  .testimonial-section .review-count{min-width:34px;color:rgba(255,255,255,.76);font-size:11px;text-align:center}
+}
+
 /* Clear, consistent route/calendar/guest iconography in the trip summary. */
 .trip-ref-facts .trip-ref-fact-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.07);color:#ea4729}
 .trip-ref-fact-icon svg{display:block;width:23px;height:23px}
