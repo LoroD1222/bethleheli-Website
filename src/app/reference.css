@@ -2078,3 +2078,95 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   .safari-page .ref-stay-grid{margin-top:34px}.safari-page .ref-stay-options button{min-height:70px;padding:10px 4px;font-size:18px}.safari-page .ref-stay-icon{width:40px;height:40px}.safari-page .ref-stay-options p{padding:0 8px 20px 58px;font-size:13px}.safari-page .ref-stay-photo>img{height:310px}.safari-page .ref-thumbs button{width:64px;height:50px}
   .safari-faq-grid{gap:34px}.safari-faq-heading>p:not(.eyebrow){font-size:14px}.safari-faq .accordion summary{min-height:68px;padding:18px;font-size:14px}.safari-faq .accordion details p{padding:0 56px 20px 18px;font-size:13px}
 }
+
+/* Final browser-annotation pass: lively Figma-style navigation, seamless home
+   sections, real gallery controls, and the true stepped planning flow. */
+@media(min-width:901px){
+  .site-header .main-nav>a{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:40px;
+    margin:0!important;
+    padding:10px 15px!important;
+    border-radius:999px;
+    font-family:Poppins,Arial,sans-serif;
+    font-size:11px!important;
+    font-weight:500;
+    letter-spacing:.01em;
+    transition:background-color .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease;
+  }
+  .site-header .main-nav>a:hover:not(.active){
+    background:rgba(255,255,255,.2);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);
+    color:#fff;
+    transform:translateY(-1px);
+  }
+  .site-header .main-nav>a.active{
+    padding:10px 15px!important;
+    background:#fff;
+    box-shadow:0 7px 20px rgba(16,26,31,.14);
+    color:#243138;
+    font-weight:600;
+  }
+}
+
+.home-ref-select,.home-ref-moments{background:var(--paper)}
+.home-ref-moments .ref-intro{padding-top:1px}
+.home-ref-moment-images figcaption{cursor:default}
+.home-ref-moment-images figcaption span{display:block;padding-right:0}
+.home-ref-moment-controls{gap:16px}
+.home-ref-moment-controls>span{min-width:36px;color:rgba(255,255,255,.7);font-size:11px;font-weight:600;white-space:nowrap}
+.home-ref-moment-controls input[type="range"]{cursor:grab}
+.home-ref-moment-controls input[type="range"]:active{cursor:grabbing}
+
+.plan-main{min-height:0!important}
+.enquiry-form{scroll-margin-top:24px}
+.enquiry-form fieldset[hidden]{display:none!important}
+.enquiry-form fieldset:not([hidden]){animation:plan-step-enter .26s ease both}
+@keyframes plan-step-enter{from{opacity:.35;transform:translateY(8px)}to{opacity:1;transform:none}}
+.enquiry-form .progress button.complete b{background:#243138}
+.plan-step-actions,.plan-final-actions{clear:both;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:28px;padding-top:22px;border-top:1px solid rgba(36,49,56,.12)}
+.plan-step-actions>span{color:#667178;font-size:12px;font-weight:600}
+.plan-step-back,.plan-step-next{display:inline-flex;align-items:center;justify-content:center;min-height:48px;border-radius:999px;font-size:13px;font-weight:600;transition:background-color .2s ease,border-color .2s ease,transform .2s ease}
+.plan-step-back{padding:10px 18px;border:1px solid rgba(36,49,56,.18);background:#fff;color:#243138}
+.plan-step-next{gap:12px;padding:6px 7px 6px 20px;border:0;background:#ea4729;color:#fff}
+.plan-step-next .arrow{width:34px;height:34px}
+.plan-step-back:hover,.plan-step-back:focus-visible{border-color:#ea4729;background:#fff0eb;transform:translateY(-1px)}
+.plan-step-next:hover,.plan-step-next:focus-visible{background:#cb361c;transform:translateY(-1px)}
+.plan-step-back:focus-visible,.plan-step-next:focus-visible{outline:2px solid #ea4729;outline-offset:3px}
+.plan-final-actions{justify-content:space-between}
+.plan-final-actions .submit-button{min-height:56px;margin:0}
+
+.safari-page .ref-seasons{padding:104px 0 112px;background:#24363f!important}
+.safari-page .ref-seasons .ref-intro{max-width:720px}
+.safari-page .ref-seasons .ref-intro h2{margin-top:12px;font-size:48px;line-height:1.1}
+.safari-page .ref-seasons .ref-intro p{max-width:650px;margin-top:18px;font-size:16px;line-height:1.75}
+.safari-page .ref-season-grid{gap:0;margin-top:48px;border-top:1px solid rgba(255,255,255,.3)}
+.safari-page .ref-season-grid article{min-height:176px;padding:26px 24px 20px;border-right:1px solid rgba(255,255,255,.2);transition:background-color .2s ease}
+.safari-page .ref-season-grid article:first-child{padding-left:0}
+.safari-page .ref-season-grid article:last-child{border-right:0}
+.safari-page .ref-season-grid article:hover{background:rgba(255,255,255,.035)}
+.safari-page .ref-season-grid b{color:#ff806a;font-size:11px;letter-spacing:.02em}
+.safari-page .ref-season-grid h3{margin-top:10px;font-size:18px}
+.safari-page .ref-season-grid p{margin-top:11px;font-size:12px;line-height:1.7}
+.safari-page .ref-safari-place-grid .ref-place-copy>a{display:none!important}
+.safari-faq{background:var(--paper)!important}
+
+@media(max-width:700px){
+  .home-ref-moment-controls{gap:8px}
+  .home-ref-moment-controls>span{min-width:30px;font-size:10px}
+  .home-ref-moment-controls input[type="range"]{width:min(170px,calc(100vw - 170px))}
+  .enquiry-form .progress{display:flex;gap:7px;overflow-x:auto;scroll-snap-type:x proximity;padding:12px 12px 16px}
+  .enquiry-form .progress button{flex:0 0 96px;scroll-snap-align:start}
+  .enquiry-form .progress p{flex:0 0 100%;order:-1}
+  .plan-step-actions,.plan-final-actions{flex-wrap:wrap}
+  .plan-step-actions>span{order:-1;width:100%;text-align:center}
+  .plan-step-next{margin-left:auto}
+  .safari-page .ref-seasons{padding:76px 0 82px}
+  .safari-page .ref-seasons .ref-intro h2{font-size:36px}
+  .safari-page .ref-seasons .ref-intro p{font-size:14px}
+  .safari-page .ref-season-grid{grid-template-columns:1fr;margin-top:32px}
+  .safari-page .ref-season-grid article,.safari-page .ref-season-grid article:first-child{min-height:0;padding:22px 4px;border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}
+  .safari-page .ref-season-grid article:last-child{border-bottom:0}
+}

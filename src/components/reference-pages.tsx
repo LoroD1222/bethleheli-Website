@@ -53,7 +53,7 @@ function Intro({ eyebrow, title, copy }: { eyebrow: string; title: string; copy?
 function PlaceGrid({ eyebrow, title, copy, cards, id = "explore", variant }: { eyebrow: string; title: string; copy: string; cards: Card[]; id?: string; variant?: "kilimanjaro" | "zanzibar" | "safari" }) {
   return <section className="ref-section ref-places" id={id}><div className="shell"><Intro eyebrow={eyebrow} title={title} copy={copy} />
     <div className={`ref-place-grid ${variant === "kilimanjaro" ? "ref-route-grid" : variant === "zanzibar" ? "ref-zanzibar-place-grid" : variant === "safari" ? "ref-safari-place-grid" : ""}`}>{cards.map((card, index) => <article className="ref-place" key={card.title}>
-      <Photo src={card.image} alt={card.title} /><div className="ref-place-copy"><h3>{card.title}</h3>{variant === "kilimanjaro" && <div className="ref-route-tags"><span>{card.note}</span><span>{index === 0 ? "Hard" : index === 5 ? "Very hard" : "Moderate–hard"}</span></div>}<p>{card.copy}</p>{variant === "kilimanjaro" ? <div className="ref-route-action"><span>From [price] / person</span><Link href={card.href || "/plan-your-trip"}>View Route <Image src={image("figma-kili-route-arrow.svg")} alt="" width={18} height={18} /></Link></div> : <>{card.note && <small>{card.note}</small>}<Link href={card.href || "/plan-your-trip"}>Explore this journey <span aria-hidden="true">↗</span></Link></>}</div>
+      <Photo src={card.image} alt={card.title} /><div className="ref-place-copy"><h3>{card.title}</h3>{variant === "kilimanjaro" && <div className="ref-route-tags"><span>{card.note}</span><span>{index === 0 ? "Hard" : index === 5 ? "Very hard" : "Moderate–hard"}</span></div>}<p>{card.copy}</p>{variant === "kilimanjaro" ? <div className="ref-route-action"><span>From [price] / person</span><Link href={card.href || "/plan-your-trip"}>View Route <Image src={image("figma-kili-route-arrow.svg")} alt="" width={18} height={18} /></Link></div> : <>{card.note && <small>{card.note}</small>}{variant !== "safari" && <Link href={card.href || "/plan-your-trip"}>Explore this journey <span aria-hidden="true">↗</span></Link>}</>}</div>
     </article>)}</div>
   </div></section>;
 }
@@ -539,7 +539,7 @@ function HomeRouteExplorer() {
 
 function HomeMoments() {
   const scroller = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState(0);
+  const [activeMoment, setActiveMoment] = useState(0);
   const [hasOverflow, setHasOverflow] = useState(false);
   const moments = [
     ["figma-kili-routes-route-landscape.png", "Climbers crossing a snow-covered Kilimanjaro slope"],
@@ -549,19 +549,28 @@ function HomeMoments() {
     ["figma-kili-routes-route-landscape3.png", "Climbers crossing Kilimanjaro's green moorland"],
     ["figma-kili-why-image2.png", "Bathiel Expeditions climbing team"],
   ];
-  const move = (direction: number) => {
+  const showMoment = (index: number, behavior: ScrollBehavior = "smooth") => {
     const viewport = scroller.current;
     if (!viewport) return;
-    const next = Math.max(0, Math.min(viewport.scrollWidth - viewport.clientWidth, viewport.scrollLeft + direction * 253));
-    viewport.scrollTo({ left: next, behavior: "smooth" });
-    setPosition(next / Math.max(1, viewport.scrollWidth - viewport.clientWidth));
+    const cards = viewport.querySelectorAll<HTMLElement>("figure");
+    const nextIndex = Math.max(0, Math.min(moments.length - 1, index));
+    const card = cards[nextIndex];
+    if (!card) return;
+    setActiveMoment(nextIndex);
+    viewport.scrollTo({ left: card.offsetLeft - (viewport.clientWidth - card.offsetWidth) / 2, behavior });
   };
-  const seek = (percent: number) => {
+  const updateActiveMoment = () => {
     const viewport = scroller.current;
     if (!viewport) return;
-    const next = Math.max(0, Math.min(100, percent)) / 100;
-    setPosition(next);
-    viewport.scrollTo({ left: next * Math.max(0, viewport.scrollWidth - viewport.clientWidth), behavior: "auto" });
+    const center = viewport.scrollLeft + viewport.clientWidth / 2;
+    const cards = Array.from(viewport.querySelectorAll<HTMLElement>("figure"));
+    const nearest = cards.reduce((best, card, index) => {
+      const distance = Math.abs(card.offsetLeft + card.offsetWidth / 2 - center);
+      const bestCard = cards[best];
+      const bestDistance = Math.abs(bestCard.offsetLeft + bestCard.offsetWidth / 2 - center);
+      return distance < bestDistance ? index : best;
+    }, 0);
+    setActiveMoment(nearest);
   };
   useEffect(() => {
     const viewport = scroller.current;
@@ -569,7 +578,7 @@ function HomeMoments() {
     const updateOverflow = () => {
       const scrollable = viewport.scrollWidth - viewport.clientWidth > 4;
       setHasOverflow(scrollable);
-      if (!scrollable) setPosition(0);
+      if (!scrollable) setActiveMoment(0);
     };
     updateOverflow();
     const observer = new ResizeObserver(updateOverflow);
@@ -581,7 +590,8 @@ function HomeMoments() {
     };
   }, []);
 
-  return <section className="home-ref-moments" id="moments"><div className="shell"><Intro eyebrow="" title="Unforgettable Moments in the Heart of Mount Kilimanjaro" copy="Experience breathtaking sunrises, explore volcanic landscapes, and create memories at one of Africa’s most iconic destinations." /></div><div className="home-ref-moment-viewport" ref={scroller} onScroll={event => setPosition(event.currentTarget.scrollLeft / Math.max(1, event.currentTarget.scrollWidth - event.currentTarget.clientWidth))}><div className="home-ref-moment-images">{moments.map(([src, alt], index) => <figure key={src} className={index === 3 ? "featured" : ""}><Photo src={image(src)} alt={alt} />{index === 3 && <figcaption><span>Sea of Sand Exploration</span><b aria-hidden="true"><ArrowIcon /></b><small>Cross the vast volcanic desert by 4×4 jeep or on foot.</small></figcaption>}</figure>)}</div></div>{hasOverflow && <div className="home-ref-moment-controls" aria-label="Moments gallery controls"><button type="button" onClick={() => move(-1)} aria-label="Previous moments" disabled={position <= 0}>←</button><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Moments slider position" aria-valuetext={`${Math.round(position * 100)}% through the moments gallery`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${Math.max(12, position * 100)}%,rgba(255,255,255,.25) ${Math.max(12, position * 100)}% 100%)` }} /><button type="button" onClick={() => move(1)} aria-label="Next moments" disabled={position >= .99}>→</button></div>}</section>;
+  const progress = ((activeMoment + 1) / moments.length) * 100;
+  return <section className="home-ref-moments" id="moments"><div className="shell"><Intro eyebrow="" title="Unforgettable Moments in the Heart of Mount Kilimanjaro" copy="Experience breathtaking sunrises, explore volcanic landscapes, and create memories at one of Africa’s most iconic destinations." /></div><div className="home-ref-moment-viewport" ref={scroller} onScroll={updateActiveMoment}><div className="home-ref-moment-images">{moments.map(([src, alt], index) => <figure key={src} className={index === 3 ? "featured" : ""}><Photo src={image(src)} alt={alt} />{index === 3 && <figcaption><span>Alpine Desert Crossing</span><small>Cross Kilimanjaro’s vast volcanic alpine desert on foot.</small></figcaption>}</figure>)}</div></div>{hasOverflow && <div className="home-ref-moment-controls" aria-label="Moments gallery controls"><button type="button" onClick={() => showMoment(activeMoment - 1)} aria-label="Previous moment" disabled={activeMoment === 0}>←</button><input type="range" min="0" max={moments.length - 1} step="1" value={activeMoment} aria-label="Moments slider position" aria-valuetext={`Moment ${activeMoment + 1} of ${moments.length}`} onChange={event => showMoment(Number(event.target.value), "auto")} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.25) ${progress}% 100%)` }} /><span aria-live="polite">{activeMoment + 1} / {moments.length}</span><button type="button" onClick={() => showMoment(activeMoment + 1)} aria-label="Next moment" disabled={activeMoment === moments.length - 1}>→</button></div>}</section>;
 }
 
 export function HomeReferencePage() {

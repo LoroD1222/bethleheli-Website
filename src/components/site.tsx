@@ -372,6 +372,10 @@ function ChipSet({ options, selected, onSelect, figmaCheck = false, label }: { o
 
 function FormNotice({ text }: { text: string }) { return <p className="form-notice" aria-live="polite">{text}</p>; }
 
+function PlanStepActions({ step, total, onBack, onNext }: { step: number; total: number; onBack: () => void; onNext: () => void }) {
+  return <div className="plan-step-actions">{step > 0 && <button type="button" className="plan-step-back" onClick={onBack}>← Back</button>}<span>Step {step + 1} of {total}</span>{step < total - 1 && <button type="button" className="plan-step-next" onClick={onNext}>Continue <Arrow /></button>}</div>;
+}
+
 function PlanPage() {
   const [interest, setInterest] = useState("Combination");
   const [dateStyle, setDateStyle] = useState("My dates are flexible");
@@ -382,25 +386,10 @@ function PlanPage() {
   const [notice, setNotice] = useState("");
   const labels = ["Interests", "Dates", "Travellers", "Duration", "Style", "About you"];
 
-  useEffect(() => {
-    const updateStep = () => {
-      const line = window.innerHeight * .34;
-      let current = 0;
-      for (let index = 0; index < 6; index++) {
-        const step = document.getElementById(`plan-step-${index + 1}`);
-        if (step && step.getBoundingClientRect().top <= line) current = index;
-      }
-      setActiveStep(current);
-    };
-    updateStep();
-    window.addEventListener("scroll", updateStep, { passive: true });
-    window.addEventListener("resize", updateStep);
-    return () => { window.removeEventListener("scroll", updateStep); window.removeEventListener("resize", updateStep); };
-  }, []);
-
   const jumpTo = (index: number) => {
-    setActiveStep(index);
-    document.getElementById(`plan-step-${index + 1}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const next = Math.max(0, Math.min(labels.length - 1, index));
+    setActiveStep(next);
+    document.querySelector(".enquiry-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   async function submit(e: FormEvent<HTMLFormElement>) {
@@ -425,7 +414,7 @@ function PlanPage() {
     setSending(false);
   }
 
-  const stage = (index: number) => ({ id: `plan-step-${index + 1}`, onFocusCapture: () => setActiveStep(index) });
+  const stage = (index: number) => ({ id: `plan-step-${index + 1}`, hidden: activeStep !== index, "aria-hidden": activeStep !== index });
   const reassurance = [
     ["figma-plan-local-team.svg", "Local team", "Start with people based in Tanzania, and share the places you want to discover."],
     ["figma-plan-personal-support.svg", "Personal support", "Ask your questions in your own words. The planning conversation should feel human."],
@@ -436,13 +425,13 @@ function PlanPage() {
   return <><Hero eyebrow="A PERSONAL JOURNEY BEGINS HERE" title="Let’s Plan Your Tanzania Adventure" text="Tell us what you want to experience and our team will help you build the right trip." image={photos.plan} short><></></Hero><main className="plan-main"><div className="shell">
     <SectionIntro eyebrow="YOUR TRIP REQUEST" title="A Few Details. A World of Possibilities." text="You don’t need every answer yet. Share what you know, and leave the rest for a conversation." align="left" />
     <div className="plan-layout"><form className="enquiry-form" onSubmit={submit} noValidate>
-      <nav className="progress" aria-label="Trip request steps">{labels.map((label, index) => <button type="button" className={activeStep === index ? "active" : ""} aria-current={activeStep === index ? "step" : undefined} aria-controls={`plan-step-${index + 1}`} onClick={() => jumpTo(index)} key={label}><b>{index + 1}</b><span>{label}</span></button>)}<p>Six simple questions. We’ll help you figure out the rest.</p></nav>
-      <fieldset {...stage(0)}><legend><small>STEP 1 OF 6</small>What Would You Love to Experience?</legend><ChipSet options={["Kilimanjaro", "Safari", "Zanzibar", "Combination"]} selected={interest} onSelect={setInterest} figmaCheck label="What would you love to experience?" /></fieldset>
-      <fieldset {...stage(1)}><legend><small>STEP 2 OF 6</small>When Are You Thinking of Traveling?</legend><ChipSet options={["I have dates", "My dates are flexible"]} selected={dateStyle} onSelect={setDateStyle} figmaCheck label="Travel date flexibility" /><div className={`input-row plan-date-row ${dateStyle === "I have dates" ? "is-current" : ""}`}><label>Preferred arrival<input type="date" name="arrival" onInput={event => setArrival(event.currentTarget.value)} onChange={event => setArrival(event.currentTarget.value)} aria-label="Preferred arrival date" /></label><label>Preferred departure<input type="date" name="departure" min={arrival || undefined} aria-label="Preferred departure date" /></label></div><label className={`plan-flexible-field ${dateStyle === "My dates are flexible" ? "is-current" : ""}`}>Flexible timing<input type="text" name="timing" placeholder="A month, season or possible travel window" /></label></fieldset>
-      <fieldset {...stage(2)}><legend><small>STEP 3 OF 6</small>Who’s Coming Along?</legend><div className="input-row"><label>Number of adults<input type="number" min="1" name="adults" placeholder="Enter number" /></label><label>Number of children<input type="number" min="0" name="children" placeholder="Enter number or 0" /></label></div></fieldset>
-      <fieldset {...stage(3)}><legend><small>STEP 4 OF 6</small>How Much Time Do You Have?</legend><label>Number of days<input type="text" inputMode="numeric" name="days" placeholder="Your available days, or ‘not sure yet’" /></label></fieldset>
-      <fieldset {...stage(4)}><legend><small>STEP 5 OF 6</small>What’s Your Travel Style?</legend><ChipSet options={["Private", "Small Group", "Solo", "Flexible"]} selected={travelStyle} onSelect={setTravelStyle} figmaCheck label="Travel style" /></fieldset>
-      <fieldset {...stage(5)}><legend><small>STEP 6 OF 6</small>Anything Else We Should Know?</legend><label>Your ideas, questions or needs<textarea name="notes" placeholder="Interests, comfort preferences, children’s ages, access needs or anything that matters to you…" /></label><div className="input-row"><label>Name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label><label>Email *<input name="email" required type="email" autoComplete="email" placeholder="Your email address" /></label></div><div className="input-row"><label>WhatsApp (optional)<input name="whatsapp" type="tel" autoComplete="tel" placeholder="Include country code" /></label><label>Country<input name="country" autoComplete="country-name" placeholder="Your country of residence" /></label></div><small>We’ll use these details to respond to your trip enquiry. Please don’t include passport numbers or sensitive medical information.</small><button className="submit-button" disabled={sending}>{sending ? "Sending…" : "Send My Trip Request"} <Arrow /></button><p className="plan-payment-note">No payment is requested here.</p><FormNotice text={notice} /></fieldset>
+      <nav className="progress" aria-label="Trip request steps">{labels.map((label, index) => <button type="button" className={`${activeStep === index ? "active" : ""}${index < activeStep ? " complete" : ""}`} aria-current={activeStep === index ? "step" : undefined} aria-controls={`plan-step-${index + 1}`} onClick={() => jumpTo(index)} key={label}><b>{index < activeStep ? "✓" : index + 1}</b><span>{label}</span></button>)}<p aria-live="polite">Step {activeStep + 1} of 6 · {labels[activeStep]}</p></nav>
+      <fieldset {...stage(0)}><legend><small>STEP 1 OF 6</small>What Would You Love to Experience?</legend><ChipSet options={["Kilimanjaro", "Safari", "Zanzibar", "Combination"]} selected={interest} onSelect={setInterest} figmaCheck label="What would you love to experience?" /><PlanStepActions step={0} total={labels.length} onBack={() => jumpTo(0)} onNext={() => jumpTo(1)} /></fieldset>
+      <fieldset {...stage(1)}><legend><small>STEP 2 OF 6</small>When Are You Thinking of Traveling?</legend><ChipSet options={["I have dates", "My dates are flexible"]} selected={dateStyle} onSelect={setDateStyle} figmaCheck label="Travel date flexibility" /><div className={`input-row plan-date-row ${dateStyle === "I have dates" ? "is-current" : ""}`}><label>Preferred arrival<input type="date" name="arrival" onInput={event => setArrival(event.currentTarget.value)} onChange={event => setArrival(event.currentTarget.value)} aria-label="Preferred arrival date" /></label><label>Preferred departure<input type="date" name="departure" min={arrival || undefined} aria-label="Preferred departure date" /></label></div><label className={`plan-flexible-field ${dateStyle === "My dates are flexible" ? "is-current" : ""}`}>Flexible timing<input type="text" name="timing" placeholder="A month, season or possible travel window" /></label><PlanStepActions step={1} total={labels.length} onBack={() => jumpTo(0)} onNext={() => jumpTo(2)} /></fieldset>
+      <fieldset {...stage(2)}><legend><small>STEP 3 OF 6</small>Who’s Coming Along?</legend><div className="input-row"><label>Number of adults<input type="number" min="1" name="adults" placeholder="Enter number" /></label><label>Number of children<input type="number" min="0" name="children" placeholder="Enter number or 0" /></label></div><PlanStepActions step={2} total={labels.length} onBack={() => jumpTo(1)} onNext={() => jumpTo(3)} /></fieldset>
+      <fieldset {...stage(3)}><legend><small>STEP 4 OF 6</small>How Much Time Do You Have?</legend><label>Number of days<input type="text" inputMode="numeric" name="days" placeholder="Your available days, or ‘not sure yet’" /></label><PlanStepActions step={3} total={labels.length} onBack={() => jumpTo(2)} onNext={() => jumpTo(4)} /></fieldset>
+      <fieldset {...stage(4)}><legend><small>STEP 5 OF 6</small>What’s Your Travel Style?</legend><ChipSet options={["Private", "Small Group", "Solo", "Flexible"]} selected={travelStyle} onSelect={setTravelStyle} figmaCheck label="Travel style" /><PlanStepActions step={4} total={labels.length} onBack={() => jumpTo(3)} onNext={() => jumpTo(5)} /></fieldset>
+      <fieldset {...stage(5)}><legend><small>STEP 6 OF 6</small>Anything Else We Should Know?</legend><label>Your ideas, questions or needs<textarea name="notes" placeholder="Interests, comfort preferences, children’s ages, access needs or anything that matters to you…" /></label><div className="input-row"><label>Name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label><label>Email *<input name="email" required type="email" autoComplete="email" placeholder="Your email address" /></label></div><div className="input-row"><label>WhatsApp (optional)<input name="whatsapp" type="tel" autoComplete="tel" placeholder="Include country code" /></label><label>Country<input name="country" autoComplete="country-name" placeholder="Your country of residence" /></label></div><small>We’ll use these details to respond to your trip enquiry. Please don’t include passport numbers or sensitive medical information.</small><div className="plan-final-actions"><button type="button" className="plan-step-back" onClick={() => jumpTo(4)}>← Back</button><button className="submit-button" disabled={sending}>{sending ? "Sending…" : "Send My Trip Request"} <Arrow /></button></div><p className="plan-payment-note">No payment is requested here.</p><FormNotice text={notice} /></fieldset>
     </form><aside className="planning-aside"><Photo src={photos.climbers} alt="Kilimanjaro climbing group" /><p className="eyebrow">YOUR FIRST CONVERSATION</p><h2>Let’s Shape It Together</h2>{reassurance.map(([icon, title, copy]) => <div key={title}><div className="planning-aside-heading"><Image src={`/images/${icon}`} alt="" width={24} height={24} /><b>{title}</b></div><p>{copy}</p></div>)}<a className="whatsapp" href={whatsappHref} target="_blank" rel="noopener noreferrer">Prefer WhatsApp? <Arrow /></a><small>Chat with our team on WhatsApp at +{whatsappNumber}. Response timing will be confirmed by the team.</small></aside></div>
   </div></main><Footer /></>;
 }
