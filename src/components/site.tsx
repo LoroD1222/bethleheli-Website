@@ -253,8 +253,8 @@ function DestinationCards({ items = destinations }: { items?: { title: string; s
 }
 
 const reviews = [
-  { name:"Arpad B", date:"February 2026 • Friends", category:"Kilimanjaro", quote:"Amazing trip with amazing people", copy:"Very well organized, professional, helpful, dedicated team, ready to fulfill each request at any time with experienced and devoted guides.", tags:["Friends","Professional team","5-star review"], image:"/images/tripadvisor-review-arpad.jpg", avatar:"/images/tripadvisor-avatar-arpad.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r1050280462-Betheli_Expeditions-Arusha_Arusha_Region.html" },
-  { name:"Viktor", date:"January 2026 • Friends", category:"Tanzania Safari", quote:"Tanzania is a beautiful and amazing country!", copy:"Every minute of the safari was fantastic and impressive, we left satisfied and are already planning to return.…", tags:["Friends","Safari","Expert guide"], image:"/images/tripadvisor-review-viktor.jpg", avatar:"/images/tripadvisor-avatar-viktor.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r1047816995-Betheli_Expeditions-Arusha_Arusha_Region.html" },
+  { name:"Arpad B", date:"February 2026 • Friends", category:"Kilimanjaro", quote:"Amazing trip with amazing people", copy:"Very well organized, professional, helpful, dedicated team, ready to fulfill each request at any time with experienced and devoted guides.", tags:["Friends","Professional team","5-star review"], image:"/images/tripadvisor-review-arpad-summit.jpg", avatar:"/images/tripadvisor-avatar-arpad.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r1050280462-Betheli_Expeditions-Arusha_Arusha_Region.html" },
+  { name:"Viktor", date:"January 2026 • Friends", category:"Tanzania Safari", quote:"Tanzania is a beautiful and amazing country!", copy:"Every minute of the safari was fantastic and impressive, we left satisfied and are already planning to return.…", tags:["Friends","Safari","Expert guide"], image:"/images/tripadvisor-review-viktor-safari-group.jpg", avatar:"/images/tripadvisor-avatar-viktor.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r1047816995-Betheli_Expeditions-Arusha_Arusha_Region.html" },
   { name:"Kata", date:"January 2025 • Solo", category:"Marangu Route", quote:"Unforgettable Adventure with Betheli Expeditions", copy:"Our guides were incredible — they were experienced, knowledgeable, and made sure we were well taken care of every step.…", tags:["Solo traveler","Kilimanjaro","Marangu Route"], image:"/images/tripadvisor-review-kata.jpg", avatar:"/images/tripadvisor-avatar-kata.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r995364646-Betheli_Expeditions-Arusha_Arusha_Region.html" },
   { name:"Elena P", date:"January 2025 • Friends", category:"Mount Kilimanjaro", quote:"Beautiful experience on Mount Kilimanjaro", copy:"Unique and indescribable experience as beautiful as , we spent 5 days trekking on Mount Kilimanjaro and our guides…", tags:["Friends","5-day trek","Kilimanjaro"], image:"/images/tripadvisor-review-elena.jpg", avatar:"/images/tripadvisor-avatar-elena.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r994236487-Betheli_Expeditions-Arusha_Arusha_Region.html" },
   { name:"Daniela B", date:"October 2019 • Friends", category:"Machame Route", quote:"Kilimanjaro trekking Machame Route 7 days", copy:"Wonderful trekking and fantastic team. We met serious, kind and specialized people. They attended us on the trek.…", tags:["Friends","7-day trek","Machame Route"], image:"/images/tripadvisor-review-daniela.jpg", avatar:"/images/tripadvisor-avatar-daniela.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r718855459-Betheli_Expeditions-Arusha_Arusha_Region.html" },
@@ -267,7 +267,6 @@ export function Testimonials() {
   const [position, setPosition] = useState(0);
   const [activeReview, setActiveReview] = useState(0);
   const [hasOverflow, setHasOverflow] = useState(false);
-  const activeReviewRef = useRef(0);
   const updatePosition = () => {
     const viewport = scroller.current;
     if (!viewport) return;
@@ -281,7 +280,6 @@ export function Testimonials() {
       return Math.abs(card.offsetLeft - targetOffset) < Math.abs(closest.offsetLeft - targetOffset) ? index : closestIndex;
     }, 0);
     setPosition(nextPosition);
-    activeReviewRef.current = nextReview;
     setActiveReview(nextReview);
   };
   useEffect(() => {
@@ -293,7 +291,6 @@ export function Testimonials() {
       if (!scrollable) {
         setPosition(0);
         setActiveReview(0);
-        activeReviewRef.current = 0;
       }
     };
     updateOverflow();
@@ -329,22 +326,11 @@ export function Testimonials() {
     if (!viewport) return;
     const next = Math.max(0, Math.min(100, percent)) / 100;
     setPosition(next);
-    activeReviewRef.current = Math.round(next * (reviews.length - 1));
-    setActiveReview(activeReviewRef.current);
+    setActiveReview(Math.round(next * (reviews.length - 1)));
     viewport.scrollTo({ left: next * Math.max(0, viewport.scrollWidth - viewport.clientWidth), behavior: "smooth" });
   };
-  const showReview = (index: number) => {
-    const viewport = scroller.current;
-    if (!viewport) return;
-    const nextIndex = Math.max(0, Math.min(reviews.length - 1, index));
-    const card = viewport.querySelectorAll<HTMLElement>(".review-card")[nextIndex];
-    if (!card) return;
-    activeReviewRef.current = nextIndex;
-    setActiveReview(nextIndex);
-    card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
-  };
   const progress = 25 + position * 75;
-  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title="What our customers say" text="Real stories from travelers who climbed, explored, and relaxed with Betheli Expeditions." align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid" ref={scroller} onScroll={updatePosition}>{reviews.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt={`Traveler photo from ${review.name}'s review`} /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt={`${review.name}'s TripAdvisor profile picture`} /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><a href={review.url} target="_blank" rel="noopener noreferrer">Read full review on TripAdvisor</a></footer></div></article>)}</div>{hasOverflow && <div className="review-controls" aria-label="Review carousel controls"><button type="button" aria-label="Previous review" disabled={activeReview === 0} onClick={() => showReview(activeReview - 1)}>←</button><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Review slider position" aria-valuetext={`${activeReview + 1} of ${reviews.length} reviews`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.3) ${progress}% 100%)` }} /><div className="review-dots" role="group" aria-label="Choose a review">{reviews.map((review, index) => <button key={review.name} type="button" aria-label={`Show review ${index + 1}`} aria-current={activeReview === index ? "true" : undefined} onClick={() => showReview(index)} />)}</div><span className="review-count" aria-live="polite">{activeReview + 1} of {reviews.length}</span><button type="button" aria-label="Next review" disabled={activeReview === reviews.length - 1} onClick={() => showReview(activeReview + 1)}>→</button></div>}</div></section>;
+  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title="What our customers say" text="Real stories from travelers who climbed, explored, and relaxed with Betheli Expeditions." align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid" ref={scroller} onScroll={updatePosition}>{reviews.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt={`Traveler photo from ${review.name}'s review`} /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt={`${review.name}'s TripAdvisor profile picture`} /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><a href={review.url} target="_blank" rel="noopener noreferrer">Read full review on Trip Advisor</a></footer></div></article>)}</div>{hasOverflow && <div className="review-controls" aria-label="Review carousel controls"><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Review slider position" aria-valuetext={`${activeReview + 1} of ${reviews.length} reviews`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.16) ${progress}% 100%)` }} /><span className="review-count" aria-live="polite">{activeReview + 1} of {reviews.length} reviews</span></div>}</div></section>;
 }
 
 const commonFaqs = [
