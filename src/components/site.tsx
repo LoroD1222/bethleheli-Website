@@ -11,14 +11,14 @@ import { whatsappHref, whatsappNumber } from "@/lib/whatsapp";
 import { HomeFooter } from "@/components/home-footer";
 
 const navItems = [
-  ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"],
+  ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"], ["Trips", "/trips"],
   ["Group Climbs", "/groups"], ["Contact", "/contact"],
 ] as const;
 const navSubmenus: Record<string, readonly (readonly [string, string])[]> = {
   Kilimanjaro: [["Kilimanjaro overview", "/kilimanjaro"], ["Machame Route", "/kilimanjaro/machame-route"], ["Lemosho Route", "/kilimanjaro/lemosho-route"], ["Marangu Route", "/kilimanjaro/marangu-route"], ["Rongai Route", "/kilimanjaro/rongai-route"], ["Northern Circuit", "/kilimanjaro/northern-circuit"], ["Umbwe Route", "/kilimanjaro/umbwe-route"], ["Group climbs", "/groups"]],
 };
 const mobileNavItems = [
-  ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"],
+  ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"], ["Trips", "/trips"],
   ["Group Climbs", "/groups"], ["Contact", "/contact"],
 ] as const;
 
@@ -68,6 +68,7 @@ export function TripadvisorLogo({ light = false, compact = false }: { light?: bo
 function navigationItemIsCurrent(pathname: string, href: string) {
   if (href.includes("#")) return false;
   if (href === "/kilimanjaro") return pathname === href || pathname.startsWith("/kilimanjaro/");
+  if (href === "/trips") return pathname === href || pathname.startsWith("/trips/");
   return pathname === href;
 }
 
