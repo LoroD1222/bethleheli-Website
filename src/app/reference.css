@@ -399,7 +399,7 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .home-ref-select{min-height:700px;text-align:center;padding:90px 0 110px}
 .home-ref-select .ref-intro{margin:auto}
 .home-ref-select .ref-intro h2{font-size:47px;font-weight:500;line-height:1.1;letter-spacing:normal}
-.home-ref-select-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px;text-align:left}
+.home-ref-select-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;width:100%;max-width:900px;margin:48px auto 0;text-align:left}
 .home-ref-select-card{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:365px;overflow:hidden;border-radius:12px;color:#fff;background:#243138;transition:transform .2s ease,box-shadow .2s ease}
 .home-ref-select-card:hover,.home-ref-select-card:focus-visible{transform:translateY(-5px);box-shadow:0 14px 30px rgba(36,49,56,.22)}
 .home-ref-select-card:focus-visible{outline:3px solid #ea4729;outline-offset:3px}
@@ -539,7 +539,7 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .home-footer-bottom{display:flex;justify-content:space-between;padding-top:32px;font-size:10px}
 @media(max-width:900px){
   .home-ref-photo-strip{left:250px}.home-ref-style-grid{gap:10px}.home-ref-stats div{padding:0 14px}.home-ref-story>.shell{gap:30px}.home-ref-story-end a{display:none}
-  .home-ref-select-cards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:14px}.home-ref-select-card{flex:0 0 260px;scroll-snap-align:start}
+  .home-ref-select-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;padding-bottom:0}.home-ref-select-card{min-width:0}
   .home-ref-map{grid-template-columns:1fr;gap:42px}.home-ref-route-image{width:min(100%,592px);margin:auto}.home-ref-route-list{width:min(100%,592px);margin:auto}
   .home-ref-faq-tabs{flex-wrap:wrap;overflow-x:visible}.home-ref-faq-tabs>.button{margin-left:0}
 }
@@ -631,7 +631,7 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .testimonial-section{position:relative;overflow:hidden;padding:95px 0 105px}
 .testimonial-section:after{content:"";position:absolute;left:max(calc((100vw - 1204px)/2),24px);bottom:45px;width:320px;height:3px;border-radius:9px;background:linear-gradient(90deg,#fff 0 55%,rgba(255,255,255,.35) 55% 100%)}
 .testimonials-heading .section-intro h2{font-size:42px;letter-spacing:-.035em}
-.review-grid{display:flex;gap:22px;width:calc(100% + max(0px,(100vw - 1204px)/2));overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 20px 12px 0}
+.review-grid{display:flex;gap:22px;width:calc(100% + max(0px,(100vw - 1204px)/2));overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 20px 12px 0}
 .review-grid::-webkit-scrollbar{display:none}
 .review-card{flex:0 0 390px;min-height:675px;scroll-snap-align:start;border-radius:18px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
 .review-visual{height:212px;position:relative}
@@ -640,6 +640,7 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .review-copy{display:flex;flex-direction:column;min-height:463px;padding:20px}
 .review-person{display:flex;align-items:center;gap:12px}
 .review-person>img{width:52px;height:52px;border-radius:50%;object-fit:cover;flex:none}
+.review-avatar{display:grid;place-items:center;flex:none;width:52px;height:52px;border-radius:50%;background:#e8edef;color:#243138;font-family:Poppins,Arial,sans-serif;font-size:18px;font-weight:700}
 .review-person strong,.review-person small{display:block}
 .review-person strong{font-family:Inter,Arial,sans-serif;font-size:16px;line-height:1.3;margin-top:4px}
 .review-person small{color:#81888b;font-size:13px;margin-top:4px}
@@ -651,6 +652,7 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .review-tags span{padding:6px 10px;background:#eff2f4;border-radius:99px;font-size:11px;font-weight:600}
 .review-copy footer{display:flex;align-items:center;gap:10px;margin-top:18px;font-size:12px;font-weight:600;text-decoration:underline}
 .review-copy footer img{width:36px;height:36px;object-fit:contain;border-radius:50%}
+.review-copy footer a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .cta-banner{height:456px;min-height:456px;border-radius:28px}
 .cta-banner>div{background:linear-gradient(90deg,rgba(27,45,52,.88),rgba(27,45,52,.08) 57%,rgba(27,45,52,.74))}
 .cta-banner section{position:absolute;z-index:2;left:41px;top:106px;padding:0;width:340px;max-width:340px}
@@ -1819,17 +1821,18 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   .testimonials-heading .figma-review-stars{width:88px;height:auto}
   .testimonial-section .review-grid{width:100%;gap:14px;margin-top:30px;padding:0 20px 8px;scroll-padding-inline:20px;scroll-snap-type:x mandatory;overscroll-behavior-inline:contain}
   .testimonial-section .review-grid::after{flex-basis:6px}
-  .testimonial-section .review-card{flex:0 0 min(84vw,336px);min-height:0;overflow:hidden;scroll-snap-align:center;border-radius:16px}
-  .testimonial-section .review-visual,.testimonial-section .review-visual img{height:164px}
+  .testimonial-section .review-card{flex:0 0 min(74vw,284px);min-height:0;overflow:hidden;scroll-snap-align:center;border-radius:15px}
+  .testimonial-section .review-visual,.testimonial-section .review-visual img{height:132px}
   .testimonial-section .review-visual>span{left:13px;top:13px;padding:7px 10px;font-size:10px}
-  .testimonial-section .review-copy{min-height:0;padding:17px}
+  .testimonial-section .review-copy{min-height:0;padding:15px}
   .testimonial-section .review-person{gap:10px}
   .testimonial-section .review-person>img{width:44px;height:44px}
+  .testimonial-section .review-avatar{width:40px;height:40px;font-size:15px}
   .testimonial-section .review-person strong{font-size:14px;margin-top:2px}
   .testimonial-section .review-person small{font-size:10px;margin-top:2px}
   .testimonial-section .review-stars .figma-review-stars{width:76px;height:auto}
-  .testimonial-section .review-copy h3{margin-top:18px;font-size:16px;line-height:1.4}
-  .testimonial-section .review-copy>p{margin-top:12px;font-size:12px;line-height:1.65}
+  .testimonial-section .review-copy h3{margin-top:15px;font-size:15px;line-height:1.35}
+  .testimonial-section .review-copy>p{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:5;margin-top:10px;font-size:11.5px;line-height:1.55}
   .testimonial-section .review-tags{margin-top:14px;padding-top:0}
   .testimonial-section .review-tags span{padding:5px 8px;font-size:9px}
   .testimonial-section .review-copy footer{margin-top:14px;font-size:10px}
@@ -2275,4 +2278,26 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   .safari-page .ref-season-grid{grid-template-columns:1fr;margin-top:32px}
   .safari-page .ref-season-grid article,.safari-page .ref-season-grid article:first-child{min-height:0;padding:22px 4px;border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}
   .safari-page .ref-season-grid article:last-child{border-bottom:0}
+}
+
+/* Keep the testimonial cards on the original Figma rhythm while using live reviews. */
+.testimonial-section:after{display:none}
+.testimonial-section .review-visual>span:before{content:none}
+.testimonial-section .review-copy h3{display:-webkit-box;min-height:48px;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.testimonial-section .review-copy>p{display:-webkit-box;min-height:99px;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:4}
+.testimonial-section .review-controls{gap:12px;margin-top:28px}
+.testimonial-section .review-controls>button{width:32px;height:32px;border:0;border-radius:0;background:transparent;color:rgba(255,255,255,.82);font-size:18px;transform:none}
+.testimonial-section .review-controls>button:hover:not(:disabled),.testimonial-section .review-controls>button:focus-visible{border:0;background:transparent;color:#fff;transform:none}
+.testimonial-section .review-controls input[type="range"]{height:3px}
+.testimonial-section .review-controls input[type="range"]::-webkit-slider-thumb{width:20px;height:20px;border:0;background:transparent;box-shadow:none}
+.testimonial-section .review-controls input[type="range"]::-moz-range-thumb{width:20px;height:20px;border:0;background:transparent;box-shadow:none}
+.testimonial-section .review-count{display:none}
+
+@media(max-width:700px){
+  .testimonial-section .review-card{height:480px}
+  .testimonial-section .review-copy{height:348px;min-height:348px}
+  .testimonial-section .review-copy h3{min-height:41px;-webkit-line-clamp:2}
+  .testimonial-section .review-copy>p{min-height:72px;-webkit-line-clamp:4}
+  .testimonial-section .review-tags{margin-top:auto;padding-top:14px}
+  .testimonial-section .review-controls>button{width:34px;height:34px;border:0;background:transparent;font-size:18px}
 }

@@ -253,10 +253,13 @@ function DestinationCards({ items = destinations }: { items?: { title: string; s
 }
 
 const reviews = [
-  { name:"Sarah B.", date:"September 2026 • Solo traveler", category:"Lemosho Route", quote:"The Lemosho route felt like the perfect balance of scenery and acclimatization.", copy:"My guide, Ola, was professional, patient, and incredibly knowledgeable. The itinerary was well paced, the camp support was excellent, and the summit sunrise was unforgettable. I felt supported every step of the way.", tags:["7 days","Solo traveler","Summit reached"], image:"/images/safari-06.jpg", avatar:"/images/home-03.png" },
-  { name:"Daniel K.", date:"October 2026 • Family of four", category:"Family Safari", quote:"Our family safari was perfectly paced for kids and adults alike.", copy:"The vehicle was comfortable, the guide was excellent with our children, and the itinerary felt flexible when we needed extra time. We saw incredible wildlife, enjoyed beautiful camps, and left with memories we’ll share for years.", tags:["8 days","Family safari","Serengeti & Ngorongoro"], image:"/images/zanzibar-03.jpg", avatar:"/images/home-04.jpg" },
-  { name:"Maya R.", date:"November 2026 • Couple", category:"Zanzibar Extension", quote:"The Zanzibar extension was the perfect way to unwind after the climb.", copy:"The beach lodge was beautiful, the transfers were seamless, and the local recommendations were spot on. We loved the mix of relaxation, Stone Town exploration, and sunset sailing. It felt like a second vacation built right into the trip.", tags:["4 days","Couple","Zanzibar extension"], image:"/images/safari-07.jpg", avatar:"/images/home-15.jpg" },
-  { name:"James O.", date:"December 2026 • Private group", category:"Machame Route", quote:"The team handled every detail so we could focus on the climb.", copy:"Communication was clear from planning to departure, the crew was friendly and experienced, and the logistics were flawless. We appreciated the flexibility when weather changed and the reassurance when the group needed extra support.", tags:["6 days","Private group","Machame Route"], image:"/images/figma-home-gallery1.png", avatar:"/images/home-07.png" },
+  { name:"Arpad B", date:"February 2026 • Friends", category:"Kilimanjaro", quote:"Amazing trip with amazing people", copy:"Very well organized, professional, helpful, dedicated team, ready to fulfill each request at any time with experienced and devoted guides.", tags:["Friends","Professional team","5-star review"], image:"/images/tripadvisor-review-arpad.jpg", avatar:"/images/tripadvisor-avatar-arpad.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r1050280462-Betheli_Expeditions-Arusha_Arusha_Region.html" },
+  { name:"Viktor", date:"January 2026 • Friends", category:"Tanzania Safari", quote:"Tanzania is a beautiful and amazing country!", copy:"Every minute of the safari was fantastic and impressive, we left satisfied and are already planning to return. It was professionally organized, congratulations!…", tags:["Friends","Safari","Expert guide"], image:"/images/tripadvisor-review-viktor.jpg", avatar:"/images/tripadvisor-avatar-viktor.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r1047816995-Betheli_Expeditions-Arusha_Arusha_Region.html" },
+  { name:"Kata", date:"January 2025 • Solo", category:"Marangu Route", quote:"Unforgettable Adventure with Betheli Expeditions", copy:"Our guides were incredible — they were experienced, knowledgeable, and made sure we were well taken care of every step of the way.…", tags:["Solo traveler","Kilimanjaro","Marangu Route"], image:"/images/tripadvisor-review-kata.jpg", avatar:"/images/tripadvisor-avatar-kata.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r995364646-Betheli_Expeditions-Arusha_Arusha_Region.html" },
+  { name:"Elena P", date:"January 2025 • Friends", category:"Mount Kilimanjaro", quote:"Beautiful experience on Mount Kilimanjaro", copy:"Unique and indescribable experience as beautiful as , we spent 5 days trekking on Mount Kilimanjaro and our guides and all of them were unique.…", tags:["Friends","5-day trek","Kilimanjaro"], image:"/images/tripadvisor-review-elena.jpg", avatar:"/images/tripadvisor-avatar-elena.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r994236487-Betheli_Expeditions-Arusha_Arusha_Region.html" },
+  { name:"Daniela B", date:"October 2019 • Friends", category:"Machame Route", quote:"Kilimanjaro trekking Machame Route 7 days", copy:"Wonderful trekking and fantastic team. We met serious, kind and specialized people. They attended us on the trek making us feel at home.…", tags:["Friends","7-day trek","Machame Route"], image:"/images/tripadvisor-review-daniela.jpg", avatar:"/images/tripadvisor-avatar-daniela.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r718855459-Betheli_Expeditions-Arusha_Arusha_Region.html" },
+  { name:"Islastyle6", date:"June 2019 • Friends", category:"Mount Meru", quote:"Great trip with wonderful guides, chefs and porters!", copy:"Our trip up Mt. Meru with Richard, Paul, Kennedy and all the guides and porters was excellent. Betheli Expedition staff catered to our every need.…", tags:["Friends","Mount Meru","Group trek"], image:"/images/tripadvisor-review-islastyle.jpg", avatar:"/images/tripadvisor-avatar-islastyle.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r682066448-Betheli_Expeditions-Arusha_Arusha_Region.html" },
+  { name:"Ralph T", date:"March 2019 • Couples", category:"Mount Meru", quote:"A great trip to the top of Mount Meru", copy:"Betheli organised a fantastic trek up to the top of Mount Meru at short notice. We were supported on the trip by a fantastic team.…", tags:["Couples","Mount Meru","Summit trek"], image:"/images/tripadvisor-review-ralph.jpg", avatar:"/images/tripadvisor-avatar-ralph.jpg", url:"https://www.tripadvisor.com/ShowUserReviews-g297913-d16714059-r663221493-Betheli_Expeditions-Arusha_Arusha_Region.html" },
 ];
 
 export function Testimonials() {
@@ -270,13 +273,12 @@ export function Testimonials() {
     if (!viewport) return;
     const maxScroll = Math.max(1, viewport.scrollWidth - viewport.clientWidth);
     const nextPosition = viewport.scrollLeft / maxScroll;
-    const viewportCenter = viewport.scrollLeft + viewport.clientWidth / 2;
     const cards = Array.from(viewport.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child.classList.contains("review-card"));
-    const nextReview = cards.reduce((closestIndex, card, index) => {
+    const firstOffset = cards[0]?.offsetLeft ?? 0;
+    const targetOffset = viewport.scrollLeft + firstOffset;
+    const nextReview = viewport.scrollLeft >= maxScroll - 2 ? cards.length - 1 : cards.reduce((closestIndex, card, index) => {
       const closest = cards[closestIndex];
-      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-      const closestCenter = closest.offsetLeft + closest.offsetWidth / 2;
-      return Math.abs(cardCenter - viewportCenter) < Math.abs(closestCenter - viewportCenter) ? index : closestIndex;
+      return Math.abs(card.offsetLeft - targetOffset) < Math.abs(closest.offsetLeft - targetOffset) ? index : closestIndex;
     }, 0);
     setPosition(nextPosition);
     activeReviewRef.current = nextReview;
@@ -295,11 +297,30 @@ export function Testimonials() {
       }
     };
     updateOverflow();
+    viewport.scrollLeft = 0;
+    setPosition(0);
+    setActiveReview(0);
     const observer = new ResizeObserver(updateOverflow);
     observer.observe(viewport);
+    const onWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+      if (maxScroll <= 4) return;
+      const movingForward = event.deltaY > 0;
+      const canAdvance = movingForward ? viewport.scrollLeft < maxScroll - 2 : viewport.scrollLeft > 2;
+      event.preventDefault();
+      if (!canAdvance) {
+        const handoffDistance = Math.sign(event.deltaY) * Math.max(Math.abs(event.deltaY), 96);
+        window.scrollBy({ top: handoffDistance, behavior: "auto" });
+        return;
+      }
+      viewport.scrollBy({ left: event.deltaY, behavior: "auto" });
+    };
+    viewport.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("resize", updateOverflow);
     return () => {
       observer.disconnect();
+      viewport.removeEventListener("wheel", onWheel);
       window.removeEventListener("resize", updateOverflow);
     };
   }, []);
@@ -318,13 +339,12 @@ export function Testimonials() {
     const nextIndex = Math.max(0, Math.min(reviews.length - 1, index));
     const card = viewport.querySelectorAll<HTMLElement>(".review-card")[nextIndex];
     if (!card) return;
-    const left = card.offsetLeft - (viewport.clientWidth - card.offsetWidth) / 2;
     activeReviewRef.current = nextIndex;
     setActiveReview(nextIndex);
-    viewport.scrollTo({ left, behavior: "auto" });
+    card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
   };
   const progress = 25 + position * 75;
-  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title="What our customers say" text="Real stories from travelers who climbed, explored, and relaxed with Betheli Expeditions." align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid" ref={scroller} onScroll={updatePosition}>{reviews.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt="" /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt="" /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><span>Read full review on Trip Advisor</span></footer></div></article>)}</div>{hasOverflow && <div className="review-controls" aria-label="Review carousel controls"><button type="button" aria-label="Previous review" disabled={activeReview === 0} onClick={() => showReview(activeReview - 1)}>←</button><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Review slider position" aria-valuetext={`${activeReview + 1} of ${reviews.length} reviews`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.3) ${progress}% 100%)` }} /><div className="review-dots" role="group" aria-label="Choose a review">{reviews.map((review, index) => <button key={review.name} type="button" aria-label={`Show review ${index + 1}`} aria-current={activeReview === index ? "true" : undefined} onClick={() => showReview(index)} />)}</div><span className="review-count" aria-live="polite">{activeReview + 1} of {reviews.length}</span><button type="button" aria-label="Next review" disabled={activeReview === reviews.length - 1} onClick={() => showReview(activeReview + 1)}>→</button></div>}</div></section>;
+  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title="What our customers say" text="Real stories from travelers who climbed, explored, and relaxed with Betheli Expeditions." align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid" ref={scroller} onScroll={updatePosition}>{reviews.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt={`Traveler photo from ${review.name}'s review`} /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt={`${review.name}'s TripAdvisor profile picture`} /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><a href={review.url} target="_blank" rel="noopener noreferrer">Read full review on TripAdvisor</a></footer></div></article>)}</div>{hasOverflow && <div className="review-controls" aria-label="Review carousel controls"><button type="button" aria-label="Previous review" disabled={activeReview === 0} onClick={() => showReview(activeReview - 1)}>←</button><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Review slider position" aria-valuetext={`${activeReview + 1} of ${reviews.length} reviews`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.3) ${progress}% 100%)` }} /><div className="review-dots" role="group" aria-label="Choose a review">{reviews.map((review, index) => <button key={review.name} type="button" aria-label={`Show review ${index + 1}`} aria-current={activeReview === index ? "true" : undefined} onClick={() => showReview(index)} />)}</div><span className="review-count" aria-live="polite">{activeReview + 1} of {reviews.length}</span><button type="button" aria-label="Next review" disabled={activeReview === reviews.length - 1} onClick={() => showReview(activeReview + 1)}>→</button></div>}</div></section>;
 }
 
 const commonFaqs = [
