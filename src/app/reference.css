@@ -2283,7 +2283,7 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 /* Testimonial geometry measured from Figma node 312:2388. */
 .testimonial-section:after{display:none}
 .testimonial-section .review-grid{gap:22px;margin-top:42px;padding:0 20px 0 0;scroll-snap-type:x mandatory}
-.testimonial-section .review-card{flex:0 0 390px;height:675px;min-height:675px;overflow:hidden;border:1px solid rgba(0,0,0,.07);border-radius:20px;background:#fff;box-shadow:0 10px 24px -8px rgba(0,0,0,.07)}
+.testimonial-section .review-card{flex:0 0 390px;height:675px;min-height:675px;overflow:hidden;border:0;border-radius:20px;background:#fff;box-shadow:0 10px 24px -8px rgba(0,0,0,.07)}
 .testimonial-section .review-visual,.testimonial-section .review-visual img{height:212px}
 .testimonial-section .review-visual>span{left:16px;top:16px;padding:8px 12px;border-radius:999px;background:rgba(36,49,56,.85);font-family:Poppins,Arial,sans-serif;font-size:12px;font-weight:600}
 .testimonial-section .review-visual>span:before{content:none}
@@ -2295,7 +2295,7 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 .testimonial-section .review-person strong{margin:0;font-family:Poppins,Arial,sans-serif;font-size:16px;font-weight:700;line-height:1.5}
 .testimonial-section .review-person small{margin:0;font-family:Poppins,Arial,sans-serif;font-size:13px;font-weight:500;line-height:1.5}
 .testimonial-section .review-copy h3{display:-webkit-box;max-height:78px;min-height:0;margin:0;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:3;font-family:Poppins,Arial,sans-serif;font-size:18px;font-weight:700;line-height:1.45;letter-spacing:0}
-.testimonial-section .review-copy>p{display:-webkit-box;max-height:151px;min-height:0;margin:0;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:6;color:rgba(0,0,0,.7);font-family:Poppins,Arial,sans-serif;font-size:15px;font-weight:500;line-height:1.68}
+.testimonial-section .review-copy>p{display:-webkit-box;height:101px;max-height:101px;min-height:101px;margin:0;overflow:hidden;text-overflow:ellipsis;-webkit-box-orient:vertical;-webkit-line-clamp:4;color:rgba(0,0,0,.7);font-family:Poppins,Arial,sans-serif;font-size:15px;font-weight:500;line-height:1.68}
 .testimonial-section .review-tags{gap:8px;margin:0;padding:0}
 .testimonial-section .review-tags span{padding:6px 10px;background:#f0f4f8;font-family:Poppins,Arial,sans-serif;font-size:12px;font-weight:600}
 .testimonial-section .review-copy footer{gap:10px;margin:0;font-family:Poppins,Arial,sans-serif;font-size:14px;font-weight:600;line-height:1.5}
@@ -2312,7 +2312,7 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   .testimonial-section .review-visual,.testimonial-section .review-visual img{height:132px}
   .testimonial-section .review-copy{flex-basis:348px;gap:10px;height:348px;min-height:348px;padding:15px}
   .testimonial-section .review-copy h3{max-height:41px;-webkit-line-clamp:2;font-size:15px;line-height:1.35}
-  .testimonial-section .review-copy>p{max-height:72px;-webkit-line-clamp:4;font-size:11.5px;line-height:1.55}
+  .testimonial-section .review-copy>p{height:72px;max-height:72px;min-height:72px;-webkit-line-clamp:4;font-size:11.5px;line-height:1.55}
   .testimonial-section .review-tags{margin-top:auto}
   .testimonial-section .review-tags span{padding:5px 8px;font-size:9px}
   .testimonial-section .review-copy footer{font-size:10px}
