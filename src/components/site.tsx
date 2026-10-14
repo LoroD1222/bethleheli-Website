@@ -71,7 +71,7 @@ function navigationItemIsCurrent(pathname: string, href: string) {
   return pathname === href;
 }
 
-export function Header({ overlay = true }: { overlay?: boolean; active?: string; variant?: "destinations" | "classic" }) {
+export function Header({ overlay = true, variant }: { overlay?: boolean; active?: string; variant?: "destinations" | "classic" }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -125,7 +125,7 @@ export function Header({ overlay = true }: { overlay?: boolean; active?: string;
     };
   }, [open]);
 
-  return <><header className={`site-header ${overlay ? "site-header-overlay" : "site-header-solid"}`}>
+  return <><header className={`site-header ${overlay ? "site-header-overlay" : "site-header-solid"}${variant ? ` site-header-${variant}` : ""}`}>
     <div className="shell header-inner">
       <Logo />
       <button ref={toggleRef} type="button" className="menu-toggle" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(value => !value)}><span /><span /><span /></button>
@@ -477,7 +477,7 @@ function GroupsPage() {
   ] as const;
   const showOctoberDepartures = year === "2026" && month === "Oct";
 
-  return <><Header overlay={false} /><main className="groups-page shell"><header>
+  return <><Header overlay={false} variant="classic" /><main className="groups-page shell"><header>
     <h1>This is the best time to join Kilimanjaro climbing group!</h1>
     <div className="year-tabs" role="group" aria-label="Departure year">{["2026", "2027"].map(value => <button type="button" aria-pressed={year === value} onClick={() => setYear(value)} className={year === value ? "active" : ""} key={value}>{value}</button>)}</div>
     <div className="months" role="group" aria-label="Departure month">{months.map(value => <button type="button" aria-pressed={month === value} onClick={() => setMonth(value)} className={month === value ? "active" : ""} key={value}>{value === "Nov" ? "Nov ☔" : value}</button>)}</div>

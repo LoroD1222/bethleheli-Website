@@ -678,6 +678,22 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
   .cta-banner aside img{height:218px}
 }
 
+/* Keep standalone pages on the same header geometry as Figma reference heroes. */
+.site-header-classic .header-inner{height:80px;column-gap:20px}
+.site-header-classic .main-nav{flex:1 1 720px;justify-content:space-evenly;width:auto;max-width:min(720px,calc(100% - 360px));height:60px;gap:0;padding:10px 12px;overflow:visible}
+.site-header-classic .main-nav a{margin:0;padding:0;color:#fff;font-family:Poppins,Arial,sans-serif;font-size:11px;font-weight:500;line-height:20px;white-space:nowrap}
+.site-header-classic .main-nav a.active{margin:0;padding:10px 13px;border-radius:999px;background:#fff;color:#243138;font-weight:600}
+.site-header-classic .header-inner>.button{min-width:178px;min-height:52px;padding:6px 8px 6px 22px;gap:16px;font-size:14px}
+.site-header-classic .header-inner>.button .arrow{width:34px;height:34px}
+@media(min-width:901px) and (max-width:1200px){
+  .site-header-classic .header-inner{gap:16px}
+  .site-header-classic .main-nav{flex:1 1 auto;max-width:min(720px,calc(100% - 295px));padding:8px 10px}
+  .site-header-classic .main-nav a{font-size:clamp(9px,.85vw,11px)}
+  .site-header-classic .main-nav a.active{padding:9px}
+  .site-header-classic .header-inner>.button{min-width:140px;padding-left:16px;gap:10px;font-size:10px}
+}
+@media(max-width:900px){.site-header-classic .header-inner{height:86px}}
+
 /* Kilimanjaro route annotations: shared Figma geometry for every route page. */
 .route-overview>.shell,.route-benefits>.shell,.route-map>.shell,.route-itinerary>.shell,.route-environments>.shell,.route-fit>.shell,.route-faq>.shell{width:min(1204px,calc(100% - 96px));max-width:none}
 .route-overview{padding:112px 0 70px}
