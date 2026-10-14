@@ -489,17 +489,18 @@ function HomeFaq() {
   return <section className="home-ref-faq shell"><Intro eyebrow="" title="Frequently Asked Questions" copy="Whether you want to meet new people, travel privately with your people, or explore" /><div className="home-ref-faq-tabs" role="group" aria-label="FAQ categories">{categories.map(category => <button type="button" aria-pressed={tab === category} className={tab === category ? "active" : ""} onClick={() => setTab(category)} key={category}>{category}</button>)}<PrimaryLink>Start planning</PrimaryLink></div><Accordion key={tab} items={questions} openCount={0} /><Link className="home-ref-faq-more" href="/faq">View all questions <ArrowIcon /></Link></section>;
 }
 
-type TripCard = { title: string; src: string; href: string; location: "Kilimanjaro" | "Safari" | "Zanzibar"; days: number; price: string };
+type TripCategory = "Zanzibar" | "Safari" | "Kilimanjaro" | "Combo Safaris";
+type TripCard = { title: string; src: string; href: string; location: "Kilimanjaro" | "Safari" | "Zanzibar"; category: TripCategory; days: number; price: string };
 
 const tripCards: TripCard[] = [
-  { title: "Northern Serengeti River Crossing", src: "figma-trips-hero.png", href: "/trips/northern-serengeti", location: "Safari", days: 6, price: "$1,732" },
-  { title: "Family Safari & Beach Escape", src: "figma-zanzibar-hero.png", href: "/plan-your-trip", location: "Zanzibar", days: 8, price: "$2,286" },
-  { title: "Kilimanjaro Summit Journey", src: "figma-home-hero.png", href: "/kilimanjaro", location: "Kilimanjaro", days: 8, price: "$2,286" },
-  { title: "Serengeti Family Adventure", src: "home-15.jpg", href: "/safari", location: "Safari", days: 8, price: "$2,286" },
-  { title: "Summit, Safari & Coast", src: "figma-kili-group-trip-landscape3.png", href: "/plan-your-trip", location: "Kilimanjaro", days: 10, price: "$2,940" },
-  { title: "Zanzibar Culture & Coast", src: "figma-home-story-zanzibar.png", href: "/zanzibar", location: "Zanzibar", days: 6, price: "$1,732" },
-  { title: "Tarangire & Ngorongoro Safari", src: "figma-safari-destinations-destination-photograph2.png", href: "/safari", location: "Safari", days: 6, price: "$1,732" },
-  { title: "Lemosho Route & Zanzibar", src: "figma-kili-routes-route-landscape1.png", href: "/kilimanjaro/lemosho-route", location: "Kilimanjaro", days: 10, price: "$2,940" },
+  { title: "Northern Serengeti River Crossing", src: "figma-trips-hero.png", href: "/trips/northern-serengeti", location: "Safari", category: "Safari", days: 6, price: "$1,732" },
+  { title: "Family Safari & Beach Escape", src: "figma-zanzibar-hero.png", href: "/plan-your-trip", location: "Zanzibar", category: "Combo Safaris", days: 8, price: "$2,286" },
+  { title: "Kilimanjaro Summit Journey", src: "figma-home-hero.png", href: "/kilimanjaro", location: "Kilimanjaro", category: "Kilimanjaro", days: 8, price: "$2,286" },
+  { title: "Serengeti Family Adventure", src: "home-15.jpg", href: "/safari", location: "Safari", category: "Safari", days: 8, price: "$2,286" },
+  { title: "Summit, Safari & Coast", src: "figma-kili-group-trip-landscape3.png", href: "/plan-your-trip", location: "Kilimanjaro", category: "Combo Safaris", days: 10, price: "$2,940" },
+  { title: "Zanzibar Culture & Coast", src: "figma-home-story-zanzibar.png", href: "/zanzibar", location: "Zanzibar", category: "Zanzibar", days: 6, price: "$1,732" },
+  { title: "Tarangire & Ngorongoro Safari", src: "figma-safari-destinations-destination-photograph2.png", href: "/safari", location: "Safari", category: "Safari", days: 6, price: "$1,732" },
+  { title: "Lemosho Route & Zanzibar", src: "figma-kili-routes-route-landscape1.png", href: "/kilimanjaro/lemosho-route", location: "Kilimanjaro", category: "Combo Safaris", days: 10, price: "$2,940" },
 ];
 
 function TripCardList({ trips, grid = false }: { trips: TripCard[]; grid?: boolean }) {
@@ -748,12 +749,17 @@ function TripFaq() {
 }
 
 export function TripsReferencePage() {
-  const [location, setLocation] = useState("All locations");
   const [duration, setDuration] = useState("Any duration");
-  const visibleTrips = tripCards.filter((trip) => (location === "All locations" || trip.location === location) && (duration === "Any duration" || `${trip.days} days` === duration));
+  const visibleTrips = tripCards.filter((trip) => duration === "Any duration" || `${trip.days} days` === duration);
+  const groups: { title: TripCategory; id: string; copy: string }[] = [
+    { title: "Zanzibar", id: "zanzibar-trips", copy: "Island journeys shaped around beaches, Stone Town, culture and the Indian Ocean." },
+    { title: "Safari", id: "safari-trips", copy: "Wildlife-focused routes through Tanzania’s national parks and remarkable landscapes." },
+    { title: "Kilimanjaro", id: "kilimanjaro-trips", copy: "Mountain journeys with thoughtful pacing, local guides and routes matched to you." },
+    { title: "Combo Safaris", id: "combo-trips", copy: "Bring mountain, wildlife and coast together in one seamless Tanzanian adventure." },
+  ];
 
   return <><ReferenceHero imageSrc={image("figma-trips-hero.png")} eyebrow="TAILORED TANZANIA JOURNEYS" title="Trips across Tanzania" lead="Climb, safari and coast — shaped into one thoughtful journey." copy="Browse a selection of trip ideas, then talk with our local team to adapt the route, pace and stays around you." action="Start planning" secondAction="Explore trips" secondActionHref="#all-trips" active="Trips" navVariant="classic" />
-    <main className="trips-index-page"><section className="ref-section ref-dark trips-ref-listing" id="all-trips"><div className="shell"><div className="trips-ref-listing-head"><div><p className="eyebrow">FIND YOUR TANZANIA JOURNEY</p><h2>Kilimanjaro, Safari and Zanzibar.</h2><p>Choose a starting point. Every itinerary can be refined around your dates, interests and travel style.</p></div><div className="home-ref-adventure-filters"><select aria-label="Filter trips by location" value={location} onChange={event => setLocation(event.target.value)}>{["All locations","Kilimanjaro","Safari","Zanzibar"].map(item => <option key={item}>{item}</option>)}</select><select aria-label="Filter trips by duration" value={duration} onChange={event => setDuration(event.target.value)}><option>Any duration</option><option>6 days</option><option>8 days</option><option>10 days</option></select></div></div><TripCardList trips={visibleTrips} grid /></div></section>
+    <main className="trips-index-page"><section className="ref-section ref-dark trips-ref-listing" id="all-trips"><div className="shell"><div className="trips-ref-listing-head"><div><p className="eyebrow">FIND YOUR TANZANIA JOURNEY</p><h2>Kilimanjaro, Safari and Zanzibar.</h2><p>Choose a starting point. Every itinerary can be refined around your dates, interests and travel style.</p></div><div className="home-ref-adventure-filters"><select aria-label="Filter trips by duration" value={duration} onChange={event => setDuration(event.target.value)}><option>Any duration</option><option>6 days</option><option>8 days</option><option>10 days</option></select></div></div><nav className="trips-ref-category-nav" aria-label="Trip categories">{groups.map(group => <a href={`#${group.id}`} key={group.id}>{group.title}</a>)}</nav>{groups.map(group => { const cards = visibleTrips.filter(trip => trip.category === group.title); return <section className="trips-ref-category" id={group.id} key={group.id}><div className="trips-ref-category-heading"><div><span>{group.title}</span><h3>{group.title} trips</h3></div><p>{group.copy}</p></div>{cards.length ? <TripCardList trips={cards} grid /> : <p className="trips-ref-empty">No {duration.toLowerCase()} trips are listed in this category yet. Ask our team for a tailored option.</p>}</section>; })}</div></section>
       <CtaBanner title="Not sure which trip fits?" text="Tell us the places you are drawn to, your available time and who you are travelling with. We’ll help shape the route." image={image("figma-safari-why-image2.png")} />
     </main><Footer /></>;
 }

@@ -5,6 +5,7 @@ import { ScrollMotion } from "@/components/site";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://betheliexpeditions.com";
 
+// src/app/icon.png is the dedicated 32x32 symbol-only browser favicon.
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -12,7 +13,6 @@ export const metadata: Metadata = {
     template: "%s | Betheli Expeditions",
   },
   description: "Explore Kilimanjaro climbs, Tanzania safaris and Zanzibar journeys with Betheli Expeditions.",
-  icons: { icon: "/images/logo.png", apple: "/images/logo.png" },
   openGraph: {
     type: "website",
     locale: "en_US",

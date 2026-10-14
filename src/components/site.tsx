@@ -16,6 +16,7 @@ const navItems = [
 ] as const;
 const navSubmenus: Record<string, readonly (readonly [string, string])[]> = {
   Kilimanjaro: [["Kilimanjaro overview", "/kilimanjaro"], ["Machame Route", "/kilimanjaro/machame-route"], ["Lemosho Route", "/kilimanjaro/lemosho-route"], ["Marangu Route", "/kilimanjaro/marangu-route"], ["Rongai Route", "/kilimanjaro/rongai-route"], ["Northern Circuit", "/kilimanjaro/northern-circuit"], ["Umbwe Route", "/kilimanjaro/umbwe-route"], ["Group climbs", "/groups"]],
+  Trips: [["All trips", "/trips"], ["Zanzibar", "/trips#zanzibar-trips"], ["Safari", "/trips#safari-trips"], ["Kilimanjaro", "/trips#kilimanjaro-trips"], ["Combo safaris", "/trips#combo-trips"]],
 };
 const mobileNavItems = [
   ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"], ["Trips", "/trips"],
@@ -75,6 +76,7 @@ function navigationItemIsCurrent(pathname: string, href: string) {
 export function Header({ overlay = true, variant }: { overlay?: boolean; active?: string; variant?: "destinations" | "classic" }) {
   const [open, setOpen] = useState(false);
   const [routesOpen, setRoutesOpen] = useState(false);
+  const [tripsOpen, setTripsOpen] = useState(false);
   const pathname = usePathname();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -134,7 +136,8 @@ export function Header({ overlay = true, variant }: { overlay?: boolean; active?
       <nav id="main-nav" className="main-nav" aria-label="Main navigation">
         {items.map(([label, href]) => {
           const current = navigationItemIsCurrent(pathname, href);
-          if (label === "Kilimanjaro") return <div className={`nav-menu-item${current ? " active" : ""}`} key={label} onMouseLeave={() => setRoutesOpen(false)}><Link href={href} aria-current={current ? "page" : undefined}>{label}</Link><button type="button" aria-label="Show Kilimanjaro routes" aria-expanded={routesOpen} aria-controls="desktop-routes-menu" onClick={() => setRoutesOpen(value => !value)}><span aria-hidden="true">⌄</span></button><div className={`nav-submenu${routesOpen ? " open" : ""}`} id="desktop-routes-menu">{navSubmenus.Kilimanjaro.slice(0, -1).map(([routeLabel, routeHref]) => <Link key={routeHref} href={routeHref} aria-current={pathname === routeHref ? "page" : undefined} onClick={() => setRoutesOpen(false)}>{routeLabel}<ArrowIcon /></Link>)}</div></div>;
+          if (label === "Kilimanjaro") return <div className={`nav-menu-item${current ? " active" : ""}`} key={label}><Link href={href} aria-current={current ? "page" : undefined}>{label}</Link><button type="button" aria-label="Show Kilimanjaro routes" aria-expanded={routesOpen} aria-controls="desktop-routes-menu" onClick={() => setRoutesOpen(value => !value)}><span aria-hidden="true">⌄</span></button><div className={`nav-submenu${routesOpen ? " open" : ""}`} id="desktop-routes-menu">{navSubmenus.Kilimanjaro.slice(0, -1).map(([routeLabel, routeHref]) => <Link key={routeHref} href={routeHref} aria-current={pathname === routeHref ? "page" : undefined} onClick={() => setRoutesOpen(false)}>{routeLabel}<ArrowIcon /></Link>)}</div></div>;
+          if (label === "Trips") return <div className={`nav-menu-item${current ? " active" : ""}`} key={label}><Link href={href} aria-current={current ? "page" : undefined}>{label}</Link><button type="button" aria-label="Show trip categories" aria-expanded={tripsOpen} aria-controls="desktop-trips-menu" onClick={() => setTripsOpen(value => !value)}><span aria-hidden="true">⌄</span></button><div className={`nav-submenu nav-submenu-trips${tripsOpen ? " open" : ""}`} id="desktop-trips-menu">{navSubmenus.Trips.map(([tripLabel, tripHref]) => <Link key={tripHref} href={tripHref} onClick={() => setTripsOpen(false)}>{tripLabel}<ArrowIcon /></Link>)}</div></div>;
           return <Link key={href} href={href} aria-current={current ? "page" : undefined} className={current ? "active" : undefined}>{label}</Link>;
         })}
       </nav>
@@ -154,6 +157,10 @@ export function Header({ overlay = true, variant }: { overlay?: boolean; active?
       <details className="mobile-route-menu">
         <summary>Kilimanjaro routes <span aria-hidden="true">⌄</span></summary>
         <div>{navSubmenus.Kilimanjaro.slice(1, -1).map(([label, href]) => <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined} onClick={() => setOpen(false)}>{label}<ArrowIcon /></Link>)}</div>
+      </details>
+      <details className="mobile-route-menu mobile-trip-menu">
+        <summary>Trip categories <span aria-hidden="true">⌄</span></summary>
+        <div>{navSubmenus.Trips.slice(1).map(([label, href]) => <Link key={href} href={href} onClick={() => setOpen(false)}>{label}<ArrowIcon /></Link>)}</div>
       </details>
       <div className="mobile-menu-footer"><PrimaryLink href="/plan-your-trip" onClick={() => setOpen(false)}>Plan Your Trip</PrimaryLink><p>Your journey, your pace. Planned with a local team.</p></div>
     </div>
@@ -498,7 +505,7 @@ function GroupsPage() {
   </section><AdvisorCard /></main><Footer /></>;
 }
 
-function AdvisorCard() { return <section className="advisor-card"><Photo src={photos.guide} alt="Victoria, local trip advisor" /><div><header><h2>Victoria</h2><span>Online</span></header><p className="eyebrow">🇹🇿 BASED IN TANZANIA</p><h3>Want to plan a memorable Tanzanian adventure?</h3><p>Contact us. We are always here to help</p><div><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="button">◉ WhatsApp</a><Link href="/contact" className="button">✉ Send an enquiry</Link></div></div></section>; }
+function AdvisorCard() { return <section className="advisor-card"><div className="advisor-card-photo"><Photo src={photos.guide} alt="Victoria, local trip advisor" /><span><i aria-hidden="true" />Online now</span></div><div className="advisor-card-content"><header><div><p className="eyebrow">YOUR LOCAL TRIP ADVISOR</p><h2>Victoria</h2></div><span className="advisor-location"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12A7 7 0 1 0 5 9c0 5.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>Based in Tanzania</span></header><h3>Want to plan a memorable Tanzanian adventure?</h3><p>Share your dates and ideas with a local planner. Victoria will help you shape the right climb, safari, island stay or combination.</p><div className="advisor-actions"><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="button"><Image src="/images/figma-trips-quote-whatsapp.svg" alt="" width={22} height={22} />WhatsApp</a><Link href="/contact" className="button advisor-enquiry"><Image src="/images/figma-home-footer-mail.svg" alt="" width={20} height={20} />Send an enquiry</Link></div></div></section>; }
 
 export function SitePage({ page }: { page: PageKey }) {
   switch (page) {
