@@ -477,7 +477,7 @@ function GroupsPage() {
   ] as const;
   const showOctoberDepartures = year === "2026" && month === "Oct";
 
-  return <main className="groups-page shell"><header>
+  return <><Header overlay={false} /><main className="groups-page shell"><header>
     <h1>This is the best time to join Kilimanjaro climbing group!</h1>
     <div className="year-tabs" role="group" aria-label="Departure year">{["2026", "2027"].map(value => <button type="button" aria-pressed={year === value} onClick={() => setYear(value)} className={year === value ? "active" : ""} key={value}>{value}</button>)}</div>
     <div className="months" role="group" aria-label="Departure month">{months.map(value => <button type="button" aria-pressed={month === value} onClick={() => setMonth(value)} className={month === value ? "active" : ""} key={value}>{value === "Nov" ? "Nov ☔" : value}</button>)}</div>
@@ -485,7 +485,7 @@ function GroupsPage() {
   <section className="group-list" aria-live="polite" aria-label={`Departures for ${month} ${year}`}>
     {showOctoberDepartures ? trips.map(([date, title, range, highlights, price], index) => <article key={date}><time dateTime={`${year}-10-${date}`}><b>{date}</b><span>Oct</span></time><div className="group-title"><h2>{title}</h2><p>{range}</p>{index === 4 && <small>☔ Rain Season</small>}</div><ul>{highlights.map(x => <li key={x}>{x}</li>)}</ul><strong>{index === 4 && <del>$3072</del>}{price}{index === 4 && <em>10%</em>}</strong><div><Link className={index === 4 ? "join secondary" : "join"} href="/plan-your-trip">JOIN GROUP</Link><span>Deposit $100</span></div></article>) :
       <div className="group-empty"><h2>No published departures for {month} {year} yet.</h2><p>Ask our team about group dates or a private Kilimanjaro climb that fits your calendar.</p><Link className="join" href="/plan-your-trip">Ask about dates <Arrow /></Link></div>}
-  </section><AdvisorCard /></main>;
+  </section><AdvisorCard /></main><Footer /></>;
 }
 
 function AdvisorCard() { return <section className="advisor-card"><Photo src={photos.guide} alt="Victoria, local trip advisor" /><div><header><h2>Victoria</h2><span>Online</span></header><p className="eyebrow">🇹🇿 BASED IN TANZANIA</p><h3>Want to plan a memorable Tanzanian adventure?</h3><p>Contact us. We are always here to help</p><div><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="button">◉ WhatsApp</a><Link href="/contact" className="button">✉ Send an enquiry</Link></div></div></section>; }
