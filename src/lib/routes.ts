@@ -1,4 +1,4 @@
-export type PageKey = "home" | "kilimanjaro" | "machame" | "lemosho" | "marangu" | "rongai" | "northernCircuit" | "umbwe" | "safari" | "zanzibar" | "plan" | "contact" | "faq" | "trips" | "groups";
+export type PageKey = "home" | "kilimanjaro" | "machame" | "lemosho" | "marangu" | "rongai" | "northernCircuit" | "umbwe" | "safari" | "zanzibar" | "plan" | "contact" | "faq" | "trips" | "northernSerengeti" | "groups";
 
 type Meta = { title: string; description: string; path: string; image: string };
 
@@ -16,14 +16,15 @@ export const pageMeta: Record<PageKey, Meta> = {
   plan: { title: "Plan Your Tanzania Adventure", description: "Share your travel interests and begin planning a Tanzania journey.", path: "/plan-your-trip", image: "/images/figma-plan-hero.png" },
   contact: { title: "Contact Bathiel Expeditions", description: "Start a conversation with the Bathiel Expeditions team.", path: "/contact", image: "/images/figma-contact-hero.jpg" },
   faq: { title: "Tanzania Travel Questions", description: "Answers to common Kilimanjaro, safari, Zanzibar and booking questions.", path: "/faq", image: "/images/figma-faq-hero.jpg" },
-  trips: { title: "Northern Serengeti River Crossing Safari", description: "View a six-day Northern Serengeti River Crossing Safari itinerary.", path: "/trips", image: "/images/figma-trips-hero.png" },
+  trips: { title: "Tanzania Trips", description: "Explore thoughtfully designed Kilimanjaro, safari and Zanzibar journeys.", path: "/trips", image: "/images/figma-trips-hero.png" },
+  northernSerengeti: { title: "Northern Serengeti River Crossing Safari", description: "View a six-day Northern Serengeti River Crossing Safari itinerary.", path: "/trips/northern-serengeti", image: "/images/figma-trips-hero.png" },
   groups: { title: "Kilimanjaro Climbing Groups", description: "View upcoming Kilimanjaro climbing group departures.", path: "/groups", image: "/images/home-10.jpg" },
 };
 
 export function routeKeyFromSlug(slug?: string[]): PageKey | null {
   const path = `/${(slug || []).join("/")}`.replace(/\/$/, "") || "/";
   const routes: Record<string, PageKey> = {
-    "/": "home", "/kilimanjaro": "kilimanjaro", "/kilimanjaro/machame-route": "machame", "/kilimanjaro/lemosho-route": "lemosho", "/kilimanjaro/marangu-route": "marangu", "/kilimanjaro/rongai-route": "rongai", "/kilimanjaro/northern-circuit": "northernCircuit", "/kilimanjaro/umbwe-route": "umbwe", "/safari": "safari", "/zanzibar": "zanzibar", "/plan-your-trip": "plan", "/contact": "contact", "/faq": "faq", "/trips": "trips", "/groups": "groups",
+    "/": "home", "/kilimanjaro": "kilimanjaro", "/kilimanjaro/machame-route": "machame", "/kilimanjaro/lemosho-route": "lemosho", "/kilimanjaro/marangu-route": "marangu", "/kilimanjaro/rongai-route": "rongai", "/kilimanjaro/northern-circuit": "northernCircuit", "/kilimanjaro/umbwe-route": "umbwe", "/safari": "safari", "/zanzibar": "zanzibar", "/plan-your-trip": "plan", "/contact": "contact", "/faq": "faq", "/trips": "trips", "/trips/northern-serengeti": "northernSerengeti", "/groups": "groups",
   };
   return routes[path] || null;
 }

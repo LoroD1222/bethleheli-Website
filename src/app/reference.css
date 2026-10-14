@@ -637,7 +637,6 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .review-visual{height:212px;position:relative}
 .review-visual img{width:100%;height:212px;object-fit:cover}
 .review-visual>span{position:absolute;left:16px;top:16px;padding:8px 12px;background:#243138;color:#fff;border-radius:24px;font-size:12px;font-weight:600}
-.review-visual>span:before{content:"●";color:#ea4729;margin-right:8px}
 .review-copy{display:flex;flex-direction:column;min-height:463px;padding:20px}
 .review-person{display:flex;align-items:center;gap:12px}
 .review-person>img{width:52px;height:52px;border-radius:50%;object-fit:cover;flex:none}
@@ -676,6 +675,58 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
   .cta-banner h2{font-size:32px}
   .cta-banner aside{left:24px;right:auto;top:auto;bottom:24px;width:calc(100% - 48px);height:275px}
   .cta-banner aside img{height:218px}
+}
+
+/* Trips directory and the final navigation/content refinements requested in
+   the October design review. */
+.home-ref-adventure-filters select{
+  font-family:Poppins,Arial,sans-serif;
+  font-weight:500;
+  letter-spacing:0;
+}
+.home-ref-view-trips{display:inline-flex;align-items:center;gap:8px;margin-top:12px;color:#ff6a4f;font-size:12px;font-weight:600}
+.home-ref-view-trips .arrow-icon{width:15px;height:15px}
+
+.trips-ref-listing{padding:110px 0 120px;background:#243138}
+.trips-ref-listing-head{display:flex;align-items:end;justify-content:space-between;gap:40px;margin-bottom:44px}
+.trips-ref-listing-head>div:first-child{max-width:680px}
+.trips-ref-listing-head .eyebrow{color:#ff6247;font-size:12px;font-weight:700;letter-spacing:.1em}
+.trips-ref-listing-head h2{margin-top:12px;font-size:48px;font-weight:500;line-height:1.08;letter-spacing:-.035em}
+.trips-ref-listing-head>div:first-child>p:last-child{max-width:620px;margin-top:18px;color:rgba(255,255,255,.68);font-size:15px;line-height:1.7}
+.trips-ref-listing-head .home-ref-adventure-filters{display:flex;flex:none;gap:10px}
+.trips-ref-card-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;overflow:visible;padding:0}
+.trips-ref-card-grid>a{width:auto;min-width:0;height:440px}
+
+.ref-zanzibar-ocean>.ref-zanzibar-ocean-photo{object-position:center 48%;image-rendering:auto}
+.ref-zanzibar-ocean::after{background:linear-gradient(90deg,rgba(24,48,58,.8) 0%,rgba(25,58,69,.58) 56%,rgba(19,58,69,.48) 100%)}
+.safari-page .ref-why-grid>.shell{display:block}
+.safari-page .ref-why-grid .ref-intro{max-width:720px}
+.safari-page .ref-why-grid>.shell>img{display:block;width:100%;height:clamp(470px,49vw,590px);margin:34px 0 0;object-fit:cover;object-position:center 44%}
+
+@media(min-width:901px){
+  .site-header .main-nav>.nav-menu-item{display:flex;align-items:center;align-self:stretch;min-height:40px;border-radius:999px;transition:background-color .2s ease,transform .2s ease,box-shadow .2s ease}
+  .site-header .main-nav>.nav-menu-item>a{display:flex;align-items:center;align-self:stretch;margin:0!important;padding:10px 3px 10px 15px!important;background:transparent!important;color:#fff!important;font-family:Poppins,Arial,sans-serif;font-size:11px!important;font-weight:500;line-height:20px}
+  .site-header .main-nav>.nav-menu-item>button{display:grid;width:27px;height:40px;place-items:center;margin:0;padding:0;border-radius:0 999px 999px 0;color:#fff}
+  .site-header .main-nav>.nav-menu-item:hover,.site-header .main-nav>.nav-menu-item:focus-within{background:rgba(255,255,255,.2);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);transform:translateY(-1px)}
+  .site-header .main-nav>.nav-menu-item.active{background:#fff;box-shadow:0 7px 20px rgba(16,26,31,.14)}
+  .site-header .main-nav>.nav-menu-item.active>a,.site-header .main-nav>.nav-menu-item.active>button{color:#243138!important;font-weight:600}
+  .site-header .main-nav>.nav-menu-item>button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+}
+
+@media(max-width:1000px){
+  .trips-ref-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .trips-ref-listing-head{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:700px){
+  .home-ref-adventures>div:first-child>div:first-child{display:block}
+  .home-ref-view-trips{margin-top:10px}
+  .trips-ref-listing{padding:78px 0 86px}
+  .trips-ref-listing-head{gap:24px;margin-bottom:32px}
+  .trips-ref-listing-head h2{font-size:36px}
+  .trips-ref-listing-head .home-ref-adventure-filters{width:100%;flex-wrap:wrap}
+  .trips-ref-card-grid{grid-template-columns:1fr;gap:16px}
+  .trips-ref-card-grid>a{height:430px}
+  .safari-page .ref-why-grid>.shell>img{height:310px;object-position:center}
 }
 
 /* Keep standalone pages on the same header geometry as Figma reference heroes. */

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SitePage } from "@/components/site";
-import { HomeReferencePage, KilimanjaroReferencePage, KilimanjaroRouteDetailPage, SafariReferencePage, TripsReferencePage, ZanzibarReferencePage } from "@/components/reference-pages";
+import { HomeReferencePage, KilimanjaroReferencePage, KilimanjaroRouteDetailPage, SafariReferencePage, TripDetailReferencePage, TripsReferencePage, ZanzibarReferencePage } from "@/components/reference-pages";
 import { pageMeta, routeKeyFromSlug } from "@/lib/routes";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug?: string[] }> }): Promise<Metadata> {
@@ -34,6 +34,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
     case "safari": return <SafariReferencePage />;
     case "zanzibar": return <ZanzibarReferencePage />;
     case "trips": return <TripsReferencePage />;
+    case "northernSerengeti": return <TripDetailReferencePage />;
     default: return <SitePage page={key} />;
   }
 }

@@ -89,8 +89,7 @@ function SafariFaq() {
 
 function ZanzibarOceanActivities() {
   return <section className="ref-section ref-dark ref-zanzibar-ocean" aria-labelledby="zanzibar-activities-title">
-    <Photo className="ref-zanzibar-ocean-photo" src={image("figma-zanzibar-ocean-ocean-photograph.png")} alt="" sizes="100vw" />
-    <Photo className="ref-zanzibar-ocean-scrim" src={image("figma-zanzibar-ocean-scrim.png")} alt="" sizes="100vw" />
+    <Photo className="ref-zanzibar-ocean-photo" src={image("figma-zanzibar-ocean-ocean-photograph-hd.png")} alt="" sizes="100vw" />
     <div className="shell ref-zanzibar-ocean-content"><div><p className="eyebrow">CLASSIC ZANZIBAR ACTIVITIES</p><h2 id="zanzibar-activities-title">Explore Stone Town, spice farms and the ocean.</h2><p>Discover classic Zanzibar experiences: Stone Town walks, spice farm tours, sunset dhow sailing and snorkeling. These timeless activities offer a deeper look at the island’s culture, history and coastline.</p></div>
       <div className="ref-zanzibar-ocean-mini"><figure><Photo src={image("figma-zanzibar-ocean-rectangle.png")} alt="Sunset dhow sailing" /><figcaption>Sunset dhow sailing</figcaption></figure><figure><Photo src={image("figma-zanzibar-ocean-rectangle1.png")} alt="Stone Town street" /><figcaption>Stone Town exploration</figcaption></figure></div>
     </div>
@@ -490,13 +489,29 @@ function HomeFaq() {
   return <section className="home-ref-faq shell"><Intro eyebrow="" title="Frequently Asked Questions" copy="Whether you want to meet new people, travel privately with your people, or explore" /><div className="home-ref-faq-tabs" role="group" aria-label="FAQ categories">{categories.map(category => <button type="button" aria-pressed={tab === category} className={tab === category ? "active" : ""} onClick={() => setTab(category)} key={category}>{category}</button>)}<PrimaryLink>Start planning</PrimaryLink></div><Accordion key={tab} items={questions} openCount={0} /><Link className="home-ref-faq-more" href="/faq">View all questions <ArrowIcon /></Link></section>;
 }
 
+type TripCard = { title: string; src: string; href: string; location: "Kilimanjaro" | "Safari" | "Zanzibar"; days: number; price: string };
+
+const tripCards: TripCard[] = [
+  { title: "Northern Serengeti River Crossing", src: "figma-trips-hero.png", href: "/trips/northern-serengeti", location: "Safari", days: 6, price: "$1,732" },
+  { title: "Family Safari & Beach Escape", src: "figma-zanzibar-hero.png", href: "/plan-your-trip", location: "Zanzibar", days: 8, price: "$2,286" },
+  { title: "Kilimanjaro Summit Journey", src: "figma-home-hero.png", href: "/kilimanjaro", location: "Kilimanjaro", days: 8, price: "$2,286" },
+  { title: "Serengeti Family Adventure", src: "home-15.jpg", href: "/safari", location: "Safari", days: 8, price: "$2,286" },
+  { title: "Summit, Safari & Coast", src: "figma-kili-group-trip-landscape3.png", href: "/plan-your-trip", location: "Kilimanjaro", days: 10, price: "$2,940" },
+  { title: "Zanzibar Culture & Coast", src: "figma-home-story-zanzibar.png", href: "/zanzibar", location: "Zanzibar", days: 6, price: "$1,732" },
+  { title: "Tarangire & Ngorongoro Safari", src: "figma-safari-destinations-destination-photograph2.png", href: "/safari", location: "Safari", days: 6, price: "$1,732" },
+  { title: "Lemosho Route & Zanzibar", src: "figma-kili-routes-route-landscape1.png", href: "/kilimanjaro/lemosho-route", location: "Kilimanjaro", days: 10, price: "$2,940" },
+];
+
+function TripCardList({ trips, grid = false }: { trips: TripCard[]; grid?: boolean }) {
+  return <div className={`home-ref-adventure-cards${grid ? " trips-ref-card-grid" : ""}`}>{trips.map((trip) => <Link href={trip.href} key={trip.title}><Photo src={image(trip.src)} alt={trip.title} /><h3>{trip.title}</h3><small>{trip.days} DAYS</small><div className="home-ref-trip-bottom"><span className="home-ref-trip-price">starts from<br /><b>{trip.price}</b><br />per person</span><span className="home-ref-trip-link">View Trip</span></div></Link>)}</div>;
+}
+
 function HomeAdventures() {
   const [location, setLocation] = useState("All locations");
   const [price, setPrice] = useState("All prices");
   const [duration, setDuration] = useState("Any duration");
-  const trips = [["Family Safari & Beach Escape","figma-home-hero.png","/kilimanjaro","Kilimanjaro"],["Family Safari & Beach Escape","figma-zanzibar-hero.png","/zanzibar","Zanzibar"],["Family Safari & Beach Escape","figma-home-hero.png","/kilimanjaro","Kilimanjaro"],["Family Safari & Beach Escape","home-15.jpg","/safari","Safari"],["Family Safari & Beach Escape","home-01.jpg","/safari","Safari"]];
-  const visible = trips.filter((trip) => (location === "All locations" || trip[3] === location) && (price === "All prices" || price === "$2,286") && (duration === "Any duration" || duration === "8 days"));
-  return <div className="shell home-ref-adventures"><div><h2>Kilimanjaro, Safari and Zanzibar.</h2><div className="home-ref-adventure-filters"><select aria-label="Filter by location" value={location} onChange={e => setLocation(e.target.value)}>{["All locations","Kilimanjaro","Safari","Zanzibar"].map(x=><option key={x}>{x}</option>)}</select><select aria-label="Filter by price" value={price} onChange={e => setPrice(e.target.value)}><option>All prices</option><option>$2,286</option></select><select aria-label="Filter by duration" value={duration} onChange={e => setDuration(e.target.value)}><option>Any duration</option><option>8 days</option></select></div></div><div className="home-ref-adventure-cards">{visible.map(([title,src,href],i)=><Link href={href} key={`${src}-${i}`}><Photo src={image(src)} alt="" /><h3>{title}</h3><small>8 DAYS</small><div className="home-ref-trip-bottom"><span className="home-ref-trip-price">starts from<br /><b>$2,286</b><br />per person</span><span className="home-ref-trip-link">View Trip</span></div></Link>)}</div></div>;
+  const visible = tripCards.filter((trip) => (location === "All locations" || trip.location === location) && (price === "All prices" || trip.price === price) && (duration === "Any duration" || `${trip.days} days` === duration)).slice(0, 5);
+  return <div className="shell home-ref-adventures"><div><div><h2>Kilimanjaro, Safari and Zanzibar.</h2><Link className="home-ref-view-trips" href="/trips">View all trips <ArrowIcon /></Link></div><div className="home-ref-adventure-filters"><select aria-label="Filter by location" value={location} onChange={e => setLocation(e.target.value)}>{["All locations","Kilimanjaro","Safari","Zanzibar"].map(x=><option key={x}>{x}</option>)}</select><select aria-label="Filter by price" value={price} onChange={e => setPrice(e.target.value)}><option>All prices</option><option>$1,732</option><option>$2,286</option><option>$2,940</option></select><select aria-label="Filter by duration" value={duration} onChange={e => setDuration(e.target.value)}><option>Any duration</option><option>6 days</option><option>8 days</option><option>10 days</option></select></div></div><TripCardList trips={visible} /></div>;
 }
 
 function HomeAdventureSelector() {
@@ -607,7 +622,7 @@ export function HomeReferencePage() {
       <HomeMoments />
       <section className="home-ref-dark"><HomeRouteExplorer /><HomeAdventures /></section>
       <section className="home-ref-story"><div className="shell"><div className="home-ref-story-visual"><Photo src={image("figma-home-story-guide.png")} alt="Local guide with travellers in Tanzania" /><div className="home-ref-story-overlay"><Photo src={image("figma-home-story-climber.png")} alt="Climber above the clouds at sunset" /><Image className="home-ref-story-overlay-arrow" src={image("figma-kili-group-button-arrow.svg")} alt="" width={40} height={40} /><span>Betheli Expeditions is a proud Tanzanian owned tour operator company.</span><Image className="home-ref-story-brand" src={image("figma-home-story-brand.png")} alt="" width={133} height={86} /></div></div><div><h2>Your Trusted Guide to the Heart of Africa</h2><p>Betheli Expeditions is a proud Tanzanian-owned tour operator company, rooted in the ancient and revered Maasai tribe, known for our unwavering passion and deep reverence for wildlife. With over a decade of invaluable experience in the East African tourism industry, covering captivating destinations like Tanzania, Zanzibar, Kenya, Uganda, and Rwanda, we have embarked on a thrilling and challenging journey as the proprietors of Betheli Expeditions.</p><div className="home-ref-story-end"><strong>94%<small>of our travelers<br />reach the summit</small></strong><Link href="/zanzibar"><Photo src={image("figma-home-story-zanzibar.png")} alt="Zanzibar beach" /><Image src={image("figma-home-story-card-arrow.svg")} alt="" width={31} height={31} />Zanzibar island</Link><Link href="/safari"><Photo src={image("figma-home-story-wildlife.png")} alt="Cheetahs in Tanzania" /><Image src={image("figma-home-story-card-arrow.svg")} alt="" width={31} height={31} />Wildlife safari</Link></div></div></div></section>
-      <section className="home-ref-team shell" id="team"><Intro eyebrow="" title="Meet the team" copy="Whether you want to meet new people, travel privately with your people, or explore" /><div>{[1,2,3].map(i=><article key={i}><Photo src={image(`figma-home-team${i}.png`)} alt="Bathiel Expeditions team member" /><h3>Jacqueline Laizer</h3><p>Co-Founder of Betheli Expeditions</p></article>)}</div></section>
+      <section className="home-ref-team shell" id="team"><Intro eyebrow="" title="Meet the team" copy="Whether you want to meet new people, travel privately with your people, or explore" /><div>{["Jacqueline Laizer","Emmanuel Laizer","Clara Encinas"].map((name,i)=><article key={name}><Photo src={image(`figma-home-team${i+1}.png`)} alt={name} /><h3>{name}</h3><p>Co-Founder of Betheli Expeditions</p></article>)}</div></section>
       <div id="reviews"><Testimonials /></div><CtaBanner title="Ready to Climb Kilimanjaro?" image={image("figma-kili-group-trip-landscape3.png")} />
       <HomeFaq /></main><HomeFooter /></>;
 }
@@ -733,6 +748,17 @@ function TripFaq() {
 }
 
 export function TripsReferencePage() {
+  const [location, setLocation] = useState("All locations");
+  const [duration, setDuration] = useState("Any duration");
+  const visibleTrips = tripCards.filter((trip) => (location === "All locations" || trip.location === location) && (duration === "Any duration" || `${trip.days} days` === duration));
+
+  return <><ReferenceHero imageSrc={image("figma-trips-hero.png")} eyebrow="TAILORED TANZANIA JOURNEYS" title="Trips across Tanzania" lead="Climb, safari and coast — shaped into one thoughtful journey." copy="Browse a selection of trip ideas, then talk with our local team to adapt the route, pace and stays around you." action="Start planning" secondAction="Explore trips" secondActionHref="#all-trips" active="Trips" navVariant="classic" />
+    <main className="trips-index-page"><section className="ref-section ref-dark trips-ref-listing" id="all-trips"><div className="shell"><div className="trips-ref-listing-head"><div><p className="eyebrow">FIND YOUR TANZANIA JOURNEY</p><h2>Kilimanjaro, Safari and Zanzibar.</h2><p>Choose a starting point. Every itinerary can be refined around your dates, interests and travel style.</p></div><div className="home-ref-adventure-filters"><select aria-label="Filter trips by location" value={location} onChange={event => setLocation(event.target.value)}>{["All locations","Kilimanjaro","Safari","Zanzibar"].map(item => <option key={item}>{item}</option>)}</select><select aria-label="Filter trips by duration" value={duration} onChange={event => setDuration(event.target.value)}><option>Any duration</option><option>6 days</option><option>8 days</option><option>10 days</option></select></div></div><TripCardList trips={visibleTrips} grid /></div></section>
+      <CtaBanner title="Not sure which trip fits?" text="Tell us the places you are drawn to, your available time and who you are travelling with. We’ll help shape the route." image={image("figma-safari-why-image2.png")} />
+    </main><Footer /></>;
+}
+
+export function TripDetailReferencePage() {
   const [openDays, setOpenDays] = useState<Set<number>>(() => new Set([0]));
   const days = [
     { title: "Arrival", copy: "The group arrives at Kilimanjaro International Airport (JRO). A Betheli Expeditions representative meets you and transfers you to your hotel in Arusha.", image: "figma-safari-destinations-destination-photograph4.png", alt: "Giraffes near Mount Meru outside Arusha", experience: "Settle in, meet your travel team and take time to rest after your flight. Your guide will confirm the following morning’s departure, luggage arrangements and the rhythm of the safari ahead.", mealPlan: "Half Board", signature: "Ngare Sero Mountain Lodge 4*", premium: "Elewana Arusha Coffee Lodge 5*" },

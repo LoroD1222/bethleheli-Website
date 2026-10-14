@@ -12,14 +12,14 @@ import { HomeFooter } from "@/components/home-footer";
 
 const navItems = [
   ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"],
-  ["Group Climbs", "/groups"], ["About", "/#team"], ["Contact", "/contact"],
+  ["Group Climbs", "/groups"], ["Contact", "/contact"],
 ] as const;
 const navSubmenus: Record<string, readonly (readonly [string, string])[]> = {
   Kilimanjaro: [["Kilimanjaro overview", "/kilimanjaro"], ["Machame Route", "/kilimanjaro/machame-route"], ["Lemosho Route", "/kilimanjaro/lemosho-route"], ["Marangu Route", "/kilimanjaro/marangu-route"], ["Rongai Route", "/kilimanjaro/rongai-route"], ["Northern Circuit", "/kilimanjaro/northern-circuit"], ["Umbwe Route", "/kilimanjaro/umbwe-route"], ["Group climbs", "/groups"]],
 };
 const mobileNavItems = [
   ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"],
-  ["Group Climbs", "/groups"], ["About", "/#team"], ["Contact", "/contact"],
+  ["Group Climbs", "/groups"], ["Contact", "/contact"],
 ] as const;
 
 const photos = {
@@ -73,6 +73,7 @@ function navigationItemIsCurrent(pathname: string, href: string) {
 
 export function Header({ overlay = true, variant }: { overlay?: boolean; active?: string; variant?: "destinations" | "classic" }) {
   const [open, setOpen] = useState(false);
+  const [routesOpen, setRoutesOpen] = useState(false);
   const pathname = usePathname();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -132,6 +133,7 @@ export function Header({ overlay = true, variant }: { overlay?: boolean; active?
       <nav id="main-nav" className="main-nav" aria-label="Main navigation">
         {items.map(([label, href]) => {
           const current = navigationItemIsCurrent(pathname, href);
+          if (label === "Kilimanjaro") return <div className={`nav-menu-item${current ? " active" : ""}`} key={label} onMouseLeave={() => setRoutesOpen(false)}><Link href={href} aria-current={current ? "page" : undefined}>{label}</Link><button type="button" aria-label="Show Kilimanjaro routes" aria-expanded={routesOpen} aria-controls="desktop-routes-menu" onClick={() => setRoutesOpen(value => !value)}><span aria-hidden="true">⌄</span></button><div className={`nav-submenu${routesOpen ? " open" : ""}`} id="desktop-routes-menu">{navSubmenus.Kilimanjaro.slice(0, -1).map(([routeLabel, routeHref]) => <Link key={routeHref} href={routeHref} aria-current={pathname === routeHref ? "page" : undefined} onClick={() => setRoutesOpen(false)}>{routeLabel}<ArrowIcon /></Link>)}</div></div>;
           return <Link key={href} href={href} aria-current={current ? "page" : undefined} className={current ? "active" : undefined}>{label}</Link>;
         })}
       </nav>
