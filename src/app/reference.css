@@ -127,6 +127,40 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .accommodation-tier-luxury{background:#b7791f}
 .accommodation-tier-midrange{background:#2f6b62}
 .accommodation-tier-budget{background:#667178}
+.accommodation-browser{display:grid;grid-template-columns:minmax(260px,.75fr) minmax(0,1.25fr);gap:56px;align-items:start;margin-top:46px}
+.accommodation-browser-copy{min-width:0}
+.accommodation-tier-tabs{display:grid;gap:10px}
+.accommodation-tier-tabs>button{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:66px;padding:12px 14px;border:1px solid rgba(36,49,56,.14);border-radius:14px;background:#fff;color:#243138;cursor:pointer;text-align:left;transition:border-color .2s ease,background-color .2s ease,transform .2s ease,box-shadow .2s ease}
+.accommodation-tier-tabs>button:hover,.accommodation-tier-tabs>button:focus-visible{border-color:rgba(234,71,41,.58);background:#fff8f5;transform:translateX(3px)}
+.accommodation-tier-tabs>button:focus-visible{outline:2px solid #ea4729;outline-offset:2px}
+.accommodation-tier-tabs>button.active{border-color:#ea4729;box-shadow:0 9px 24px rgba(36,49,56,.1)}
+.accommodation-tier-tabs>button small{color:#667178;font-size:12px;font-weight:600}
+.accommodation-browser-copy>p{margin:24px 0 10px;color:#243138;font:500 15px/1.75 Poppins,Arial,sans-serif}
+.accommodation-browser-copy>small{display:block;color:#667178;font:400 12px/1.65 Poppins,Arial,sans-serif}
+.accommodation-stage{min-width:0}
+.accommodation-stage figure{position:relative;overflow:hidden;margin:0;border-radius:20px;background:#dfe5e7;box-shadow:0 18px 42px rgba(20,33,40,.12)}
+.accommodation-stage figure>img{display:block;width:100%;height:452px;object-fit:cover;animation:accommodation-photo-in .42s ease both}
+@keyframes accommodation-photo-in{from{opacity:.35;transform:scale(1.025)}to{opacity:1;transform:scale(1)}}
+.accommodation-stage-meta{position:absolute;z-index:2;right:18px;bottom:18px;left:18px;display:flex;align-items:center;gap:10px;min-width:0;padding:9px 11px;border:1px solid rgba(255,255,255,.3);border-radius:14px;background:rgba(20,33,40,.82);color:#fff;backdrop-filter:blur(10px)}
+.accommodation-stage-meta strong{min-width:0;overflow:hidden;font-size:14px;text-overflow:ellipsis;white-space:nowrap}
+.accommodation-arrow{position:absolute;z-index:3;top:50%;display:grid;place-items:center;width:44px;height:44px;border:1px solid rgba(255,255,255,.65);border-radius:50%;background:rgba(255,255,255,.94);box-shadow:0 8px 20px rgba(20,33,40,.2);color:#243138;cursor:pointer;font-size:20px;transform:translateY(-50%);transition:color .2s ease,background-color .2s ease,transform .2s ease}
+.accommodation-arrow:hover,.accommodation-arrow:focus-visible{background:#ea4729;color:#fff;transform:translateY(-50%) scale(1.07)}
+.accommodation-arrow:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.accommodation-arrow-prev{left:16px}.accommodation-arrow-next{right:16px}
+.accommodation-progress{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;margin-top:15px;color:#667178;font-size:11px;font-weight:600}
+.accommodation-progress>span{color:#243138;font-size:13px;font-variant-numeric:tabular-nums}
+.accommodation-progress>div{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+.accommodation-progress>div button{height:5px;padding:0;border:0;border-radius:99px;background:#d5dcdf;cursor:pointer;transition:background-color .2s ease,transform .2s ease}
+.accommodation-progress>div button:hover,.accommodation-progress>div button:focus-visible{background:#f29a89;transform:scaleY(1.7)}
+.accommodation-progress>div button.active{background:#ea4729}
+.accommodation-progress>small{white-space:nowrap}
+.accommodation-browser-compact{grid-template-columns:minmax(235px,.8fr) minmax(0,1.2fr);gap:24px;margin:8px 0 38px}
+.accommodation-browser-compact .accommodation-tier-tabs>button{min-height:52px;padding:8px 10px}
+.accommodation-browser-compact .accommodation-browser-copy>p{margin:16px 0 7px;font-size:13px;line-height:1.6}
+.accommodation-browser-compact .accommodation-browser-copy>small{font-size:11px}
+.accommodation-browser-compact .accommodation-stage figure>img{height:300px}
+.accommodation-browser-compact .accommodation-stage-meta{right:12px;bottom:12px;left:12px}
+.accommodation-browser-compact .accommodation-arrow{width:38px;height:38px}
 .ref-thumbs{display:flex;gap:10px;margin-top:12px}
 .ref-thumbs img{width:70px;height:55px;border-radius:5px;object-fit:cover}
 .ref-seasons{position:relative;overflow:hidden;background:#243138;color:#fff}
@@ -2551,4 +2585,30 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   .trip-ref-map-modal{padding:14px}
   .trip-ref-map-modal-panel{width:100%;height:min(84vh,760px);padding:10px;border-radius:16px}
   .trip-ref-map-close{top:18px;right:18px}
+}
+
+@media(max-width:900px){
+  .accommodation-browser,.accommodation-browser-compact{grid-template-columns:1fr;gap:28px}
+  .accommodation-tier-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .accommodation-tier-tabs>button{flex-direction:column;align-items:flex-start;justify-content:center;gap:7px;min-height:76px}
+}
+
+@media(max-width:650px){
+  .accommodation-browser{margin-top:28px}
+  .accommodation-browser,.accommodation-browser-compact{gap:22px}
+  .accommodation-tier-tabs{grid-template-columns:1fr}
+  .accommodation-tier-tabs>button{flex-direction:row;align-items:center;justify-content:space-between;min-height:54px}
+  .accommodation-stage figure>img,.accommodation-browser-compact .accommodation-stage figure>img{height:286px}
+  .accommodation-stage-meta{right:10px;bottom:10px;left:10px}
+  .accommodation-stage-meta strong{font-size:12px}
+  .accommodation-arrow{width:38px;height:38px}
+  .accommodation-arrow-prev{left:10px}
+  .accommodation-arrow-next{right:10px}
+  .accommodation-progress{grid-template-columns:auto 1fr;gap:10px}
+  .accommodation-progress>small{grid-column:1/-1;text-align:right}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .accommodation-stage figure>img{animation:none}
+  .accommodation-tier-tabs>button,.accommodation-arrow,.accommodation-progress>div button{transition:none}
 }
