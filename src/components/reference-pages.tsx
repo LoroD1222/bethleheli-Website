@@ -316,8 +316,8 @@ const kilimanjaroRoutes: Card[] = [
 const relatedTrips: Card[] = [
   ["6-Day Machame Route", "Machame • Hard", "6 DAYS", 0, "/kilimanjaro/machame-route"],
   ["7-Day Machame Route", "Machame • Hard", "7 DAYS", 1, "/kilimanjaro/machame-route"],
-  ["7-Day Lemosho Route", "Lemosho • Moderate–hard", "7 DAYS", 2, "/plan-your-trip"],
-  ["8-Day Lemosho Route", "Lemosho • Moderate–hard", "8 DAYS", 3, "/plan-your-trip"],
+  ["7-Day Lemosho Route", "Lemosho • Moderate–hard", "7 DAYS", 2, "/kilimanjaro/lemosho-route"],
+  ["8-Day Lemosho Route", "Lemosho • Moderate–hard", "8 DAYS", 3, "/kilimanjaro/lemosho-route"],
 ].map(([title, copy, note, n, href]) => ({
   title: title as string,
   copy: copy as string,
