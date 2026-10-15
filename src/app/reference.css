@@ -509,8 +509,8 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .home-ref-select .ref-intro{max-width:1205px;margin:auto}
 .home-ref-select .ref-intro h2{font-size:47px;font-weight:500;line-height:1.1;letter-spacing:normal}
 .home-ref-select .ref-intro p{max-width:733px;margin:14px auto 0;font-size:17px;line-height:1.7}
-.home-ref-select-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;width:min(810px,100%);margin:48px auto 0;text-align:left}
-.home-ref-select-card{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:330px;overflow:hidden;border-radius:12px;color:#fff;background:#243138;transition:transform .28s ease,box-shadow .28s ease}
+.home-ref-select-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;width:100%;max-width:900px;margin:48px auto 0;text-align:left}
+.home-ref-select-card{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:365px;overflow:hidden;border-radius:12px;color:#fff;background:#243138;transition:transform .28s ease,box-shadow .28s ease}
 .home-ref-select-card:hover,.home-ref-select-card:focus-visible{transform:translateY(-7px);box-shadow:0 20px 42px rgba(36,49,56,.26)}
 .home-ref-select-card:focus-visible{outline:3px solid #ea4729;outline-offset:3px}
 .home-ref-select-card:after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(180deg,rgba(20,36,42,.04) 18%,rgba(20,36,42,.86) 100%)}
@@ -2386,18 +2386,12 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 .plan-final-actions{justify-content:space-between}
 .plan-final-actions .submit-button{min-height:56px;margin:0}
 
-.safari-page .ref-seasons{padding:104px 0 112px;background:#24363f!important}
-.safari-page .ref-seasons .ref-intro{max-width:720px}
-.safari-page .ref-seasons .ref-intro h2{margin-top:12px;font-size:48px;line-height:1.1}
-.safari-page .ref-seasons .ref-intro p{max-width:650px;margin-top:18px;font-size:16px;line-height:1.75}
-.safari-page .ref-season-grid{gap:0;margin-top:48px;border-top:1px solid rgba(255,255,255,.3)}
-.safari-page .ref-season-grid article{min-height:176px;padding:26px 24px 20px;border-right:1px solid rgba(255,255,255,.2);transition:background-color .2s ease}
+.safari-page .ref-seasons{min-height:0;padding:96px 0;background:#24363f!important}
+.safari-page .ref-seasons .ref-intro{max-width:700px}
+.safari-page .ref-season-grid{gap:0;margin-top:44px;border-top:2px solid rgba(255,255,255,.3)}
+.safari-page .ref-season-grid article{min-height:160px;padding:28px 22px;border-right:1px solid rgba(255,255,255,.22)}
 .safari-page .ref-season-grid article:first-child{padding-left:0}
 .safari-page .ref-season-grid article:last-child{border-right:0}
-.safari-page .ref-season-grid article:hover{background:rgba(255,255,255,.035)}
-.safari-page .ref-season-grid b{color:#ff806a;font-size:11px;letter-spacing:.02em}
-.safari-page .ref-season-grid h3{margin-top:10px;font-size:18px}
-.safari-page .ref-season-grid p{margin-top:11px;font-size:12px;line-height:1.7}
 .safari-page .ref-safari-place-grid .ref-place-copy>a{display:none!important}
 .safari-faq{background:var(--paper)!important}
 
