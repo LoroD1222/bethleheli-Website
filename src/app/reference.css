@@ -91,6 +91,11 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .ref-image-card-copy p{margin-top:10px;min-height:45px;color:rgba(255,255,255,.94);font-size:11px;line-height:1.5}
 .ref-image-card-copy>span{display:flex;align-items:center;justify-content:space-between;margin-top:12px;border-radius:30px;background:white;color:#243138;padding:5px 6px 5px 11px;font-size:10px;font-weight:700}
 .ref-image-card-copy b{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#ea4729;color:#fff;font-size:13px}
+.ref-image-card-copy>span{transition:background-color .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease}
+.ref-image-card-copy>span b{transition:transform .2s ease,background-color .2s ease}
+.ref-image-card:hover .ref-image-card-copy>span,.ref-image-card:focus-visible .ref-image-card-copy>span{background:#ea4729;color:#fff;box-shadow:0 8px 20px rgba(234,71,41,.3);transform:translateY(-2px)}
+.ref-image-card:hover .ref-image-card-copy>span b,.ref-image-card:focus-visible .ref-image-card-copy>span b{background:#fff;color:#ea4729;transform:translate(2px,-2px)}
+.ref-image-card:active .ref-image-card-copy>span{transform:translateY(0) scale(.985)}
 .ref-dark-story{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:70px;min-height:580px}
 .ref-dark-story.reversed>img{grid-column:1;grid-row:1}
 .ref-dark-story.reversed>div{grid-column:2;grid-row:1}
@@ -1975,10 +1980,20 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 .ref-zanzibar-place-grid .ref-place-copy>a{display:none}
 
 /* Keep the itinerary reference panel visible while the desktop day list scrolls. */
-.trip-ref-itinerary-sticky>.trip-ref-map-hint{display:flex;align-items:center;gap:9px;margin-bottom:15px;color:rgba(0,0,0,.6);font-family:Inter,Arial,sans-serif;font-size:20px;font-weight:600;line-height:28px}
-.trip-ref-itinerary-sticky>img{display:block;width:100%;height:620px;border:1px solid #e3e6e6;border-radius:20px;object-fit:cover}
+.trip-ref-map-button{display:block;width:100%;border:0;padding:0;background:transparent;color:inherit;cursor:zoom-in;text-align:left}
+.trip-ref-map-button>img{display:block;width:100%;height:620px;border:1px solid #e3e6e6;border-radius:20px;object-fit:cover;transition:transform .22s ease,box-shadow .22s ease}
+.trip-ref-map-button>.trip-ref-map-hint{display:flex;align-items:center;justify-content:flex-end;gap:9px;margin-top:12px;color:rgba(0,0,0,.6);font-family:Inter,Arial,sans-serif;font-size:15px;font-weight:600;line-height:24px;transition:color .2s ease}
+.trip-ref-map-button:hover>img,.trip-ref-map-button:focus-visible>img{box-shadow:0 14px 32px rgba(36,49,56,.16);transform:translateY(-2px)}
+.trip-ref-map-button:hover>.trip-ref-map-hint,.trip-ref-map-button:focus-visible>.trip-ref-map-hint{color:#ea4729}
+.trip-ref-map-button:focus-visible{outline:3px solid #ea4729;outline-offset:5px;border-radius:20px}
 .trip-ref-itinerary-sticky>h3{margin-top:20px;font-size:20px}
 .trip-ref-itinerary-sticky>ul{font-size:16px;line-height:1.75}
+.trip-ref-map-modal{position:fixed;z-index:1000;inset:0;display:grid;place-items:center;padding:30px}
+.trip-ref-map-backdrop{position:absolute;inset:0;width:100%;height:100%;border:0;background:rgba(13,22,27,.82);cursor:zoom-out}
+.trip-ref-map-modal-panel{position:relative;z-index:1;width:min(900px,92vw);height:min(86vh,900px);padding:18px;border-radius:22px;background:#fff;box-shadow:0 28px 80px rgba(0,0,0,.4)}
+.trip-ref-map-modal-panel>img{width:100%;height:100%;border-radius:14px;object-fit:contain}
+.trip-ref-map-close{position:absolute;z-index:2;top:28px;right:28px;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:#243138;color:#fff;cursor:pointer;font-size:30px;line-height:1;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.trip-ref-map-close:hover,.trip-ref-map-close:focus-visible{background:#ea4729}
 @media(min-width:901px){
   .trip-ref-itinerary aside{align-self:stretch;min-width:0}
   .trip-ref-itinerary-sticky{position:sticky;top:112px;max-height:min(760px,calc(100vh - 132px));overflow:auto;overscroll-behavior:contain;padding:0 8px 10px 0;scrollbar-width:thin;scrollbar-color:rgba(36,49,56,.3) transparent}
@@ -2004,7 +2019,7 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 @media(max-width:900px){
   .ref-hero .header-inner{height:86px;margin-top:0}
   .ref-hero .logo{width:118px;height:52px}
-  .trip-ref-itinerary-sticky>img{height:450px;object-fit:contain}
+  .trip-ref-map-button>img{height:450px;object-fit:contain}
 }
 @media(max-width:700px){
   .ref-actions .button,.ref-actions .ghost-button{min-height:52px;padding-left:18px;font-size:13px}
@@ -2019,7 +2034,7 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   .ref-zanzibar-place-grid .ref-place h3{font-size:22px}
   .ref-zanzibar-place-grid .ref-place p{font-size:14px}
   .ref-zanzibar-place-grid .ref-place small{font-size:12px}
-  .trip-ref-itinerary-sticky>img{height:400px}
+  .trip-ref-map-button>img{height:400px}
   .ref-zanzibar-faq>.shell{width:calc(100% - 40px)}
   .ref-zanzibar-faq .accordion summary{min-height:68px;padding:18px 20px;font-size:15px}
   .ref-zanzibar-faq .accordion details p{padding:0 20px 20px;font-size:14px}
@@ -2305,12 +2320,12 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 
 /* Testimonial geometry measured from Figma node 312:2388. */
 .testimonial-section:after{display:none}
-.testimonial-section .review-grid{gap:22px;margin-top:42px;padding:0 20px 0 0;scroll-snap-type:x mandatory}
-.testimonial-section .review-card{flex:0 0 390px;height:675px;min-height:675px;overflow:hidden;border:0;border-radius:20px;background:#fff;box-shadow:0 10px 24px -8px rgba(0,0,0,.07)}
+.testimonial-section .review-grid{align-items:flex-start;gap:22px;margin-top:42px;padding:0 20px 0 0;scroll-snap-type:x mandatory}
+.testimonial-section .review-card{flex:0 0 390px;height:660px;min-height:660px;overflow:hidden;border:0;border-radius:20px;background:#fff;box-shadow:0 10px 24px -8px rgba(0,0,0,.07)}
 .testimonial-section .review-visual,.testimonial-section .review-visual img{height:212px}
 .testimonial-section .review-visual>span{left:16px;top:16px;padding:8px 12px;border-radius:999px;background:rgba(36,49,56,.85);font-family:Poppins,Arial,sans-serif;font-size:12px;font-weight:600}
 .testimonial-section .review-visual>span:before{content:none}
-.testimonial-section .review-copy{display:flex;flex:0 0 463px;gap:18px;height:463px;min-height:463px;padding:20px}
+.testimonial-section .review-copy{display:flex;gap:18px;height:448px;min-height:448px;padding:20px}
 .testimonial-section .review-person{gap:12px}
 .testimonial-section .review-person>div{display:flex;flex:1;min-width:0;flex-direction:column;gap:1px}
 .testimonial-section .review-person>img{width:52px;height:52px}
@@ -2318,8 +2333,8 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 .testimonial-section .review-person strong{margin:0;font-family:Poppins,Arial,sans-serif;font-size:16px;font-weight:700;line-height:1.5}
 .testimonial-section .review-person small{margin:0;font-family:Poppins,Arial,sans-serif;font-size:13px;font-weight:500;line-height:1.5}
 .testimonial-section .review-copy h3{display:-webkit-box;max-height:78px;min-height:0;margin:0;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:3;font-family:Poppins,Arial,sans-serif;font-size:18px;font-weight:700;line-height:1.45;letter-spacing:0}
-.testimonial-section .review-copy>p{display:-webkit-box;height:101px;max-height:101px;min-height:101px;margin:0;overflow:hidden;text-overflow:ellipsis;-webkit-box-orient:vertical;-webkit-line-clamp:4;color:rgba(0,0,0,.7);font-family:Poppins,Arial,sans-serif;font-size:15px;font-weight:500;line-height:1.68}
-.testimonial-section .review-tags{gap:8px;margin:0;padding:0}
+.testimonial-section .review-copy>p{display:-webkit-box;height:auto;max-height:calc(6 * 1.68em);min-height:0;margin:0;overflow:hidden;text-overflow:ellipsis;-webkit-box-orient:vertical;-webkit-line-clamp:6;line-clamp:6;color:rgba(0,0,0,.7);font-family:Poppins,Arial,sans-serif;font-size:15px;font-weight:500;line-height:1.68}
+.testimonial-section .review-tags{gap:8px;margin:auto 0 0;padding:0}
 .testimonial-section .review-tags span{padding:6px 10px;background:#f0f4f8;font-family:Poppins,Arial,sans-serif;font-size:12px;font-weight:600}
 .testimonial-section .review-copy footer{gap:10px;margin:0;font-family:Poppins,Arial,sans-serif;font-size:14px;font-weight:600;line-height:1.5}
 .testimonial-section .review-copy footer img{width:36px;height:36px}
@@ -2331,11 +2346,11 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 
 @media(max-width:700px){
   .testimonial-section .review-grid{gap:14px;margin-top:30px;padding:0 20px 8px}
-  .testimonial-section .review-card{flex-basis:min(74vw,284px);height:480px;min-height:480px;border-radius:15px}
+  .testimonial-section .review-card{flex-basis:min(74vw,284px);height:500px;min-height:500px;border-radius:15px}
   .testimonial-section .review-visual,.testimonial-section .review-visual img{height:132px}
-  .testimonial-section .review-copy{flex-basis:348px;gap:10px;height:348px;min-height:348px;padding:15px}
+  .testimonial-section .review-copy{gap:10px;height:368px;min-height:368px;padding:15px}
   .testimonial-section .review-copy h3{max-height:41px;-webkit-line-clamp:2;font-size:15px;line-height:1.35}
-  .testimonial-section .review-copy>p{height:72px;max-height:72px;min-height:72px;-webkit-line-clamp:4;font-size:11.5px;line-height:1.55}
+  .testimonial-section .review-copy>p{height:auto;max-height:calc(6 * 1.55em);min-height:0;-webkit-line-clamp:6;line-clamp:6;font-size:11.5px;line-height:1.55}
   .testimonial-section .review-tags{margin-top:auto}
   .testimonial-section .review-tags span{padding:5px 8px;font-size:9px}
   .testimonial-section .review-copy footer{font-size:10px}
@@ -2394,4 +2409,15 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   .group-schedule{padding-top:70px;padding-bottom:72px}
   .group-schedule>header h2{font-size:34px}
   .group-advisor-wrap{padding:58px 0 72px}
+}
+
+/* Keep the moments pagination below the staggered image row at every size. */
+.home-ref-moments{height:700px}
+.home-ref-moment-controls{bottom:26px}
+@media(max-width:700px){
+  .home-ref-moments{height:620px}
+  .home-ref-moment-controls{bottom:18px}
+  .trip-ref-map-modal{padding:14px}
+  .trip-ref-map-modal-panel{width:100%;height:min(84vh,760px);padding:10px;border-radius:16px}
+  .trip-ref-map-close{top:18px;right:18px}
 }
