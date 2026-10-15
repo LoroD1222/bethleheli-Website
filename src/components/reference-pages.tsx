@@ -22,9 +22,57 @@ import {
 
 type Card = { title: string; copy: string; note?: string; image: string; href?: string };
 type AccommodationTier = "Luxury" | "Mid-range" | "Budget";
-type StayOption = { name: string; text: string; property: string; tier: AccommodationTier; photo: string };
 type TripStayOption = { property: string; tier: AccommodationTier; image: string; alt: string };
+type StayOption = { name: string; text: string; property: string; tier: AccommodationTier; photo: string; slides: TripStayOption[] };
 const image = (name: string) => `/images/${name}`;
+const galleryStay = (property: string, tier: AccommodationTier, source: string): TripStayOption => ({ property, tier, image: `accommodations/gallery/${source}`, alt: `${property} ${tier.toLowerCase()} accommodation` });
+
+const safariStayChoices: StayOption[] = [
+  { name: "Classic safari camp", text: "A warm tented camp with an immersive bush setting and an easygoing safari atmosphere.", property: "Karibu River Camp", tier: "Mid-range", photo: "accommodations/karibu-river-camp.jpg", slides: [
+    galleryStay("Karibu River Camp", "Mid-range", "mainland/Midrange/karibu_camps/01_karibu_river_camp_serengeti.jpg"), galleryStay("Karibu River Camp", "Mid-range", "mainland/Midrange/karibu_camps/02_karibu_river_camp_serengeti.jpg"),
+    galleryStay("Lake Masek Tented Lodge", "Mid-range", "mainland/Midrange/lake_masek_tented_lodge/01_lake_masek_tented_lodge.jpg"), galleryStay("Lake Masek Tented Lodge", "Mid-range", "mainland/Midrange/lake_masek_tented_lodge/02_lake_masek_tented_lodge.jpg"),
+    galleryStay("Mara Mara Tented Camp", "Luxury", "mainland/Luxury/mara_mara_tented_camp/01_mara_mara_tented_lodge.jpg"), galleryStay("Mara Mara Tented Camp", "Luxury", "mainland/Luxury/mara_mara_tented_camp/02_mara_mara_tented_lodge.jpg"),
+  ] },
+  { name: "Tented suite", text: "A spacious canvas suite combining close-to-nature character with refined interiors and service.", property: "Legendary Serengeti", tier: "Luxury", photo: "accommodations/legendary-serengeti.webp", slides: [
+    galleryStay("Legendary Serengeti", "Luxury", "mainland/Luxury/legendary_serengeti/01_legendary_serengeti_mobile_camp_legendary_expeditions.webp"), galleryStay("Legendary Serengeti", "Luxury", "mainland/Luxury/legendary_serengeti/02_legendary_serengeti_mobile_camp_legendary_expeditions.webp"),
+    galleryStay("Nimali Serengeti", "Luxury", "mainland/Luxury/nimali_serengeti_tarangire/01_nimali_serengeti_and_nimali_tarangire.jpg"), galleryStay("Nimali Tarangire", "Luxury", "mainland/Luxury/nimali_serengeti_tarangire/02_nimali_serengeti_and_nimali_tarangire.webp"),
+    galleryStay("Siringit Serengeti", "Luxury", "mainland/Luxury/siringit_serengeti/01_siringit_serengeti_camp_siringit_migration_camp.jpg"), galleryStay("Siringit Migration Camp", "Luxury", "mainland/Luxury/siringit_serengeti/02_siringit_serengeti_camp_siringit_migration_camp.jpg"),
+  ] },
+  { name: "Forest lodge", text: "A polished lodge surrounded by the forested highlands near Ngorongoro.", property: "Neptune Ngorongoro Luxury Lodge", tier: "Luxury", photo: "accommodations/neptune-ngorongoro.webp", slides: [
+    galleryStay("Neptune Ngorongoro", "Luxury", "mainland/Luxury/neptune_ngorongoro/01_neptune_ngorongoro_luxury_lodge.webp"), galleryStay("Neptune Ngorongoro", "Luxury", "mainland/Luxury/neptune_ngorongoro/02_neptune_ngorongoro_luxury_lodge.jpg"),
+    galleryStay("Wellworth Collection", "Mid-range", "mainland/Luxury/wellworth_properties/01_wellworth_collection_serengeti_and_lake_manyara_properties.jpg"), galleryStay("Wellworth Collection", "Mid-range", "mainland/Luxury/wellworth_properties/02_wellworth_collection_serengeti_and_lake_manyara_properties.jpg"),
+    galleryStay("Nomad Tanzania", "Luxury", "mainland/Luxury/nomad_tanzania/01_nomad_serengeti_nomad_tanzania.jpg"), galleryStay("Nomad Tanzania", "Luxury", "mainland/Luxury/nomad_tanzania/02_nomad_serengeti_nomad_tanzania.jpg"),
+  ] },
+  { name: "Arusha garden lodge", text: "A comfortable green base for resting before or after the safari circuit.", property: "Arumeru River Lodge", tier: "Mid-range", photo: "accommodations/arumeru-river-lodge.jpg", slides: [
+    galleryStay("Mount Meru Hotel", "Budget", "mainland/Midrange/mount_meru_hotel/01_mount_meru_hotel_arusha.jpg"), galleryStay("Mount Meru Hotel", "Budget", "mainland/Midrange/mount_meru_hotel/02_mount_meru_hotel_arusha.jpg"),
+    galleryStay("Arumeru River Lodge", "Mid-range", "mainland/Midrange/arumeru_river_lodge/01_arumeru_river_lodge.jpg"), galleryStay("Arumeru River Lodge", "Mid-range", "mainland/Midrange/arumeru_river_lodge/02_arumeru_river_lodge.jpg"),
+    galleryStay("Arusha Coffee Lodge", "Luxury", "mainland/Luxury/arusha_coffee_lodge/01_arusha_coffee_lodge.jpg"), galleryStay("Arusha Coffee Lodge", "Luxury", "mainland/Luxury/arusha_coffee_lodge/02_arusha_coffee_lodge.jpg"),
+    galleryStay("Gran Meliá Arusha", "Luxury", "mainland/Luxury/gran_meli_arusha/01_gran_meli_arusha.jpg"), galleryStay("Gran Meliá Arusha", "Luxury", "mainland/Luxury/gran_meli_arusha/02_gran_meli_arusha.jpg"),
+  ] },
+];
+
+const zanzibarStayChoices: StayOption[] = [
+  { name: "Resort stay", text: "A relaxed coastal resort with broad facilities and an easy base for exploring the island.", property: "TUI BLUE Bahari Zanzibar", tier: "Mid-range", photo: "accommodations/tui-blue-bahari-zanzibar.jpg", slides: [
+    galleryStay("TUI BLUE Bahari Zanzibar", "Mid-range", "zanzibar/Midrange/tui_blue/01_tui_blue_bahari_zanzibar.jpg"), galleryStay("TUI BLUE Bahari Zanzibar", "Mid-range", "zanzibar/Midrange/tui_blue/02_tui_blue_bahari_zanzibar.jpg"),
+    galleryStay("Royal Zanzibar Beach Resort", "Mid-range", "zanzibar/Midrange/royal_zanzibar/01_royal_zanzibar_beach_resort.jpg"), galleryStay("Royal Zanzibar Beach Resort", "Mid-range", "zanzibar/Midrange/royal_zanzibar/02_royal_zanzibar_beach_resort.jpg"),
+    galleryStay("Zanzi Resort", "Luxury", "zanzibar/Luxury/zanzi_resort/01_zanzi_resort_zanzibar.jpg"), galleryStay("Zanzi Resort", "Luxury", "zanzibar/Luxury/zanzi_resort/02_zanzi_resort_zanzibar.jpg"),
+  ] },
+  { name: "Beachfront villa", text: "A private villa setting with generous space and direct access to the coast.", property: "Zanzibar White Sand Luxury Villas & Spa", tier: "Luxury", photo: "accommodations/zanzibar-white-sand-villas.jpg", slides: [
+    galleryStay("White Sand Luxury Villas & Spa", "Luxury", "zanzibar/Luxury/white_sand_luxury_villas_spa/01_zanzibar_white_sand_luxury_villas_spa.jpg"), galleryStay("White Sand Luxury Villas & Spa", "Luxury", "zanzibar/Luxury/white_sand_luxury_villas_spa/02_zanzibar_white_sand_luxury_villas_spa.jpg"),
+    galleryStay("SafiraBlu Resort & Villas", "Mid-range", "zanzibar/Luxury/safariblue_luxury_villa/01_safirablu_luxury_resort_villas.jpg"), galleryStay("SafiraBlu Resort & Villas", "Mid-range", "zanzibar/Luxury/safariblue_luxury_villa/02_safirablu_luxury_resort_villas.jpg"),
+    galleryStay("Ycona Luxury Resort", "Luxury", "zanzibar/Luxury/ycona_luxury_resort/01_ycona_luxury_resort.jpg"), galleryStay("Ycona Luxury Resort", "Luxury", "zanzibar/Luxury/ycona_luxury_resort/02_ycona_luxury_resort.jpg"),
+  ] },
+  { name: "Private suite", text: "A secluded, intimate stay designed around quiet service and time by the ocean.", property: "The Palms Zanzibar", tier: "Luxury", photo: "accommodations/the-palms-zanzibar.jpg", slides: [
+    galleryStay("The Palms Zanzibar", "Luxury", "zanzibar/Luxury/the_palms_zanzibar/01_the_palms_zanzibar.jpg"), galleryStay("The Palms Zanzibar", "Luxury", "zanzibar/Luxury/the_palms_zanzibar/02_the_palms_zanzibar.jpg"),
+    galleryStay("The Residence Zanzibar", "Luxury", "zanzibar/Luxury/the_residence_zanzibar/01_the_residence_zanzibar.jpg"), galleryStay("The Residence Zanzibar", "Luxury", "zanzibar/Luxury/the_residence_zanzibar/02_the_residence_zanzibar.webp"),
+    galleryStay("Tulia Zanzibar", "Luxury", "zanzibar/Luxury/tulia_zanzibar_unique_beach_resort/01_tulia_zanzibar_unique_beach_resort.jpg"), galleryStay("Tulia Zanzibar", "Luxury", "zanzibar/Luxury/tulia_zanzibar_unique_beach_resort/02_tulia_zanzibar_unique_beach_resort.jpg"),
+  ] },
+  { name: "Family-friendly resort", text: "A practical beach base with room to unwind together and a wide choice of facilities.", property: "Royal Zanzibar Beach Resort", tier: "Mid-range", photo: "accommodations/royal-zanzibar.jpg", slides: [
+    galleryStay("Royal Zanzibar Beach Resort", "Mid-range", "zanzibar/Midrange/royal_zanzibar/01_royal_zanzibar_beach_resort.jpg"), galleryStay("Royal Zanzibar Beach Resort", "Mid-range", "zanzibar/Midrange/royal_zanzibar/02_royal_zanzibar_beach_resort.jpg"),
+    galleryStay("Neptune Pwani Beach Resort", "Mid-range", "zanzibar/Luxury/neptune_zanzibar/01_neptune_pwani_beach_resort_spa.jpg"), galleryStay("Neptune Pwani Beach Resort", "Mid-range", "zanzibar/Luxury/neptune_zanzibar/02_neptune_pwani_beach_resort_spa.jpg"),
+    galleryStay("The Mora Zanzibar", "Luxury", "zanzibar/Luxury/the_mora_zanzibar/01_the_mora_zanzibar.jpg"), galleryStay("The Mora Zanzibar", "Luxury", "zanzibar/Luxury/the_mora_zanzibar/02_the_mora_zanzibar.jpg"),
+  ] },
+];
 
 function ReferenceHero({
   imageSrc, eyebrow, title, lead, copy, action, actionHref = "/plan-your-trip", secondAction, secondActionHref = "#explore", active, navVariant = "destinations", trustItems, routeFacts, heroClass = "",
@@ -118,11 +166,22 @@ function WhyGrid({ title, imageSrc, items, copy }: { title: string; imageSrc: st
 
 function StaySelector({ eyebrow, title, copy, items }: { eyebrow: string; title: string; copy: string; items: StayOption[] }) {
   const [selected, setSelected] = useState(0);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
   const current = items[selected];
+  const slides = current.slides;
+  const slide = slides[slideIndex] || slides[0];
   const icons = ["figma-zanzibar-stay-building.svg","figma-zanzibar-stay-house.svg","figma-zanzibar-stay-bed.svg","figma-zanzibar-stay-users.svg"];
+  const chooseStay = (index: number) => { setSelected(index); setSlideIndex(0); };
+  const move = (direction: number) => setSlideIndex(index => (index + direction + slides.length) % slides.length);
+  useEffect(() => {
+    if (paused || slides.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => setSlideIndex(index => (index + 1) % slides.length), 4500);
+    return () => window.clearInterval(timer);
+  }, [paused, selected, slides.length]);
   return <section className="ref-section ref-stay"><div className="shell"><Intro eyebrow={eyebrow} title={title} copy={copy} /><div className="ref-stay-grid">
-    <div className="ref-stay-options">{items.map((item, i) => <div className={selected === i ? "active" : ""} key={item.property}><button type="button" aria-expanded={selected === i} onClick={() => setSelected(i)}><span className="ref-stay-icon"><Image src={image(icons[i])} alt="" width={20} height={20} /></span><span>{item.name}</span></button>{selected === i && <p>{item.text}</p>}</div>)}</div>
-    <div className="ref-stay-photo"><Photo key={current.photo} src={image(current.photo)} alt={`${current.property} ${current.name.toLowerCase()}`} /><div className="ref-stay-photo-meta"><span className={`accommodation-tier accommodation-tier-${current.tier.toLowerCase().replace("-", "")}`}>{current.tier}</span><strong>{current.property}</strong></div><div className="ref-thumbs">{items.map((item, i) => <button type="button" className={selected === i ? "active" : ""} aria-label={`Show ${item.property}, ${item.tier} accommodation`} aria-pressed={selected === i} onClick={() => setSelected(i)} key={item.property}><Photo src={image(item.photo)} alt="" /></button>)}</div></div>
+    <div className="ref-stay-options">{items.map((item, i) => <div className={selected === i ? "active" : ""} key={item.property}><button type="button" aria-expanded={selected === i} onClick={() => chooseStay(i)}><span className="ref-stay-icon"><Image src={image(icons[i])} alt="" width={20} height={20} /></span><span>{item.name}</span></button>{selected === i && <p>{item.text}</p>}</div>)}</div>
+    <div className="ref-stay-gallery" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}><div className="ref-stay-photo" aria-live="polite"><Photo key={`${selected}-${slideIndex}-${slide.image}`} src={image(slide.image)} alt={slide.alt} /><div className="ref-stay-photo-meta"><span className={`accommodation-tier accommodation-tier-${slide.tier.toLowerCase().replace("-", "")}`}>{slide.tier}</span><strong>{slide.property}</strong></div><div className="ref-stay-arrows"><button type="button" aria-label={`Previous ${current.name} accommodation`} onClick={() => move(-1)}>‹</button><span>{slideIndex + 1} / {slides.length}</span><button type="button" aria-label={`Next ${current.name} accommodation`} onClick={() => move(1)}>›</button></div></div><div className="ref-thumbs">{items.map((item, i) => <button type="button" className={selected === i ? "active" : ""} aria-label={`Show ${item.name} accommodation collection`} aria-pressed={selected === i} onClick={() => chooseStay(i)} key={item.property}><Photo src={image(item.photo)} alt="" /></button>)}</div></div>
   </div></div></section>;
 }
 
@@ -277,12 +336,7 @@ export function SafariReferencePage() {
       <ImageCards eyebrow="POPULAR PLANNING IDEAS" title="Choose Your Safari" copy="Four starting points, not fixed departures. Itinerary, availability and pricing are confirmed when you plan with us." cards={safaris} />
       <SafariStory />
       <SafariVehicles />
-      <StaySelector eyebrow="FEATURED SAFARI ACCOMMODATION" title="Choose the stay that fits your safari" copy="Compare real properties across comfort levels. Final availability, room type and pricing are confirmed in your tailored quote." items={[
-        { name: "Classic safari camp", text: "A warm tented camp with an immersive bush setting and an easygoing safari atmosphere.", property: "Karibu River Camp", tier: "Mid-range", photo: "accommodations/karibu-river-camp.jpg" },
-        { name: "Tented suite", text: "A spacious canvas suite combining close-to-nature character with refined interiors and service.", property: "Legendary Serengeti", tier: "Luxury", photo: "accommodations/legendary-serengeti.webp" },
-        { name: "Forest lodge", text: "A polished lodge surrounded by the forested highlands near Ngorongoro.", property: "Neptune Ngorongoro Luxury Lodge", tier: "Luxury", photo: "accommodations/neptune-ngorongoro.webp" },
-        { name: "Arusha garden lodge", text: "A comfortable green base for resting before or after the safari circuit.", property: "Arumeru River Lodge", tier: "Mid-range", photo: "accommodations/arumeru-river-lodge.jpg" },
-      ]} />
+      <StaySelector eyebrow="FEATURED SAFARI ACCOMMODATION" title="Choose the stay that fits your safari" copy="Compare real properties across comfort levels. Final availability, room type and pricing are confirmed in your tailored quote." items={safariStayChoices} />
 <WhyGrid title="Why Travel With Bathiel Expeditions?" imageSrc={image("figma-safari-why-image2.png")} copy="Start with a conversation. A Tanzanian-owned team — not a booking engine — helps you shape the journey that fits you." items={[["Local perspective","Start with a Tanzanian team and a conversation about the places you want to see."],["Personal planning","Share your interests, available time and preferred pace before choosing an outline."],["Clear choices","Ask for a written quote showing your proposed itinerary and all the details to confirm."],["Thoughtful travel","Discuss wildlife etiquette, community visits and low-impact travel with the team."],["A journey that fits","Private and small-group preferences can be discussed; availability is confirmed with your quote."],["Local perspective","Start with a Tanzanian team and a conversation about the places you want to see."]]} />
       <Seasons eyebrow="PLAN AROUND THE SEASONS" title="When to Go on Safari" copy="There is no single perfect month. Match your interests to the season, then check current conditions with the team." items={[["JAN — FEB","Green plains","Seasonal herd activity in some areas. Showers remain possible."],["MAR — MAY","Longer rains","Expect changing conditions and discuss suitable locations."],["JUN — OCT","Drier days","Dry-season conditions can bring wildlife toward remaining water."],["NOV — DEC","Shorter rains","Fresh vegetation and changing light reshape the landscape."]]} />
       <Testimonials /><CtaBanner title="Ready to experience Tanzania?" image={image("figma-zanzibar-combine-frame.png")} /><SafariFaq /></main><Footer /></>;
@@ -293,12 +347,7 @@ export function ZanzibarReferencePage() {
     <main><PlaceGrid eyebrow="ISLAND BEACHES, STONE TOWNS AND COASTAL EXPLORATION" title="Where Will Your Zanzibar Journey Take You?" copy="Get to know the island’s distinct corners before choosing your route. Each destination brings its own pace, scenery and experiences." cards={zanzibarPlaces} variant="zanzibar" />
       <ZanzibarOceanActivities />
       <ZanzibarIslandIntro />
-      <StaySelector eyebrow="FEATURED ZANZIBAR ACCOMMODATION" title="Find your island stay" copy="Compare real Zanzibar properties across comfort levels. Final beach, room type and availability are confirmed in your tailored quote." items={[
-        { name: "Resort stay", text: "A relaxed coastal resort with broad facilities and an easy base for exploring the island.", property: "TUI BLUE Bahari Zanzibar", tier: "Mid-range", photo: "accommodations/tui-blue-bahari-zanzibar.jpg" },
-        { name: "Beachfront villa", text: "A private villa setting with generous space and direct access to the coast.", property: "Zanzibar White Sand Luxury Villas & Spa", tier: "Luxury", photo: "accommodations/zanzibar-white-sand-villas.jpg" },
-        { name: "Private suite", text: "A secluded, intimate stay designed around quiet service and time by the ocean.", property: "The Palms Zanzibar", tier: "Luxury", photo: "accommodations/the-palms-zanzibar.jpg" },
-        { name: "Family-friendly resort", text: "A practical beach base with room to unwind together and a wide choice of facilities.", property: "Royal Zanzibar Beach Resort", tier: "Mid-range", photo: "accommodations/royal-zanzibar.jpg" },
-      ]} />
+      <StaySelector eyebrow="FEATURED ZANZIBAR ACCOMMODATION" title="Find your island stay" copy="Compare real Zanzibar properties across comfort levels. Final beach, room type and availability are confirmed in your tailored quote." items={zanzibarStayChoices} />
       <Seasons eyebrow="PLAN AROUND THE SEASONS" title="Best time to visit Zanzibar." items={[["JAN — FEB","Warm island days","Warm with beach time between showers. Sea conditions and visibility vary."],["MAR — MAY","Longer rains","More frequent rain. Flexible plans needed for beach and boat days."],["JUN — OCT","Often drier","Less humid, a popular period. Wind and tides affect water activities."],["NOV — DEC","Shorter rains","Showers with sunny intervals. Holiday periods can bring more demand."]]} imageSrc={image("figma-zanzibar-hero.png")} />
       <ImageCards className="ref-zanzibar-combinations" eyebrow="A DIFFERENT KIND OF FINISH" title="Combine Zanzibar with Tanzania." copy="Choose the contrasts you want, then build in realistic travel and recovery time. Connections and park selection to confirm." cards={[{note:"SAFARI",title:"Wildlife, and nature",copy:"Park choices and onward connections tailored around your dates.",image:image("figma-zanzibar-combine-frame.png"),href:"/safari"},{note:"KILIMANJARO",title:"Summit, the roof of Africa",copy:"Space to rest after the climb. The island at your own pace.",image:image("figma-zanzibar-combine-frame1.png"),href:"/kilimanjaro"},{title:"Zanzibar island",copy:"One journey across the full range of Tanzania. Sequence to confirm.",image:image("figma-zanzibar-combine-frame2.png") }]} />
       <Testimonials /><ZanzibarFaq /><CtaBanner title="Ready to explore Zanzibar?" image={image("figma-zanzibar-hero.png")} /></main><Footer /></>;
@@ -653,8 +702,20 @@ export function HomeReferencePage() {
 
 function TripAccommodation({ day, mealPlan, options }: { day: number; mealPlan: string; options: TripStayOption[] }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
   const [mealInfoOpen, setMealInfoOpen] = useState(false);
   const selected = options[selectedIndex];
+  const tierSlides = safariStayChoices.flatMap(choice => choice.slides).filter((stay, index, all) => stay.tier === selected.tier && stay.property !== selected.property && all.findIndex(candidate => candidate.image === stay.image) === index);
+  const slides = [selected, ...tierSlides];
+  const slide = slides[slideIndex] || slides[0];
+  const chooseOption = (index: number) => { setSelectedIndex(index); setSlideIndex(0); };
+  const move = (direction: number) => setSlideIndex(index => (index + direction + slides.length) % slides.length);
+  useEffect(() => {
+    if (paused || slides.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => setSlideIndex(index => (index + 1) % slides.length), 4500);
+    return () => window.clearInterval(timer);
+  }, [paused, selectedIndex, slides.length]);
   return <>
     <div className="trip-ref-day-meta">
       <span className="trip-ref-accommodation-label"><Image src={image("figma-trips-accommodation.svg")} alt="" width={45} height={45} />Day {day} | Accommodation</span>
@@ -667,11 +728,11 @@ function TripAccommodation({ day, mealPlan, options }: { day: number; mealPlan: 
         {options.map((option, index) => {
           const selectedOption = selectedIndex === index;
           const icon = option.tier === "Luxury" ? "figma-trips-premium-crown.svg" : "figma-trips-signature-star.svg";
-          return <button type="button" className={`trip-ref-lodge-option${selectedOption ? " active" : ""}`} aria-pressed={selectedOption} onClick={() => setSelectedIndex(index)} key={`${option.tier}-${option.property}`}><span className="trip-ref-lodge-tier"><span className="trip-ref-lodge-tier-icon"><Image src={image(icon)} alt="" width={28} height={28} /></span>{option.tier}</span><span className="trip-ref-lodge-name">{option.property}</span></button>;
+          return <button type="button" className={`trip-ref-lodge-option${selectedOption ? " active" : ""}`} aria-pressed={selectedOption} onClick={() => chooseOption(index)} key={`${option.tier}-${option.property}`}><span className="trip-ref-lodge-tier"><span className="trip-ref-lodge-tier-icon"><Image src={image(icon)} alt="" width={28} height={28} /></span>{option.tier}</span><span className="trip-ref-lodge-name">{option.property}</span></button>;
         })}
         <small>Property availability and the final room category are confirmed in your trip proposal.</small>
       </div>
-      <figure aria-live="polite"><Photo key={selected.image} src={image(selected.image)} alt={selected.alt} /><span className={`accommodation-tier accommodation-tier-${selected.tier.toLowerCase().replace("-", "")}`}>{selected.tier}</span><figcaption>{selected.property}</figcaption></figure>
+      <figure aria-live="polite" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}><Photo key={`${selectedIndex}-${slideIndex}-${slide.image}`} src={image(slide.image)} alt={slide.alt} /><span className={`accommodation-tier accommodation-tier-${slide.tier.toLowerCase().replace("-", "")}`}>{slide.tier}</span><div className="trip-ref-lodge-arrows"><button type="button" aria-label={`Previous ${selected.tier.toLowerCase()} accommodation`} onClick={() => move(-1)}>‹</button><span>{slideIndex + 1} / {slides.length}</span><button type="button" aria-label={`Next ${selected.tier.toLowerCase()} accommodation`} onClick={() => move(1)}>›</button></div><figcaption>{slide.property}</figcaption></figure>
     </div>
   </>;
 }

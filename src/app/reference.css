@@ -121,12 +121,22 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .ref-stay-options details p{margin:9px 0 0 29px;color:#667178;font-size:13px;line-height:1.7}
 .ref-stay-photo{position:relative}
 .ref-stay-photo>img{width:100%;height:450px;border-radius:12px;object-fit:cover}
+.ref-stay-gallery{min-width:0}
+.ref-stay-photo>img{animation:accommodation-slide-in .35s ease both}
+@keyframes accommodation-slide-in{from{opacity:.45}to{opacity:1}}
 .ref-stay-photo-meta{position:absolute;z-index:2;top:18px;left:18px;display:flex;align-items:center;gap:10px;max-width:calc(100% - 36px);padding:7px 12px 7px 7px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:rgba(20,33,40,.78);box-shadow:0 8px 22px rgba(20,33,40,.18);color:#fff;backdrop-filter:blur(8px)}
 .ref-stay-photo-meta strong{min-width:0;overflow:hidden;font-size:13px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}
 .accommodation-tier{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:5px 10px;border-radius:999px;color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;line-height:1;text-transform:uppercase;white-space:nowrap}
 .accommodation-tier-luxury{background:#b7791f}
 .accommodation-tier-midrange{background:#2f6b62}
 .accommodation-tier-budget{background:#667178}
+.ref-stay-arrows,.trip-ref-lodge-arrows{position:absolute;z-index:3;inset:0;pointer-events:none}
+.ref-stay-arrows button,.trip-ref-lodge-arrows button{position:absolute;top:50%;display:grid;place-items:center;width:42px;height:42px;padding:0;border:1px solid rgba(255,255,255,.75);border-radius:50%;background:rgba(255,255,255,.93);box-shadow:0 6px 18px rgba(20,33,40,.2);color:#ea4729;cursor:pointer;font:500 28px/1 Arial,sans-serif;pointer-events:auto;transform:translateY(-50%);transition:background-color .2s ease,color .2s ease,transform .2s ease}
+.ref-stay-arrows button:first-child,.trip-ref-lodge-arrows button:first-child{left:14px}
+.ref-stay-arrows button:last-child,.trip-ref-lodge-arrows button:last-child{right:14px}
+.ref-stay-arrows button:hover,.ref-stay-arrows button:focus-visible,.trip-ref-lodge-arrows button:hover,.trip-ref-lodge-arrows button:focus-visible{background:#ea4729;color:#fff;transform:translateY(-50%) scale(1.06)}
+.ref-stay-arrows button:focus-visible,.trip-ref-lodge-arrows button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.ref-stay-arrows>span,.trip-ref-lodge-arrows>span{position:absolute;right:16px;bottom:16px;padding:6px 10px;border-radius:999px;background:rgba(20,33,40,.78);color:#fff;font-size:11px;font-weight:600;pointer-events:none;backdrop-filter:blur(8px)}
 .ref-thumbs{display:flex;gap:10px;margin-top:12px}
 .ref-thumbs img{width:70px;height:55px;border-radius:5px;object-fit:cover}
 .ref-seasons{position:relative;overflow:hidden;background:#243138;color:#fff}
@@ -499,8 +509,8 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .home-ref-select .ref-intro{max-width:1205px;margin:auto}
 .home-ref-select .ref-intro h2{font-size:47px;font-weight:500;line-height:1.1;letter-spacing:normal}
 .home-ref-select .ref-intro p{max-width:733px;margin:14px auto 0;font-size:17px;line-height:1.7}
-.home-ref-select-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;width:100%;margin:48px auto 0;text-align:left}
-.home-ref-select-card{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:365px;overflow:hidden;border-radius:12px;color:#fff;background:#243138;transition:transform .28s ease,box-shadow .28s ease}
+.home-ref-select-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;width:min(810px,100%);margin:48px auto 0;text-align:left}
+.home-ref-select-card{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:330px;overflow:hidden;border-radius:12px;color:#fff;background:#243138;transition:transform .28s ease,box-shadow .28s ease}
 .home-ref-select-card:hover,.home-ref-select-card:focus-visible{transform:translateY(-7px);box-shadow:0 20px 42px rgba(36,49,56,.26)}
 .home-ref-select-card:focus-visible{outline:3px solid #ea4729;outline-offset:3px}
 .home-ref-select-card:after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(180deg,rgba(20,36,42,.04) 18%,rgba(20,36,42,.86) 100%)}
@@ -2551,4 +2561,10 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   .trip-ref-map-modal{padding:14px}
   .trip-ref-map-modal-panel{width:100%;height:min(84vh,760px);padding:10px;border-radius:16px}
   .trip-ref-map-close{top:18px;right:18px}
+  .ref-stay-arrows button,.trip-ref-lodge-arrows button{width:38px;height:38px;font-size:24px}
+  .ref-stay-arrows button:first-child,.trip-ref-lodge-arrows button:first-child{left:10px}
+  .ref-stay-arrows button:last-child,.trip-ref-lodge-arrows button:last-child{right:10px}
+  .ref-stay-arrows>span,.trip-ref-lodge-arrows>span{right:10px;bottom:10px}
 }
+
+@media(prefers-reduced-motion:reduce){.ref-stay-photo>img{animation:none}.ref-stay-arrows button,.trip-ref-lodge-arrows button{transition:none}}
