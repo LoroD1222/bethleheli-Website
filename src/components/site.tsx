@@ -492,6 +492,7 @@ function FaqPage() {
 function GroupsPage() {
   const [year, setYear] = useState("2026");
   const [month, setMonth] = useState("Oct");
+  const [selectedDeparture, setSelectedDeparture] = useState<number | null>(null);
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const trips = [
     ["06", "Kilimanjaro via Lemosho route - 7 days", "From 06 October - 14 October", ["🌙 Starry sky", "🚙 High-Altitude Drop-Off", "⛺ Extra Summit"], "$3170"],
@@ -502,15 +503,47 @@ function GroupsPage() {
   ] as const;
   const showOctoberDepartures = year === "2026" && month === "Oct";
 
-  return <><Header overlay={false} variant="classic" /><main className="groups-page"><section className="group-climb-hero"><Photo className="group-climb-hero-image" src="/images/figma-kili-group-trip-landscape.png" alt="A small group climbing together on the snowy slopes of Mount Kilimanjaro" priority /><div className="group-climb-hero-scrim" /><div className="group-climb-hero-content shell"><p className="eyebrow light">CLIMB TOGETHER</p><h1>Share the journey.<br />Reach higher together.</h1><p>Join a scheduled Kilimanjaro departure with other travellers, supported by an experienced local mountain team from the first step to the summit attempt.</p><div className="group-climb-hero-actions"><a className="button" href="#group-departures">View group dates <Arrow /></a><Link className="ghost-button" href="/contact">Ask about a climb <Arrow /></Link></div><div className="group-climb-benefits" aria-label="Group climb benefits"><span><Image src="/images/figma-kili-value-users.svg" alt="" width={28} height={28} /><span><b>Small groups</b>Shared pace, personal support</span></span><span><Image src="/images/figma-plan-local-team.svg" alt="" width={28} height={28} /><span><b>Local mountain team</b>Guides, cooks and porters</span></span><span><Image src="/images/figma-trips-fact-dates.svg" alt="" width={28} height={28} /><span><b>Scheduled departures</b>Clear dates and route choices</span></span></div></div></section><section id="group-departures" className="group-schedule shell"><header>
+  return <><main className="groups-page"><section className="group-climb-hero"><Photo className="group-climb-hero-image" src="/images/figma-kili-group-trip-landscape.png" alt="A small group climbing together on the snowy slopes of Mount Kilimanjaro" priority /><div className="group-climb-hero-scrim" /><div className="group-climb-hero-content shell"><p className="eyebrow light">CLIMB TOGETHER</p><h1>Share the journey.<br />Reach higher together.</h1><p>Join a scheduled Kilimanjaro departure with other travellers, supported by an experienced local mountain team from the first step to the summit attempt.</p><div className="group-climb-hero-actions"><a className="button" href="#group-departures">View group dates <Arrow /></a><Link className="ghost-button" href="/contact">Ask about a climb <Arrow /></Link></div><div className="group-climb-benefits" aria-label="Group climb benefits"><span><Image src="/images/figma-kili-value-users.svg" alt="" width={28} height={28} /><span><b>Small groups</b>Shared pace, personal support</span></span><span><Image src="/images/figma-plan-local-team.svg" alt="" width={28} height={28} /><span><b>Local mountain team</b>Guides, cooks and porters</span></span><span><Image src="/images/figma-trips-fact-dates.svg" alt="" width={28} height={28} /><span><b>Scheduled departures</b>Clear dates and route choices</span></span></div></div></section><section id="group-departures" className="group-schedule shell"><header>
     <p className="eyebrow">UPCOMING DEPARTURES</p><h2>This is the best time to join a Kilimanjaro climbing group!</h2>
     <div className="year-tabs" role="group" aria-label="Departure year">{["2026", "2027"].map(value => <button type="button" aria-pressed={year === value} onClick={() => setYear(value)} className={year === value ? "active" : ""} key={value}>{value}</button>)}</div>
     <div className="months" role="group" aria-label="Departure month">{months.map(value => <button type="button" aria-pressed={month === value} onClick={() => setMonth(value)} className={month === value ? "active" : ""} key={value}>{value === "Nov" ? "Nov ☔" : value}</button>)}</div>
   </header>
   <section className="group-list" aria-live="polite" aria-label={`Departures for ${month} ${year}`}>
-    {showOctoberDepartures ? trips.map(([date, title, range, highlights, price], index) => <article key={date}><time dateTime={`${year}-10-${date}`}><b>{date}</b><span>Oct</span></time><div className="group-title"><h2>{title}</h2><p>{range}</p>{index === 4 && <small>☔ Rain Season</small>}</div><ul>{highlights.map(x => <li key={x}>{x}</li>)}</ul><strong>{index === 4 && <del>$3072</del>}{price}{index === 4 && <em>10%</em>}</strong><div><Link className={index === 4 ? "join secondary" : "join"} href="/plan-your-trip">JOIN GROUP</Link><span>Deposit $100</span></div></article>) :
+    {showOctoberDepartures ? trips.map(([date, title, range, highlights, price], index) => <article key={date}><time dateTime={`${year}-10-${date}`}><b>{date}</b><span>Oct</span></time><div className="group-title"><h2>{title}</h2><p>{range}</p>{index === 4 && <small>☔ Rain Season</small>}</div><ul>{highlights.map(x => <li key={x}>{x}</li>)}</ul><strong>{index === 4 && <del>$3072</del>}{price}{index === 4 && <em>10%</em>}</strong><div><button type="button" className={index === 4 ? "join secondary" : "join"} onClick={() => setSelectedDeparture(index)}>JOIN GROUP</button><span>Deposit $100</span></div></article>) :
       <div className="group-empty"><h2>No published departures for {month} {year} yet.</h2><p>Ask our team about group dates or a private Kilimanjaro climb that fits your calendar.</p><Link className="join" href="/plan-your-trip">Ask about dates <Arrow /></Link></div>}
-  </section></section><Testimonials groupClimbsOnly title="Stories from the mountain" text="Hear from travellers who shared the trail, supported one another and climbed with the Betheli mountain team." /><div className="group-advisor-wrap shell"><AdvisorCard /></div></main><Footer /></>;
+  </section></section><div className="group-advisor-wrap shell"><AdvisorCard /></div><Testimonials groupClimbsOnly title="Stories from the mountain" text="Hear from travellers who shared the trail, supported one another and climbed with the Betheli mountain team." /></main><Footer />{selectedDeparture !== null && <GroupJoinForm departure={trips[selectedDeparture]} onClose={() => setSelectedDeparture(null)} />}</>;
+}
+
+function GroupJoinForm({ departure, onClose }: { departure: readonly [string, string, string, readonly string[], string]; onClose: () => void }) {
+  const [, title, range, , price] = departure;
+  const [notice, setNotice] = useState("");
+  const [sending, setSending] = useState(false);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [onClose]);
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!form.reportValidity()) return;
+    setSending(true);
+    setNotice("Sending your request…");
+    const result = await sendEnquiry("trip", form, { interest: "Kilimanjaro group climb", dateStyle: "Fixed group departure", departure: range, timing: `${title} — ${range}`, days: title.match(/\d+ days/)?.[0] || "" });
+    setNotice(result.message);
+    setSending(false);
+    if (result.ok) form.reset();
+  }
+  return createPortal(<div className="group-join-modal" role="dialog" aria-modal="true" aria-labelledby="group-join-title"><button type="button" className="group-join-backdrop" aria-label="Close join group form" onClick={onClose} /><section className="group-join-panel"><button ref={closeRef} type="button" className="group-join-close" aria-label="Close join group form" onClick={onClose}>×</button><p className="eyebrow">JOIN A DEPARTURE</p><h2 id="group-join-title">Join this Kilimanjaro group</h2><div className="group-join-selection"><strong>{title}</strong><span>{range}</span><b>{price} per person · Deposit $100</b></div><form onSubmit={submit} noValidate><div className="input-row"><label>Full name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label><label>Email *<input type="email" name="email" required autoComplete="email" placeholder="you@example.com" /></label></div><div className="input-row"><label>WhatsApp number<input name="whatsapp" autoComplete="tel" placeholder="+255…" /></label><label>Number of travellers *<input type="number" name="adults" required min="1" max="20" defaultValue="1" /></label></div><label>Country<input name="country" autoComplete="country-name" placeholder="Where are you travelling from?" /></label><label>Anything we should know?<textarea name="notes" placeholder="Experience, questions, dietary needs or other details…" /></label><p className="privacy">Submitting this form sends an enquiry only. Your place is confirmed after the team contacts you and completes the booking process.</p><button className="submit-button" disabled={sending}>{sending ? "Sending…" : "Request to join"}<Arrow /></button><FormNotice text={notice} /></form></section></div>, document.body);
 }
 
 function AdvisorCard() { return <section className="advisor-card"><div className="advisor-card-photo"><Photo src={photos.guide} alt="Victoria, local trip advisor" /><span><i aria-hidden="true" />Online now</span></div><div className="advisor-card-content"><header><div><p className="eyebrow">YOUR LOCAL TRIP ADVISOR</p><h2>Victoria</h2></div><span className="advisor-location"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12A7 7 0 1 0 5 9c0 5.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>Based in Tanzania</span></header><h3>Want to plan a memorable Tanzanian adventure?</h3><p>Share your dates and ideas with a local planner. Victoria will help you shape the right climb, safari, island stay or combination.</p><div className="advisor-actions"><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="button"><Image src="/images/figma-trips-quote-whatsapp.svg" alt="" width={22} height={22} />WhatsApp</a><Link href="/contact" className="button advisor-enquiry"><Image src="/images/figma-home-footer-mail.svg" alt="" width={20} height={20} />Send an enquiry</Link></div></div></section>; }

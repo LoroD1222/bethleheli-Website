@@ -2387,8 +2387,34 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 .group-schedule>header>.eyebrow{margin-bottom:12px}
 .group-schedule>header h2{max-width:900px;margin:0 auto;font-size:clamp(34px,4vw,52px);line-height:1.13}
 .group-schedule>header h2:after{display:block;width:85px;height:2px;margin:22px auto 32px;background:var(--coral);content:""}
+.group-schedule .year-tabs{justify-content:center;border-top:0}
+.group-schedule .year-tabs button{min-width:128px}
+.group-list .join{border:0;cursor:pointer;font-family:Poppins,Arial,sans-serif}
+.group-list .join:hover,.group-list .join:focus-visible{background:#cc351e;transform:translateY(-2px)}
+.group-list .join.secondary:hover,.group-list .join.secondary:focus-visible{border-color:#ea4729;background:#fff0eb;color:#d63b22}
+.group-list .join:focus-visible{outline:3px solid rgba(234,71,41,.3);outline-offset:3px}
 .group-advisor-wrap{padding:80px 0 100px}
 .group-advisor-wrap .advisor-card{margin-top:0}
+.group-join-modal{position:fixed;z-index:1200;inset:0;display:grid;place-items:center;padding:24px}
+.group-join-backdrop{position:absolute;inset:0;width:100%;height:100%;border:0;background:rgba(15,25,30,.82);cursor:pointer}
+.group-join-panel{position:relative;z-index:1;width:min(760px,calc(100vw - 48px));max-height:calc(100vh - 48px);overflow:auto;padding:38px;border-radius:24px;background:#fff;box-shadow:0 30px 90px rgba(0,0,0,.42)}
+.group-join-close{position:absolute;top:20px;right:20px;display:grid;place-items:center;width:42px;height:42px;border:0;border-radius:50%;background:#243138;color:#fff;cursor:pointer;font-size:28px;line-height:1}
+.group-join-close:hover,.group-join-close:focus-visible{background:#ea4729}
+.group-join-panel>.eyebrow{color:#ea4729}
+.group-join-panel>h2{max-width:560px;margin-top:8px;color:#243138;font-size:36px;line-height:1.15}
+.group-join-selection{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:22px;padding:18px 20px;border-radius:14px;background:#f1f4f5;color:#243138}
+.group-join-selection strong{width:100%;font-size:18px}
+.group-join-selection span{color:#667178;font-size:13px}
+.group-join-selection b{margin-left:auto;color:#ea4729;font-size:13px}
+.group-join-panel form{display:grid;gap:18px;margin-top:26px}
+.group-join-panel form .input-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.group-join-panel form label{display:grid;gap:8px;margin:0;color:#243138;font-size:13px;font-weight:600}
+.group-join-panel form input,.group-join-panel form textarea{width:100%;margin:0;border:1px solid rgba(36,49,56,.2);border-radius:12px;background:#fff;color:#243138;font:inherit;font-weight:400}
+.group-join-panel form input{height:50px;padding:0 14px}
+.group-join-panel form textarea{min-height:105px;padding:13px 14px;resize:vertical}
+.group-join-panel form input:focus,.group-join-panel form textarea:focus{border-color:#ea4729;outline:2px solid rgba(234,71,41,.15)}
+.group-join-panel .privacy{margin:0;color:#667178;font-size:11px;line-height:1.6}
+.group-join-panel .submit-button{width:max-content;min-height:54px;margin:0}
 
 @media(max-width:900px){
   .group-climb-hero{min-height:620px}
@@ -2414,6 +2440,13 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   .group-schedule{padding-top:70px;padding-bottom:72px}
   .group-schedule>header h2{font-size:34px}
   .group-advisor-wrap{padding:58px 0 72px}
+  .group-schedule .year-tabs button{min-width:0}
+  .group-join-modal{padding:12px}
+  .group-join-panel{width:100%;max-height:calc(100vh - 24px);padding:28px 18px 22px;border-radius:18px}
+  .group-join-panel>h2{padding-right:40px;font-size:28px}
+  .group-join-selection b{width:100%;margin-left:0}
+  .group-join-panel form .input-row{grid-template-columns:1fr}
+  .group-join-panel .submit-button{width:100%;justify-content:space-between}
 }
 
 /* Keep the moments pagination below the staggered image row at every size. */
