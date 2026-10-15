@@ -130,7 +130,6 @@ function Seasons({ eyebrow, title, copy, items, imageSrc }: { eyebrow: string; t
 }
 
 function Safety() {
-  const [selected, setSelected] = useState(0);
   const items = [
     { title: "Experienced mountain guides", copy: "Ask about your guide team’s experience and the support available on your chosen route.", icon: "users", photo: "figma-kili-safety-expedition-team-photograph.png" },
     { title: "Acclimatization strategy", copy: "Discuss the daily altitude profile, rest opportunities and a pace that suits your itinerary.", icon: "chart", photo: "figma-kili-journey-journey-landscape2.png" },
@@ -147,16 +146,27 @@ function Safety() {
     equipment: <><path d="M3 9h18v11H3zM8 9V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3M3 14h18m-11-2v4h4v-4"/></>,
     heart: <><path d="M20.8 8.4c0 4.7-8.8 11.2-8.8 11.2S3.2 13.1 3.2 8.4a4.4 4.4 0 0 1 8.8-.4 4.4 4.4 0 0 1 8.8.4Z"/><path d="M5 12h4l2-3 2 6 2-3h4"/></>,
   };
-  return <section className="ref-section ref-dark ref-safety" id="safety"><div className="shell ref-safety-grid"><div><Intro eyebrow="CARE BEFORE THE SUMMIT" title="Your Safety Comes First" copy="The mountain deserves respect. So do your questions. Talk to us about the support and arrangements for your climb before you book." /><Photo key={items[selected].photo} src={image(items[selected].photo)} alt={`${items[selected].title} on Kilimanjaro`} /><p>Reaching the summit is never more important than returning safely. No itinerary can remove the risks of high altitude.</p></div><div className="ref-safety-list">{items.map((item, index) => <button className={`ref-safety-topic ${selected === index ? "active" : ""}`} type="button" aria-pressed={selected === index} onClick={() => setSelected(index)} key={item.title}><span className="ref-safety-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[item.icon]}</svg></span><span><strong>{item.title}</strong><small>{item.copy}</small></span></button>)}<Link className="ref-safety-cta" href="/contact">Talk to a Guide <span aria-hidden="true">↗</span></Link></div></div></section>;
+  return <section className="ref-section ref-dark ref-safety" id="safety"><div className="shell ref-safety-grid"><div><Intro eyebrow="CARE BEFORE THE SUMMIT" title="Your Safety Comes First" copy="The mountain deserves respect. So do your questions. Talk to us about the support and arrangements for your climb before you book." /><Photo src={image(items[0].photo)} alt="Experienced mountain guides on Kilimanjaro" /><p>Reaching the summit is never more important than returning safely. No itinerary can remove the risks of high altitude.</p></div><div className="ref-safety-list">{items.map((item) => <div className="ref-safety-topic" key={item.title}><span className="ref-safety-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[item.icon]}</svg></span><span><strong>{item.title}</strong><small>{item.copy}</small></span></div>)}<Link className="ref-safety-cta" href="/contact">Talk to a Guide <span aria-hidden="true">↗</span></Link></div></div></section>;
 }
 
 const kilimanjaroEnvironments = [
-  { title: "Cultivation Zone", height: "1,000–1,800m", icon: "◌", image: "figma-kili-journey-journey-landscape.png", alt: "Green lower slopes and forest at the foot of Kilimanjaro", copy: "Cultivated foothills and open grassland form the mountain’s green, lived-in lower edge." },
-  { title: "Montane Forest", height: "1,800–3,000m", icon: "♧", image: "figma-kili-routes-route-landscape2.png", alt: "Trekkers climbing through Kilimanjaro montane forest", copy: "Dense, humid forest surrounds the trail before the route opens into higher, drier country." },
-  { title: "Heath & Moorland", height: "3,000–4,000m", icon: "⌇", image: "figma-machame-environment-rectangle56.png", alt: "Open heath and moorland on Kilimanjaro", copy: "Low shrubs, giant groundsels and broad mountain views replace the enclosed forest trail." },
-  { title: "Alpine Desert", height: "4,000–5,000m", icon: "△", image: "figma-kili-journey-journey-landscape2.png", alt: "Trekkers crossing Kilimanjaro alpine desert", copy: "A stark, high-altitude landscape of rock, dust and strong light leads toward the summit slopes." },
-  { title: "Arctic / Summit Zone", height: "5,000–5,895m", icon: "✦", image: "figma-kili-journey-summit-panorama.png", alt: "Climbers on the snowy summit zone of Kilimanjaro", copy: "Ice, snow, wind and thin air define the final exposed approach to Uhuru Peak." },
+  { title: "Cultivation Zone", height: "1,000–1,800m", icon: "leaf", image: "figma-kili-journey-journey-landscape.png", alt: "Green lower slopes and forest at the foot of Kilimanjaro", copy: "Cultivated foothills and open grassland form the mountain’s green, lived-in lower edge." },
+  { title: "Montane Forest", height: "1,800–3,000m", icon: "forest", image: "figma-kili-routes-route-landscape2.png", alt: "Trekkers climbing through Kilimanjaro montane forest", copy: "Dense, humid forest surrounds the trail before the route opens into higher, drier country." },
+  { title: "Heath & Moorland", height: "3,000–4,000m", icon: "grass", image: "figma-machame-environment-rectangle56.png", alt: "Open heath and moorland on Kilimanjaro", copy: "Low shrubs, giant groundsels and broad mountain views replace the enclosed forest trail." },
+  { title: "Alpine Desert", height: "4,000–5,000m", icon: "mountain", image: "figma-kili-journey-journey-landscape2.png", alt: "Trekkers crossing Kilimanjaro alpine desert", copy: "A stark, high-altitude landscape of rock, dust and strong light leads toward the summit slopes." },
+  { title: "Arctic / Summit Zone", height: "5,000–5,895m", icon: "snow", image: "figma-kili-journey-summit-panorama.png", alt: "Climbers on the snowy summit zone of Kilimanjaro", copy: "Ice, snow, wind and thin air define the final exposed approach to Uhuru Peak." },
 ];
+
+function EnvironmentIcon({ type }: { type: string }) {
+  const paths: Record<string, React.ReactNode> = {
+    leaf: <><path d="M5 20c1-8 5-13 14-16 0 9-4 14-12 14"/><path d="M7 18c3-4 6-7 11-10"/></>,
+    forest: <><path d="m7 3-4 7h3l-4 7h10l-4-7h3z"/><path d="M7 17v4M16 6l-3 6h2l-3 6h8l-3-6h2zM16 18v3"/></>,
+    grass: <><path d="M5 21c0-7 2-12 6-16-1 7 0 11 1 16M12 21c0-6 2-10 7-13-3 6-3 9-3 13M4 21h16"/></>,
+    mountain: <><path d="m3 20 7-13 3 5 2-3 6 11z"/><path d="m8 11 2 2 2-2"/></>,
+    snow: <><path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 4l3 3 3-3M9 20l3-3 3 3M4 10l4 1-1-4M20 14l-4-1 1 4M4 14l4-1-1 4M20 10l-4 1 1-4"/></>,
+  };
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{paths[type]}</svg>;
+}
 
 function RouteEnvironments() {
   const [selected, setSelected] = useState(1);
@@ -166,7 +176,7 @@ function RouteEnvironments() {
     <div className="route-environment-photo" aria-live="polite"><Photo key={environment.image} src={image(environment.image)} alt={environment.alt} /></div>
     <div className="route-environment-content"><div className="ref-intro"><span>A MOUNTAIN OF MANY WORLDS</span><h2 id="route-environments-title">Environments of Kilimanjaro</h2></div>
       <div className="route-environment-options">{kilimanjaroEnvironments.map((item, index) => <button type="button" className={selected === index ? "active" : ""} aria-pressed={selected === index} onClick={() => setSelected(index)} key={item.title}>
-        <span className="route-environment-icon" aria-hidden="true">{item.icon}</span><span className="route-environment-copy"><strong>{item.title}</strong><small>{item.height}</small>{selected === index && <span className="route-environment-description">{item.copy}</span>}</span>
+        <span className="route-environment-icon" aria-hidden="true"><EnvironmentIcon type={item.icon} /></span><span className="route-environment-copy"><strong>{item.title}</strong><small>{item.height}</small>{selected === index && <span className="route-environment-description">{item.copy}</span>}</span>
       </button>)}</div>
     </div>
   </div></section>;
