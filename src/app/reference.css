@@ -2414,6 +2414,13 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 .group-join-panel form input{height:50px;padding:0 14px}
 .group-join-panel form textarea{min-height:105px;padding:13px 14px;resize:vertical}
 .group-join-panel form input:focus,.group-join-panel form textarea:focus{border-color:#ea4729;outline:2px solid rgba(234,71,41,.15)}
+.group-join-panel form .group-date-preference{align-items:end}
+.group-join-panel form .group-flexible-date{display:flex;min-height:50px;flex-direction:row;align-items:center;gap:12px;padding:9px 14px;border:1px solid rgba(36,49,56,.2);border-radius:12px;cursor:pointer}
+.group-join-panel form .group-flexible-date input{flex:0 0 20px;width:20px;height:20px;padding:0;accent-color:#ea4729}
+.group-join-panel form .group-flexible-date span{display:grid;gap:2px}
+.group-join-panel form .group-flexible-date b{font-size:13px;line-height:1.2}
+.group-join-panel form .group-flexible-date small{color:#667178;font-size:10px;font-weight:400;line-height:1.3}
+.group-join-panel form .group-flexible-date:has(input:focus-visible){border-color:#ea4729;outline:2px solid rgba(234,71,41,.15)}
 .group-join-panel .privacy{margin:0;color:#667178;font-size:11px;line-height:1.6}
 .group-join-panel .submit-button{width:max-content;min-height:54px;margin:0}
 

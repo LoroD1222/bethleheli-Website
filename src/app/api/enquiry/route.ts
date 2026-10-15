@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   if (kind === "contact") {
     submission.topic = field(data, "topic", 100);
   } else {
-    for (const key of ["interest", "dateStyle", "arrival", "departure", "timing", "adults", "children", "days", "travelStyle", "whatsapp", "country"] as const) {
+    for (const key of ["interest", "dateStyle", "dateFlexibility", "arrival", "departure", "timing", "adults", "children", "days", "travelStyle", "whatsapp", "country"] as const) {
       submission[key] = field(data, key);
     }
   }
