@@ -589,9 +589,9 @@ function HomeAdventures() {
 
 function HomeAdventureSelector() {
   const adventures = [
-    { title: "Kilimanjaro", copy: "Choose a route and begin planning your mountain journey.", src: "figma-kili-routes-route-landscape.png", href: "/kilimanjaro" },
-    { title: "Safari", copy: "Explore Tanzania's national parks, wildlife and open landscapes.", src: "figma-safari-packages-trip-card1.png", href: "/safari" },
-    { title: "Zanzibar", copy: "Discover beaches, Stone Town and the Indian Ocean coast.", src: "figma-zanzibar-hero.png", href: "/zanzibar" },
+    { eyebrow: "SAFARI", title: "Wildlife, and Nature", copy: "Park choices and onward connections tailored around your dates.", src: "figma-zanzibar-combine-frame.png", href: "/safari" },
+    { eyebrow: "KILIMANJARO", title: "Summit, the roof of Africa", copy: "Space to rest after the climb. The island at your own pace.", src: "figma-zanzibar-combine-frame1.png", href: "/kilimanjaro" },
+    { eyebrow: "", title: "Zanzibar island", copy: "One journey across the full range of Tanzania. Sequence to confirm.", src: "figma-zanzibar-combine-frame2.png", href: "/zanzibar" },
   ];
 
   return <section className="home-ref-select">
@@ -599,7 +599,7 @@ function HomeAdventureSelector() {
       <Intro eyebrow="" title="Select your Tanzanian adventure" copy="Whether you want to meet new people, travel privately with your people, or explore Tanzania independently, choose the safari style that fits your journey." />
       <div className="home-ref-select-cards">{adventures.map((adventure) => <Link href={adventure.href} key={adventure.title} className="home-ref-select-card">
         <Photo src={image(adventure.src)} alt="" />
-        <div><h3>{adventure.title}</h3><p>{adventure.copy}</p><span>Explore <Image src={image("figma-kili-group-button-arrow.svg")} alt="" width={40} height={40} /></span></div>
+        <div>{adventure.eyebrow && <small>{adventure.eyebrow}</small>}<h3>{adventure.title}</h3><p>{adventure.copy}</p><span>Start planning <Image src={image("figma-kili-group-button-arrow.svg")} alt="" width={40} height={40} /></span></div>
       </Link>)}</div>
     </div>
   </section>;
