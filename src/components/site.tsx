@@ -265,58 +265,7 @@ const groupClimbReviews = reviews.filter(review => review.category !== "Tanzania
 
 export function Testimonials({ groupClimbsOnly = false, title = "What our customers say", text = "Real stories from travelers who climbed, explored, and relaxed with Betheli Expeditions." }: { groupClimbsOnly?: boolean; title?: string; text?: string } = {}) {
   const reviewItems = groupClimbsOnly ? groupClimbReviews : reviews;
-  const scroller = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState(0);
-  const [activeReview, setActiveReview] = useState(0);
-  const [hasOverflow, setHasOverflow] = useState(false);
-  const updatePosition = () => {
-    const viewport = scroller.current;
-    if (!viewport) return;
-    const maxScroll = Math.max(1, viewport.scrollWidth - viewport.clientWidth);
-    const nextPosition = viewport.scrollLeft / maxScroll;
-    const cards = Array.from(viewport.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child.classList.contains("review-card"));
-    const firstOffset = cards[0]?.offsetLeft ?? 0;
-    const targetOffset = viewport.scrollLeft + firstOffset;
-    const nextReview = viewport.scrollLeft >= maxScroll - 2 ? cards.length - 1 : cards.reduce((closestIndex, card, index) => {
-      const closest = cards[closestIndex];
-      return Math.abs(card.offsetLeft - targetOffset) < Math.abs(closest.offsetLeft - targetOffset) ? index : closestIndex;
-    }, 0);
-    setPosition(nextPosition);
-    setActiveReview(nextReview);
-  };
-  useEffect(() => {
-    const viewport = scroller.current;
-    if (!viewport) return;
-    const updateOverflow = () => {
-      const scrollable = viewport.scrollWidth - viewport.clientWidth > 4;
-      setHasOverflow(scrollable);
-      if (!scrollable) {
-        setPosition(0);
-        setActiveReview(0);
-      }
-    };
-    updateOverflow();
-    viewport.scrollLeft = 0;
-    setPosition(0);
-    setActiveReview(0);
-    const observer = new ResizeObserver(updateOverflow);
-    observer.observe(viewport);
-    window.addEventListener("resize", updateOverflow);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", updateOverflow);
-    };
-  }, []);
-  const seek = (percent: number) => {
-    const viewport = scroller.current;
-    if (!viewport) return;
-    const next = Math.max(0, Math.min(100, percent)) / 100;
-    setPosition(next);
-    setActiveReview(Math.round(next * (reviewItems.length - 1)));
-    viewport.scrollTo({ left: next * Math.max(0, viewport.scrollWidth - viewport.clientWidth), behavior: "smooth" });
-  };
-  const progress = 25 + position * 75;
-  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title={title} text={text} align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid" ref={scroller} onScroll={updatePosition}>{reviewItems.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt={`Traveler photo from ${review.name}'s review`} /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt={`${review.name}'s TripAdvisor profile picture`} /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><a href={review.url} target="_blank" rel="noopener noreferrer">Read full review on Trip Advisor</a></footer></div></article>)}</div>{hasOverflow && <div className="review-controls" aria-label="Review carousel controls"><input type="range" min="0" max="100" value={Math.round(position * 100)} aria-label="Review slider position" aria-valuetext={`${activeReview + 1} of ${reviewItems.length} reviews`} onChange={event => seek(Number(event.target.value))} style={{ background: `linear-gradient(90deg,#fff 0 ${progress}%,rgba(255,255,255,.16) ${progress}% 100%)` }} /><span className="review-count" aria-live="polite">{activeReview + 1} of {reviewItems.length} reviews</span></div>}</div></section>;
+  return <section className="testimonial-section"><div className="shell"><div className="testimonials-heading"><SectionIntro eyebrow="" title={title} text={text} align="left" /><div className="testimonial-rating-summary"><div className="testimonial-rating-copy"><strong>5.0 Reviews</strong><small>23 verified reviews</small></div><Stars summary /></div></div><div className="review-grid">{reviewItems.map(review => <article className="review-card" key={review.name}><div className="review-visual"><Photo src={review.image} alt={`Traveler photo from ${review.name}'s review`} /><span>{review.category}</span></div><div className="review-copy"><div className="review-person"><Photo src={review.avatar} alt={`${review.name}'s TripAdvisor profile picture`} /><div><div className="review-stars"><Stars /> <b>5.0</b></div><strong>{review.name}</strong><small>{review.date}</small></div></div><h3>“{review.quote}”</h3><p>{review.copy}</p><div className="review-tags">{review.tags.map(tag => <span key={tag}>{tag}</span>)}</div><footer><Photo src="/images/home-12.png" alt="" /><a href={review.url} target="_blank" rel="noopener noreferrer">Read full review on Trip Advisor</a></footer></div></article>)}</div></div></section>;
 }
 
 const commonFaqs = [

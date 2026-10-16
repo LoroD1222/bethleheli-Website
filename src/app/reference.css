@@ -2563,3 +2563,50 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 }
 
 @media(prefers-reduced-motion:reduce){.ref-stay-photo>img{animation:none}.ref-stay-arrows button,.trip-ref-lodge-arrows button{transition:none}}
+
+/* Reviews follow the document flow: no nested horizontal scroller or clipped copy. */
+.testimonial-section .review-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  align-items:stretch;
+  gap:22px;
+  width:100%;
+  margin-top:42px;
+  padding:0;
+  overflow:visible;
+  scroll-snap-type:none;
+}
+.testimonial-section .review-card{
+  display:flex;
+  flex:none;
+  width:auto;
+  height:auto;
+  min-height:0;
+  flex-direction:column;
+  scroll-snap-align:none;
+}
+.testimonial-section .review-copy{
+  flex:1;
+  height:auto;
+  min-height:448px;
+}
+.testimonial-section .review-copy h3,
+.testimonial-section .review-copy>p{
+  display:block;
+  height:auto;
+  max-height:none;
+  overflow:visible;
+  -webkit-line-clamp:unset;
+  line-clamp:unset;
+}
+@media(max-width:1000px){
+  .testimonial-section .review-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .testimonial-section .review-grid{grid-template-columns:1fr;width:calc(100% - 40px);margin:30px auto 0;padding:0}
+  .testimonial-section .review-card{width:100%;height:auto;min-height:0}
+  .testimonial-section .review-visual,.testimonial-section .review-visual img{height:190px}
+  .testimonial-section .review-copy{height:auto;min-height:0;padding:18px}
+  .testimonial-section .review-copy h3{max-height:none;-webkit-line-clamp:unset}
+  .testimonial-section .review-copy>p{max-height:none;-webkit-line-clamp:unset;line-clamp:unset}
+}
