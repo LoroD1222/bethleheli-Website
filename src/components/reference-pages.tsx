@@ -555,7 +555,7 @@ export function KilimanjaroRouteDetailPage({ route }: { route: KilimanjaroRouteS
 function HomeFaq() {
   const [tab, setTab] = useState("All");
   const categories = ["All", ...faqCategories.map(([category]) => category.charAt(0) + category.slice(1).toLowerCase())];
-  const featuredQuestions = ["Is airfare included in the package price?", "How difficult is Kilimanjaro?", "Will I see the Big Five or the Migration?", "Which coast should I choose?", "Do I need a visa for Tanzania?", "Can I combine Kilimanjaro, safari and Zanzibar?"];
+  const featuredQuestions = ["Is airfare included in the package price?", "How difficult is Kilimanjaro?", "Will I see the Big Five or the Great Migration?", "Which coast should I choose?", "Do I need a visa for Tanzania?", "Can I combine Kilimanjaro, safari and Zanzibar?"];
   const selectedQuestions = tab === "All" ? featuredQuestions : faqCategories.find(([category]) => category.toLowerCase() === tab.toLowerCase())?.[2] || [];
   const questions = selectedQuestions.map(question => [question, faqAnswers[question] || "Please ask the Bathiel team to confirm this detail for your proposed trip."]);
   return <section className="home-ref-faq shell"><Intro eyebrow="" title="Frequently Asked Questions" copy="Whether you want to meet new people, travel privately with your people, or explore" /><div className="home-ref-faq-tabs" role="group" aria-label="FAQ categories">{categories.map(category => <button type="button" aria-pressed={tab === category} className={tab === category ? "active" : ""} onClick={() => setTab(category)} key={category}>{category}</button>)}<PrimaryLink>Start planning</PrimaryLink></div><Accordion key={tab} items={questions} openCount={0} /><Link className="home-ref-faq-more" href="/faq">View all questions <ArrowIcon /></Link></section>;
@@ -807,7 +807,7 @@ function TripEnvironments() {
 const tripFaqItems = [
   { category: "Booking", question: "Is airfare included in the package price?", answer: faqAnswers["Is airfare included in the package price?"] },
   { category: "Kilimanjaro", question: "How difficult is Kilimanjaro?", answer: faqAnswers["How difficult is Kilimanjaro?"] },
-  { category: "Safari", question: "Will I see the Big Five or the Migration?", answer: faqAnswers["Will I see the Big Five or the Migration?"] },
+  { category: "Safari", question: "Will I see the Big Five or the Great Migration?", answer: faqAnswers["Will I see the Big Five or the Great Migration?"] },
   { category: "Zanzibar", question: "Which coast should I choose?", answer: faqAnswers["Which coast should I choose?"] },
   { category: "Travel", question: "Do I need a visa for Tanzania?", answer: faqAnswers["Do I need a visa for Tanzania?"] },
   { category: "General", question: "Can I combine Kilimanjaro, safari and Zanzibar?", answer: faqAnswers["Can I combine Kilimanjaro, safari and Zanzibar?"] },
