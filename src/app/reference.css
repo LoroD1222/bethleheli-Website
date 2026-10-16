@@ -2081,7 +2081,7 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 
 /* Keep the itinerary reference panel visible while the desktop day list scrolls. */
 .trip-ref-map-button{display:block;width:100%;border:0;padding:0;background:transparent;color:inherit;cursor:zoom-in;text-align:left}
-.trip-ref-map-button>img{display:block;width:100%;height:620px;border:1px solid #e3e6e6;border-radius:20px;object-fit:cover;transition:transform .22s ease,box-shadow .22s ease}
+.trip-ref-map-button>img{display:block;width:100%;height:auto;aspect-ratio:1;border:1px solid #e3e6e6;border-radius:20px;object-fit:contain;background:#fff;transition:transform .22s ease,box-shadow .22s ease}
 .trip-ref-map-button>.trip-ref-map-hint{display:flex;align-items:center;justify-content:flex-end;gap:9px;margin-top:12px;color:rgba(0,0,0,.6);font-family:Inter,Arial,sans-serif;font-size:15px;font-weight:600;line-height:24px;transition:color .2s ease}
 .trip-ref-map-button:hover>img,.trip-ref-map-button:focus-visible>img{box-shadow:0 14px 32px rgba(36,49,56,.16);transform:translateY(-2px)}
 .trip-ref-map-button:hover>.trip-ref-map-hint,.trip-ref-map-button:focus-visible>.trip-ref-map-hint{color:#ea4729}
@@ -2119,7 +2119,7 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 @media(max-width:900px){
   .ref-hero .header-inner{height:86px;margin-top:0}
   .ref-hero .logo{width:118px;height:52px}
-  .trip-ref-map-button>img{height:450px;object-fit:contain}
+  .trip-ref-map-button>img{height:auto}
 }
 @media(max-width:700px){
   .ref-actions .button,.ref-actions .ghost-button{min-height:52px;padding-left:18px;font-size:13px}
@@ -2134,7 +2134,7 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   .ref-zanzibar-place-grid .ref-place h3{font-size:22px}
   .ref-zanzibar-place-grid .ref-place p{font-size:14px}
   .ref-zanzibar-place-grid .ref-place small{font-size:12px}
-  .trip-ref-map-button>img{height:400px}
+  .trip-ref-map-button>img{height:auto}
   .ref-zanzibar-faq>.shell{width:calc(100% - 40px)}
   .ref-zanzibar-faq .accordion summary{min-height:68px;padding:18px 20px;font-size:15px}
   .ref-zanzibar-faq .accordion details p{padding:0 20px 20px;font-size:14px}
