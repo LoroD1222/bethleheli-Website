@@ -417,7 +417,7 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .trip-ref-chapter-item img{display:block;height:24px;width:24px}
 .trip-ref-chapter-item h4{color:#243138;font-size:16px;font-weight:500;line-height:25px;margin:8px 0}
 .trip-ref-chapter-item p{color:#667178;font-size:14px;line-height:22px;margin:0}
-@media(min-width:1101px){.trip-ref-itinerary{min-height:2520px}.trip-ref-inclusions{min-height:1110px}}
+@media(min-width:1101px){.trip-ref-inclusions{min-height:1110px}}
 @media(max-width:1100px){.trip-ref-lodge{grid-template-columns:1fr;gap:12px}.trip-ref-day-meta{flex-wrap:wrap;gap:12px}}
 @media(max-width:1100px){.trip-ref-chapter{grid-template-columns:1fr}.trip-ref-chapter-heading{gap:8px}.trip-ref-chapter:nth-child(n){min-height:0}}
 @media(max-width:650px){.trip-ref-chapter-items,.trip-ref-chapter:nth-child(2) .trip-ref-chapter-items{grid-template-columns:1fr 1fr;gap:24px;padding:22px}.trip-ref-chapter-heading{padding:22px}.trip-ref-chapter-heading h3{font-size:23px}}
@@ -792,8 +792,8 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 /* Categorized trip directory and a clearer local-advisor contact card. */
 .nav-menu-item .nav-submenu-trips{width:230px}
 .trips-ref-category-nav{display:flex;flex-wrap:wrap;gap:10px;margin:-8px 0 52px;padding-bottom:26px;border-bottom:1px solid rgba(255,255,255,.16)}
-.trips-ref-category-nav a{display:inline-flex;align-items:center;min-height:42px;padding:9px 18px;border:1px solid rgba(255,255,255,.28);border-radius:999px;color:#fff;font-size:12px;font-weight:600;transition:background-color .2s ease,border-color .2s ease,transform .2s ease}
-.trips-ref-category-nav a:hover,.trips-ref-category-nav a:focus-visible{border-color:#ea4729;background:#ea4729;transform:translateY(-2px)}
+.trips-ref-category-nav button{display:inline-flex;align-items:center;min-height:42px;padding:9px 18px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:transparent;color:#fff;font:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:background-color .2s ease,border-color .2s ease,transform .2s ease}
+.trips-ref-category-nav button:hover,.trips-ref-category-nav button:focus-visible,.trips-ref-category-nav button.active{border-color:#ea4729;background:#ea4729;color:#fff;transform:translateY(-2px)}
 .trips-ref-category{scroll-margin-top:24px;padding:44px 0 58px;border-bottom:1px solid rgba(255,255,255,.14)}
 .trips-ref-category:last-child{padding-bottom:0;border-bottom:0}
 .trips-ref-category-heading{display:flex;align-items:end;justify-content:space-between;gap:36px;margin-bottom:28px}
@@ -832,7 +832,7 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 }
 @media(max-width:700px){
   .trips-ref-category-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:28px}
-  .trips-ref-category-nav a{justify-content:center;padding-inline:10px}
+  .trips-ref-category-nav button{justify-content:center;padding-inline:10px}
   .trips-ref-category{padding:34px 0 46px}
   .trips-ref-category-heading h3{font-size:29px}
   .advisor-card{grid-template-columns:1fr;gap:22px;margin-top:36px;padding:18px}
@@ -872,8 +872,8 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 
 .trips-ref-listing .home-ref-adventure-filters select{border-color:rgba(36,49,56,.28);background:#fff;color:#243138}
 .trips-ref-listing .trips-ref-category-nav{border-color:rgba(36,49,56,.14)}
-.trips-ref-listing .trips-ref-category-nav a{border-color:rgba(36,49,56,.24);color:#243138}
-.trips-ref-listing .trips-ref-category-nav a:hover,.trips-ref-listing .trips-ref-category-nav a:focus-visible{border-color:#ea4729;color:#fff}
+.trips-ref-listing .trips-ref-category-nav button{border-color:rgba(36,49,56,.24);color:#243138}
+.trips-ref-listing .trips-ref-category-nav button:hover,.trips-ref-listing .trips-ref-category-nav button:focus-visible,.trips-ref-listing .trips-ref-category-nav button.active{border-color:#ea4729;background:#ea4729;color:#fff}
 .trips-ref-listing .trips-ref-category{border-color:rgba(36,49,56,.13)}
 .trips-ref-listing .trips-ref-category-heading h3{color:#243138}
 .trips-ref-listing .trips-ref-category-heading p{color:#667178}
