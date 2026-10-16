@@ -346,8 +346,6 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .trip-ref-nav .button{margin-left:auto;background:#2e3e52;min-height:51px;font-size:15px;white-space:nowrap}
 .trip-ref-nav .button:hover,.trip-ref-nav .button:focus-visible{background:#405670}
 .trip-ref-nav~main [id]{scroll-margin-top:100px}
-.trip-ref-exclusions{padding-top:72px;padding-bottom:72px}
-.trip-ref-exclusions .ref-intro{max-width:800px}
 .trip-ref-overview>.shell{display:grid;grid-template-columns:1.25fr 1fr;gap:65px;align-items:center}
 .trip-ref-overview h2{max-width:570px;font-size:42px}
 .trip-ref-overview p{max-width:650px;margin-top:22px;color:rgba(255,255,255,.72);font-size:14px;line-height:1.8}

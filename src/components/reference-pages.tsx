@@ -265,7 +265,6 @@ const tripSections = [
   ["overview", "OVERVIEW"],
   ["itinerary", "ITINERARY"],
   ["inclusions", "INCLUSIONS"],
-  ["exclusions", "EXCLUSIONS"],
   ["questions", "FREQUENTLY ASKED QUESTIONS"],
 ] as const;
 
@@ -882,7 +881,6 @@ export function TripDetailReferencePage() {
       {mapOpen && <div className="trip-ref-map-modal" role="dialog" aria-modal="true" aria-label="Northern Tanzania safari route map"><button type="button" className="trip-ref-map-backdrop" aria-label="Close map" onClick={() => setMapOpen(false)} /><div className="trip-ref-map-modal-panel"><button type="button" className="trip-ref-map-close" aria-label="Close map" onClick={() => setMapOpen(false)}>×</button><Photo src={image("figma-trips-map-photo.png")} alt="Expanded illustrative Northern Tanzania safari route map" /></div></div>}
       <TripEnvironments />
       <section className="ref-section trip-ref-inclusions" id="inclusions"><div className="shell"><Intro eyebrow="YOUR SAFARI, TAKEN CARE OF" title="What’s included in your safari" copy="Use this checklist when planning your enquiry. All package details are subject to confirmation in your quote." /><div className="trip-ref-chapters">{tripInclusionChapters.map(chapter=><article className="trip-ref-chapter" key={chapter.title}><div className="trip-ref-chapter-heading"><span>{chapter.marker}</span><h3>{chapter.title}</h3><p>{chapter.description}</p></div><div className="trip-ref-chapter-items">{chapter.items.map(item=><div className="trip-ref-chapter-item" key={item.title}><Image src={image(`figma-trips-inclusion-${item.icon}.svg`)} alt="" width={24} height={24} /><h4>{item.title}</h4><p>{item.description}</p></div>)}</div></article>)}</div></div></section>
-      <section className="ref-section trip-ref-exclusions" id="exclusions"><div className="shell"><Intro eyebrow="BEFORE YOU BOOK" title="Exclusions" copy="Every trip is planned around your dates and group. Ask us for a written quote confirming exactly what is and is not included." /></div></section>
       <CtaBanner title="Unforgettable Moments in the Heart of Mount Kilimanjaro" text="Experience breathtaking sunrises, explore volcanic landscapes, and create memories at one of Africa’s most iconic destinations." image={image("figma-kili-group-trip-landscape3.png")} centerImage={image("figma-kili-group-trip-landscape3.png")} />
       <Testimonials />
       <ImageCards eyebrow="Related Trips" title="You Might Also Like" cards={relatedTrips} variant="climbs" className="trip-ref-related" />
