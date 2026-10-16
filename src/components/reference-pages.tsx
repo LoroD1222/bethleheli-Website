@@ -140,7 +140,7 @@ function SafariFaq() {
 
 function ZanzibarOceanActivities() {
   return <section className="ref-section ref-dark ref-zanzibar-ocean" aria-labelledby="zanzibar-activities-title">
-    <Photo className="ref-zanzibar-ocean-photo" src={image("figma-zanzibar-hero.png")} alt="Zanzibar beach, palm trees and the Indian Ocean" sizes="100vw" />
+    <Photo className="ref-zanzibar-ocean-photo" src={image("figma-zanzibar-ocean-ocean-photograph-hd.png")} alt="Snorkeler floating above a coral reef in Zanzibar" sizes="100vw" />
     <div className="shell ref-zanzibar-ocean-content"><div><p className="eyebrow">CLASSIC ZANZIBAR ACTIVITIES</p><h2 id="zanzibar-activities-title">Explore Stone Town, spice farms and the ocean.</h2><p>Discover classic Zanzibar experiences: Stone Town walks, spice farm tours, sunset dhow sailing and snorkeling. These timeless activities offer a deeper look at the island’s culture, history and coastline.</p></div>
       <div className="ref-zanzibar-ocean-mini"><figure><Photo src={image("figma-zanzibar-ocean-rectangle.png")} alt="Sunset dhow sailing" /><figcaption>Sunset dhow sailing</figcaption></figure><figure><Photo src={image("figma-zanzibar-ocean-rectangle1.png")} alt="Stone Town street" /><figcaption>Stone Town exploration</figcaption></figure></div>
     </div>
