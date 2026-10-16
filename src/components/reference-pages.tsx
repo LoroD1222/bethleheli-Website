@@ -566,17 +566,17 @@ type TripCard = { title: string; src: string; href: string; location: "Kilimanja
 
 const tripCards: TripCard[] = [
   { title: "Northern Serengeti River Crossing", src: "figma-trips-hero.png", href: "/trips/northern-serengeti", location: "Safari", category: "Safari", days: 6, price: "$1,732" },
-  { title: "Family Safari & Beach Escape", src: "figma-zanzibar-hero.png", href: "/plan-your-trip", location: "Zanzibar", category: "Combo Safaris", days: 8, price: "$2,286" },
-  { title: "Kilimanjaro Summit Journey", src: "figma-home-hero.png", href: "/kilimanjaro", location: "Kilimanjaro", category: "Kilimanjaro", days: 8, price: "$2,286" },
-  { title: "Serengeti Family Adventure", src: "home-15.jpg", href: "/safari", location: "Safari", category: "Safari", days: 8, price: "$2,286" },
-  { title: "Summit, Safari & Coast", src: "figma-kili-group-trip-landscape3.png", href: "/plan-your-trip", location: "Kilimanjaro", category: "Combo Safaris", days: 10, price: "$2,940" },
-  { title: "Zanzibar Culture & Coast", src: "figma-home-story-zanzibar.png", href: "/zanzibar", location: "Zanzibar", category: "Zanzibar", days: 6, price: "$1,732" },
-  { title: "Tarangire & Ngorongoro Safari", src: "figma-safari-destinations-destination-photograph2.png", href: "/safari", location: "Safari", category: "Safari", days: 6, price: "$1,732" },
-  { title: "Lemosho Route & Zanzibar", src: "figma-kili-routes-route-landscape1.png", href: "/kilimanjaro/lemosho-route", location: "Kilimanjaro", category: "Combo Safaris", days: 10, price: "$2,940" },
+  { title: "Family Safari & Beach Escape", src: "figma-zanzibar-hero.png", href: "/trips/northern-serengeti", location: "Zanzibar", category: "Combo Safaris", days: 8, price: "$2,286" },
+  { title: "Kilimanjaro Summit Journey", src: "figma-home-hero.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", category: "Kilimanjaro", days: 8, price: "$2,286" },
+  { title: "Serengeti Family Adventure", src: "home-15.jpg", href: "/trips/northern-serengeti", location: "Safari", category: "Safari", days: 8, price: "$2,286" },
+  { title: "Summit, Safari & Coast", src: "figma-kili-group-trip-landscape3.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", category: "Combo Safaris", days: 10, price: "$2,940" },
+  { title: "Zanzibar Culture & Coast", src: "figma-home-story-zanzibar.png", href: "/trips/northern-serengeti", location: "Zanzibar", category: "Zanzibar", days: 6, price: "$1,732" },
+  { title: "Tarangire & Ngorongoro Safari", src: "figma-safari-destinations-destination-photograph2.png", href: "/trips/northern-serengeti", location: "Safari", category: "Safari", days: 6, price: "$1,732" },
+  { title: "Lemosho Route & Zanzibar", src: "figma-kili-routes-route-landscape1.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", category: "Combo Safaris", days: 10, price: "$2,940" },
 ];
 
-function TripCardList({ trips, grid = false, hrefOverride }: { trips: TripCard[]; grid?: boolean; hrefOverride?: string }) {
-  return <div className={`home-ref-adventure-cards${grid ? " trips-ref-card-grid" : ""}`}>{trips.map((trip) => <Link href={hrefOverride || trip.href} key={trip.title}><Photo src={image(trip.src)} alt={trip.title} /><h3>{trip.title}</h3><small>{trip.days} DAYS</small><div className="home-ref-trip-bottom"><span className="home-ref-trip-price">starts from<br /><b>{trip.price}</b><br />per person</span><span className="home-ref-trip-link">View Trip</span></div></Link>)}</div>;
+function TripCardList({ trips, grid = false }: { trips: TripCard[]; grid?: boolean }) {
+  return <div className={`home-ref-adventure-cards${grid ? " trips-ref-card-grid" : ""}`}>{trips.map((trip) => <Link href={trip.href} key={trip.title}><Photo src={image(trip.src)} alt={trip.title} /><h3>{trip.title}</h3><small>{trip.days} DAYS</small><div className="home-ref-trip-bottom"><span className="home-ref-trip-price">starts from<br /><b>{trip.price}</b><br />per person</span><span className="home-ref-trip-link">View Trip</span></div></Link>)}</div>;
 }
 
 function HomeAdventures() {
@@ -584,7 +584,7 @@ function HomeAdventures() {
   const [price, setPrice] = useState("All prices");
   const [duration, setDuration] = useState("Any duration");
   const visible = tripCards.filter((trip) => (location === "All locations" || trip.location === location) && (price === "All prices" || trip.price === price) && (duration === "Any duration" || `${trip.days} days` === duration)).slice(0, 5);
-  return <div className="shell home-ref-adventures"><div><div><h2>Kilimanjaro, Safari and Zanzibar.</h2></div><div className="home-ref-adventure-filters"><select aria-label="Filter by location" value={location} onChange={e => setLocation(e.target.value)}>{["All locations","Kilimanjaro","Safari","Zanzibar"].map(x=><option key={x}>{x}</option>)}</select><select aria-label="Filter by price" value={price} onChange={e => setPrice(e.target.value)}><option>All prices</option><option>$1,732</option><option>$2,286</option><option>$2,940</option></select><select aria-label="Filter by duration" value={duration} onChange={e => setDuration(e.target.value)}><option>Any duration</option><option>6 days</option><option>8 days</option><option>10 days</option></select></div></div><TripCardList trips={visible} hrefOverride="/trips" /><Link className="home-ref-view-trips" href="/trips">View all trips <ArrowIcon /></Link></div>;
+  return <div className="shell home-ref-adventures"><div><div><h2>Kilimanjaro, Safari and Zanzibar.</h2></div><div className="home-ref-adventure-filters"><select aria-label="Filter by location" value={location} onChange={e => setLocation(e.target.value)}>{["All locations","Kilimanjaro","Safari","Zanzibar"].map(x=><option key={x}>{x}</option>)}</select><select aria-label="Filter by price" value={price} onChange={e => setPrice(e.target.value)}><option>All prices</option><option>$1,732</option><option>$2,286</option><option>$2,940</option></select><select aria-label="Filter by duration" value={duration} onChange={e => setDuration(e.target.value)}><option>Any duration</option><option>6 days</option><option>8 days</option><option>10 days</option></select></div></div><TripCardList trips={visible} /><Link className="home-ref-view-trips" href="/trips">View all trips <ArrowIcon /></Link></div>;
 }
 
 function HomeAdventureSelector() {
