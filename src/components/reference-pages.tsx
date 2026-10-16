@@ -636,6 +636,11 @@ function HomeMoments() {
     ["zanzibar-03.jpg", "Climbers resting above the clouds"],
     ["figma-kili-routes-route-landscape3.png", "Climbers crossing Kilimanjaro's green moorland"],
     ["figma-kili-why-image2.png", "Bathiel Expeditions climbing team"],
+    ["figma-kili-intro-climbers-above-the-clouds.png", "Climbers pausing above Kilimanjaro's cloud line"],
+    ["figma-kili-journey-journey-landscape1.png", "Climbers crossing a footbridge on Kilimanjaro"],
+    ["figma-kili-journey-journey-landscape3.png", "Climbers following a high-altitude mountain stream"],
+    ["figma-kili-safety-expedition-team-photograph.png", "The full Betheli Expeditions mountain team"],
+    ["figma-kili-group-trip-landscape3.png", "Climbers approaching Kilimanjaro beneath drifting clouds"],
   ];
   const showMoment = (index: number, behavior: ScrollBehavior = "smooth") => {
     const viewport = scroller.current;
