@@ -2458,11 +2458,12 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 
 /* Group climbs landing page */
 .groups-page{width:100%;padding:0;background:var(--paper)}
-.group-climb-hero{position:relative;min-height:650px;overflow:hidden;background:#243138;color:#fff}
+.group-climb-hero{position:relative;min-height:720px;overflow:hidden;background:#243138;color:#fff}
 .group-climb-hero-image,.group-climb-hero-scrim{position:absolute!important;inset:0;width:100%;height:100%}
 .group-climb-hero-image{object-fit:cover;object-position:center 57%}
 .group-climb-hero-scrim{background:linear-gradient(90deg,rgba(24,39,46,.94) 0%,rgba(24,39,46,.7) 42%,rgba(24,39,46,.12) 78%),linear-gradient(180deg,rgba(24,39,46,.1) 0%,rgba(24,39,46,.18) 62%,rgba(24,39,46,.88) 100%)}
-.group-climb-hero-content{position:relative;z-index:1;padding-top:82px;padding-bottom:38px}
+.group-climb-hero .site-header-overlay .header-inner>.button{border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.13)}
+.group-climb-hero-content{position:relative;z-index:1;padding-top:132px;padding-bottom:38px}
 .group-climb-hero-content h1{max-width:760px;margin-top:15px;font-family:Poppins,Arial,sans-serif;font-size:clamp(48px,5.3vw,76px);font-weight:500;line-height:1.08;letter-spacing:-.035em}
 .group-climb-hero-content>p:not(.eyebrow){max-width:650px;margin-top:22px;color:rgba(255,255,255,.82);font-size:17px;line-height:1.75}
 .group-climb-hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
@@ -2515,8 +2516,8 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 .group-join-panel .submit-button{width:max-content;min-height:54px;margin:0}
 
 @media(max-width:900px){
-  .group-climb-hero{min-height:620px}
-  .group-climb-hero-content{padding-top:70px}
+  .group-climb-hero{min-height:700px}
+  .group-climb-hero-content{padding-top:118px}
   .group-climb-benefits{margin-top:45px}
   .group-climb-benefits>span{padding:15px}
   .group-climb-benefits b{font-size:13px}
@@ -2524,10 +2525,10 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 
 @media(max-width:590px){
   .groups-page{padding:0}
-  .group-climb-hero{min-height:750px}
+  .group-climb-hero{min-height:820px}
   .group-climb-hero-image{object-position:67% center}
   .group-climb-hero-scrim{background:linear-gradient(180deg,rgba(24,39,46,.82) 0%,rgba(24,39,46,.52) 45%,rgba(24,39,46,.95) 100%)}
-  .group-climb-hero-content{padding-top:58px;padding-bottom:28px}
+  .group-climb-hero-content{padding-top:108px;padding-bottom:28px}
   .group-climb-hero-content h1{font-size:42px;line-height:1.08}
   .group-climb-hero-content>p:not(.eyebrow){font-size:14px;line-height:1.65}
   .group-climb-hero-actions{margin-top:22px}
