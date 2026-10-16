@@ -301,25 +301,9 @@ export function Testimonials({ groupClimbsOnly = false, title = "What our custom
     setActiveReview(0);
     const observer = new ResizeObserver(updateOverflow);
     observer.observe(viewport);
-    const onWheel = (event: WheelEvent) => {
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-      const maxScroll = viewport.scrollWidth - viewport.clientWidth;
-      if (maxScroll <= 4) return;
-      const movingForward = event.deltaY > 0;
-      const canAdvance = movingForward ? viewport.scrollLeft < maxScroll - 2 : viewport.scrollLeft > 2;
-      event.preventDefault();
-      if (!canAdvance) {
-        const handoffDistance = Math.sign(event.deltaY) * Math.max(Math.abs(event.deltaY), 96);
-        window.scrollBy({ top: handoffDistance, behavior: "auto" });
-        return;
-      }
-      viewport.scrollBy({ left: event.deltaY, behavior: "auto" });
-    };
-    viewport.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("resize", updateOverflow);
     return () => {
       observer.disconnect();
-      viewport.removeEventListener("wheel", onWheel);
       window.removeEventListener("resize", updateOverflow);
     };
   }, []);
