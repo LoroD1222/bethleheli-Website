@@ -388,3 +388,304 @@ export type AllSanitySchemaTypes =
   | SanityAssetSourceData
   | SanityImageAsset
   | Geopoint;
+
+// Source: ../src/sanity/lib/queries.ts
+// Variable: TRIP_PAGE_QUERY
+// Query: *[_type == "trip" && slug.current == $slug][0] {    _id,    title,    durationDays,    startingPrice { amount, currency },    heroImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions },    heroSummary,    overviewParagraphs,    overviewImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions },    itineraryFor,    travelDatesText,    guestsText,    destinations,    planningTitle,    planningDescription,    itinerary[] {      _key,      title,      summary,      image {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions },      experience,      mealPlan,      accommodations[]-> {        _id,        propertyName,        tier,        coverImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions },        gallery[] {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions }      }    },    landscapesTitle,    landscapes[] {      _key,      name,      descriptor,      iconKey,      image {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions },      description    },    inclusionsEyebrow,    inclusionsTitle,    inclusionsDescription,    inclusionGroups[] {      _key,      marker,      title,      description,      items[] { _key, iconKey, title, description }    },    relatedTrips[] {      _key,      title,      summary,      durationLabel,      image {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions },      href    },    seo {      title,      description,      canonicalPath,      shareImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions }    },    "sharedMap": *[_id == "tripSettings"][0].map {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions }  }
+export type TRIP_PAGE_QUERY_RESULT = {
+  _id: string;
+  title: string | null;
+  durationDays: number | null;
+  startingPrice: {
+    amount: number | null;
+    currency: "USD" | null;
+  } | null;
+  heroImage: {
+    asset: SanityImageAssetReference | null;
+    alt: string | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+  heroSummary: string | null;
+  overviewParagraphs: Array<string> | null;
+  overviewImage: {
+    asset: SanityImageAssetReference | null;
+    alt: string | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+  itineraryFor: string | null;
+  travelDatesText: string | null;
+  guestsText: string | null;
+  destinations: Array<string> | null;
+  planningTitle: string | null;
+  planningDescription: string | null;
+  itinerary: Array<{
+    _key: string;
+    title: string | null;
+    summary: string | null;
+    image: {
+      asset: SanityImageAssetReference | null;
+      alt: string | null;
+      crop: SanityImageCrop | null;
+      hotspot: SanityImageHotspot | null;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+    experience: string | null;
+    mealPlan: "breakfast" | "fullBoard" | "halfBoard" | null;
+    accommodations: Array<{
+      _id: string;
+      propertyName: string | null;
+      tier: "budget" | "luxury" | "midRange" | null;
+      coverImage: {
+        asset: SanityImageAssetReference | null;
+        alt: string | null;
+        crop: SanityImageCrop | null;
+        hotspot: SanityImageHotspot | null;
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+      gallery: Array<{
+        asset: SanityImageAssetReference | null;
+        alt: string | null;
+        crop: SanityImageCrop | null;
+        hotspot: SanityImageHotspot | null;
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      }> | null;
+    }> | null;
+  }> | null;
+  landscapesTitle: string | null;
+  landscapes: Array<{
+    _key: string;
+    name: string | null;
+    descriptor: string | null;
+    iconKey: string | null;
+    image: {
+      asset: SanityImageAssetReference | null;
+      alt: string | null;
+      crop: SanityImageCrop | null;
+      hotspot: SanityImageHotspot | null;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+    description: string | null;
+  }> | null;
+  inclusionsEyebrow: string | null;
+  inclusionsTitle: string | null;
+  inclusionsDescription: string | null;
+  inclusionGroups: Array<{
+    _key: string;
+    marker: string | null;
+    title: string | null;
+    description: string | null;
+    items: Array<{
+      _key: string;
+      iconKey: string | null;
+      title: string | null;
+      description: string | null;
+    }> | null;
+  }> | null;
+  relatedTrips: Array<{
+    _key: string;
+    title: string | null;
+    summary: string | null;
+    durationLabel: string | null;
+    image: {
+      asset: SanityImageAssetReference | null;
+      alt: string | null;
+      crop: SanityImageCrop | null;
+      hotspot: SanityImageHotspot | null;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+    href: string | null;
+  }> | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    canonicalPath: string | null;
+    shareImage: {
+      asset: SanityImageAssetReference | null;
+      alt: string | null;
+      crop: SanityImageCrop | null;
+      hotspot: SanityImageHotspot | null;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+  } | null;
+  sharedMap: {
+    asset: SanityImageAssetReference | null;
+    alt: string | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+} | null;
+
+// Source: ../src/sanity/lib/queries.ts
+// Variable: GROUP_CLIMBS_QUERY
+// Query: {    "page": *[_id == "groupClimbsPage"][0] {      _id,      heroEyebrow,      heroTitle,      heroDescription,      heroImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions },      benefits[] { _key, iconKey, title, description },      scheduleEyebrow,      scheduleTitle,      emptyStateTitle,      emptyStateDescription,      seo {        title,        description,        canonicalPath,        shareImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions }      }    },    "departures": *[_type == "groupDeparture" && bookingStatus == "scheduled"] | order(startDate asc) {      _id,      routeName,      durationDays,      startDate,      endDate,      highlights,      price { amount, currency },      deposit { amount, currency },      promotionStatus,      originalPrice { amount, currency },      seasonStatus,      seasonLabel    }  }
+export type GROUP_CLIMBS_QUERY_RESULT = {
+  page:
+    | {
+        _id: "groupClimbsPage";
+        heroEyebrow: null;
+        heroTitle: null;
+        heroDescription: null;
+        heroImage: null;
+        benefits: null;
+        scheduleEyebrow: null;
+        scheduleTitle: null;
+        emptyStateTitle: null;
+        emptyStateDescription: null;
+        seo: null;
+      }
+    | {
+        _id: "groupClimbsPage";
+        heroEyebrow: null;
+        heroTitle: null;
+        heroDescription: null;
+        heroImage: {
+          asset: SanityImageAssetReference | null;
+          alt: string | null;
+          crop: SanityImageCrop | null;
+          hotspot: SanityImageHotspot | null;
+          lqip: string | null;
+          dimensions: SanityImageDimensions | null;
+        } | null;
+        benefits: null;
+        scheduleEyebrow: null;
+        scheduleTitle: null;
+        emptyStateTitle: null;
+        emptyStateDescription: null;
+        seo: {
+          title: string | null;
+          description: string | null;
+          canonicalPath: string | null;
+          shareImage: {
+            asset: SanityImageAssetReference | null;
+            alt: string | null;
+            crop: SanityImageCrop | null;
+            hotspot: SanityImageHotspot | null;
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
+        } | null;
+      }
+    | {
+        _id: "groupClimbsPage";
+        heroEyebrow: string | null;
+        heroTitle: string | null;
+        heroDescription: string | null;
+        heroImage: {
+          asset: SanityImageAssetReference | null;
+          alt: string | null;
+          crop: SanityImageCrop | null;
+          hotspot: SanityImageHotspot | null;
+          lqip: string | null;
+          dimensions: SanityImageDimensions | null;
+        } | null;
+        benefits: Array<{
+          _key: string;
+          iconKey: string | null;
+          title: string | null;
+          description: string | null;
+        }> | null;
+        scheduleEyebrow: string | null;
+        scheduleTitle: string | null;
+        emptyStateTitle: string | null;
+        emptyStateDescription: string | null;
+        seo: {
+          title: string | null;
+          description: string | null;
+          canonicalPath: string | null;
+          shareImage: {
+            asset: SanityImageAssetReference | null;
+            alt: string | null;
+            crop: SanityImageCrop | null;
+            hotspot: SanityImageHotspot | null;
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
+        } | null;
+      }
+    | null;
+  departures: Array<{
+    _id: string;
+    routeName: string | null;
+    durationDays: number | null;
+    startDate: string | null;
+    endDate: string | null;
+    highlights: Array<string> | null;
+    price: {
+      amount: number | null;
+      currency: "USD" | null;
+    } | null;
+    deposit: {
+      amount: number | null;
+      currency: "USD" | null;
+    } | null;
+    promotionStatus: "discounted" | "standard" | null;
+    originalPrice: {
+      amount: number | null;
+      currency: "USD" | null;
+    } | null;
+    seasonStatus: "rain" | "standard" | null;
+    seasonLabel: string | null;
+  }>;
+};
+
+// Source: ../src/sanity/lib/queries.ts
+// Variable: TRIP_SEO_QUERY
+// Query: *[_type == "trip" && slug.current == $slug][0].seo {    title,    description,    canonicalPath,    shareImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions }  }
+export type TRIP_SEO_QUERY_RESULT = {
+  title: string | null;
+  description: string | null;
+  canonicalPath: string | null;
+  shareImage: {
+    asset: SanityImageAssetReference | null;
+    alt: string | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+} | null;
+
+// Source: ../src/sanity/lib/queries.ts
+// Variable: GROUP_CLIMBS_SEO_QUERY
+// Query: *[_id == "groupClimbsPage"][0].seo {    title,    description,    canonicalPath,    shareImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions }  }
+export type GROUP_CLIMBS_SEO_QUERY_RESULT = {
+  title: string | null;
+  description: string | null;
+  canonicalPath: string | null;
+  shareImage: {
+    asset: SanityImageAssetReference | null;
+    alt: string | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+} | null;
+
+// Query TypeMap
+declare global {
+  interface SanityQueries {
+    '\n  *[_type == "trip" && slug.current == $slug][0] {\n    _id,\n    title,\n    durationDays,\n    startingPrice { amount, currency },\n    heroImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n    heroSummary,\n    overviewParagraphs,\n    overviewImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n    itineraryFor,\n    travelDatesText,\n    guestsText,\n    destinations,\n    planningTitle,\n    planningDescription,\n    itinerary[] {\n      _key,\n      title,\n      summary,\n      image { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n      experience,\n      mealPlan,\n      accommodations[]-> {\n        _id,\n        propertyName,\n        tier,\n        coverImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n        gallery[] { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n      }\n    },\n    landscapesTitle,\n    landscapes[] {\n      _key,\n      name,\n      descriptor,\n      iconKey,\n      image { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n      description\n    },\n    inclusionsEyebrow,\n    inclusionsTitle,\n    inclusionsDescription,\n    inclusionGroups[] {\n      _key,\n      marker,\n      title,\n      description,\n      items[] { _key, iconKey, title, description }\n    },\n    relatedTrips[] {\n      _key,\n      title,\n      summary,\n      durationLabel,\n      image { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n      href\n    },\n    seo {\n      title,\n      description,\n      canonicalPath,\n      shareImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n    },\n    "sharedMap": *[_id == "tripSettings"][0].map { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n  }\n': TRIP_PAGE_QUERY_RESULT;
+    '\n  {\n    "page": *[_id == "groupClimbsPage"][0] {\n      _id,\n      heroEyebrow,\n      heroTitle,\n      heroDescription,\n      heroImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n      benefits[] { _key, iconKey, title, description },\n      scheduleEyebrow,\n      scheduleTitle,\n      emptyStateTitle,\n      emptyStateDescription,\n      seo {\n        title,\n        description,\n        canonicalPath,\n        shareImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n      }\n    },\n    "departures": *[_type == "groupDeparture" && bookingStatus == "scheduled"] | order(startDate asc) {\n      _id,\n      routeName,\n      durationDays,\n      startDate,\n      endDate,\n      highlights,\n      price { amount, currency },\n      deposit { amount, currency },\n      promotionStatus,\n      originalPrice { amount, currency },\n      seasonStatus,\n      seasonLabel\n    }\n  }\n': GROUP_CLIMBS_QUERY_RESULT;
+    '\n  *[_type == "trip" && slug.current == $slug][0].seo {\n    title,\n    description,\n    canonicalPath,\n    shareImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n  }\n': TRIP_SEO_QUERY_RESULT;
+    '\n  *[_id == "groupClimbsPage"][0].seo {\n    title,\n    description,\n    canonicalPath,\n    shareImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n  }\n': GROUP_CLIMBS_SEO_QUERY_RESULT;
+  }
+}
+// Lets @sanity/client releases that predate the global registry read it too
+declare module "@sanity/client" {
+  interface SanityQueries extends globalThis.SanityQueries {}
+}

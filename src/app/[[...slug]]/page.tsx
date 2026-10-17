@@ -1,20 +1,30 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { SitePage } from "@/components/site";
+import { GroupsPage, SitePage } from "@/components/site";
 import { HomeReferencePage, KilimanjaroReferencePage, KilimanjaroRouteDetailPage, SafariReferencePage, TripDetailReferencePage, TripsReferencePage, ZanzibarReferencePage } from "@/components/reference-pages";
 import { pageMeta, routeKeyFromSlug } from "@/lib/routes";
+import { getGroupClimbsContent, getGroupClimbsSeo, getTripPageContent, getTripSeo } from "@/sanity/lib/content";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug?: string[] }> }): Promise<Metadata> {
   const { slug } = await params;
   const key = routeKeyFromSlug(slug);
   if (!key) notFound();
   const meta = pageMeta[key];
+  const cmsSeo = key === "northernSerengeti"
+    ? await getTripSeo("northern-serengeti")
+    : key === "groups"
+      ? await getGroupClimbsSeo()
+      : null;
+  const title = cmsSeo?.title ?? meta.title;
+  const description = cmsSeo?.description ?? meta.description;
+  const canonical = cmsSeo?.canonicalPath ?? meta.path;
+  const image = cmsSeo?.shareImage.src ?? meta.image;
   return {
-    title: meta.title,
-    description: meta.description,
-    alternates: { canonical: meta.path },
-    openGraph: { title: meta.title, description: meta.description, url: meta.path, images: [{ url: meta.image, alt: meta.title }] },
-    twitter: { card: "summary_large_image", title: meta.title, description: meta.description, images: [meta.image] },
+    title: cmsSeo ? { absolute: title } : title,
+    description,
+    alternates: { canonical },
+    openGraph: { title, description, url: canonical, images: [{ url: image, alt: cmsSeo?.shareImage.alt || title }] },
+    twitter: { card: "summary_large_image", title, description, images: [image] },
   };
 }
 
@@ -34,7 +44,8 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
     case "safari": return <SafariReferencePage />;
     case "zanzibar": return <ZanzibarReferencePage />;
     case "trips": return <TripsReferencePage />;
-    case "northernSerengeti": return <TripDetailReferencePage />;
+    case "northernSerengeti": return <TripDetailReferencePage data={await getTripPageContent("northern-serengeti")} />;
+    case "groups": return <GroupsPage data={await getGroupClimbsContent()} />;
     default: return <SitePage page={key} />;
   }
 }

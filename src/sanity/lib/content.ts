@@ -1,0 +1,266 @@
+import "server-only";
+
+import type { ClientReturn } from "@sanity/client";
+import type { SanityImageSource } from "@sanity/image-url";
+import type {
+  GROUP_CLIMBS_SEO_QUERY_RESULT,
+  TRIP_PAGE_QUERY_RESULT,
+  TRIP_SEO_QUERY_RESULT,
+} from "../../../sanity.types";
+import type {
+  CmsGroupClimbsData,
+  CmsGroupDeparture,
+  CmsImage,
+  CmsSeo,
+  CmsTripPageData,
+  CmsTripStay,
+} from "@/sanity/content-types";
+import { sanityClient } from "./client";
+import { urlForImage } from "./image";
+import {
+  GROUP_CLIMBS_QUERY,
+  GROUP_CLIMBS_SEO_QUERY,
+  TRIP_PAGE_QUERY,
+  TRIP_SEO_QUERY,
+} from "./queries";
+
+type RawTrip = NonNullable<TRIP_PAGE_QUERY_RESULT>;
+type RawImage = NonNullable<RawTrip["heroImage"]>;
+type RawMoney = { amount?: number | null; currency?: string | null };
+type RawSeo = TRIP_SEO_QUERY_RESULT | GROUP_CLIMBS_SEO_QUERY_RESULT;
+
+const mealPlanLabels: Record<string, string> = {
+  breakfast: "Breakfast",
+  halfBoard: "Half Board",
+  fullBoard: "Full Board",
+};
+
+const tierLabels: Record<string, CmsTripStay["tier"]> = {
+  budget: "Budget",
+  midRange: "Mid-range",
+  luxury: "Luxury",
+};
+
+const landscapeIcons: Record<string, string> = {
+  tree: "🌳",
+  mountain: "⛰️",
+  zebra: "🦓",
+  grass: "🌾",
+  water: "🌊",
+};
+
+function presentImage(value: RawImage | null | undefined, width = 1600): CmsImage | null {
+  if (!value) return null;
+  try {
+    return {
+      src: urlForImage(value as SanityImageSource).width(width).fit("max").auto("format").url(),
+      alt: value.alt || "",
+    };
+  } catch {
+    return null;
+  }
+}
+
+function formatMoney(value: RawMoney | null | undefined, useGrouping = true) {
+  if (typeof value?.amount !== "number") return "";
+  const currency = value.currency || "USD";
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+    useGrouping,
+  }).format(value.amount);
+}
+
+function presentSeo(raw: RawSeo): CmsSeo | null {
+  const shareImage = presentImage(raw?.shareImage, 1600);
+  if (!raw?.title || !raw?.description || !raw?.canonicalPath || !shareImage) return null;
+  return {
+    title: raw.title,
+    description: raw.description,
+    canonicalPath: raw.canonicalPath,
+    shareImage,
+  };
+}
+
+async function fetchSanity<const Query extends string>(query: Query, params: Record<string, string>, tags: string[]): Promise<ClientReturn<Query>> {
+  return sanityClient.fetch(query, params, {
+    next: { revalidate: 60, tags },
+  });
+}
+
+export async function getTripPageContent(slug: string): Promise<CmsTripPageData | null> {
+  try {
+    const raw = await fetchSanity(TRIP_PAGE_QUERY, { slug }, ["sanity", "trip", `trip:${slug}`, "accommodation", "tripSettings"]);
+    const heroImage = presentImage(raw?.heroImage);
+    const overviewImage = presentImage(raw?.overviewImage);
+    const map = presentImage(raw?.sharedMap, 1200);
+    if (!raw || !heroImage || !overviewImage || !map) return null;
+
+    const allAccommodations = (raw.itinerary || []).flatMap(day => day.accommodations || []);
+    const slidesByTier = new Map<CmsTripStay["tier"], CmsTripStay["slides"]>();
+    for (const accommodation of allAccommodations) {
+      const tier = tierLabels[accommodation.tier || ""];
+      if (!tier) continue;
+      const slides = (accommodation.gallery || [])
+        .map(entry => presentImage(entry, 1400))
+        .filter((entry): entry is CmsImage => Boolean(entry))
+        .map(entry => ({ property: accommodation.propertyName || "Accommodation", tier, image: entry.src, alt: entry.alt }));
+      const current = slidesByTier.get(tier) || [];
+      for (const slide of slides) {
+        if (!current.some((candidate) => candidate.image === slide.image)) current.push(slide);
+      }
+      slidesByTier.set(tier, current.slice(0, 10));
+    }
+
+    const itinerary = (raw.itinerary || []).map((day, dayIndex) => ({
+      key: day._key || `day-${dayIndex + 1}`,
+      title: day.title || "Itinerary day",
+      summary: day.summary || "",
+      image: presentImage(day.image, 1600),
+      experience: day.experience || "",
+      mealPlan: mealPlanLabels[day.mealPlan || ""] || day.mealPlan || "",
+      stays: (day.accommodations || []).map(accommodation => {
+        const tier = tierLabels[accommodation.tier || ""] || "Mid-range";
+        const coverImage = presentImage(accommodation.coverImage, 1400);
+        return {
+          property: accommodation.propertyName || "Accommodation",
+          tier,
+          image: coverImage?.src || "",
+          alt: coverImage?.alt || accommodation.propertyName || "Accommodation",
+          slides: slidesByTier.get(tier) || [],
+        } satisfies CmsTripStay;
+      }).filter((stay: CmsTripStay) => Boolean(stay.image)),
+    })).filter((day): day is typeof day & { image: CmsImage } => Boolean(day.image));
+
+    return {
+      title: raw.title || "Trip",
+      durationDays: raw.durationDays || itinerary.length,
+      startingPrice: formatMoney(raw.startingPrice),
+      heroImage,
+      heroSummary: raw.heroSummary || "",
+      overviewParagraphs: raw.overviewParagraphs || [],
+      overviewImage,
+      itineraryFor: raw.itineraryFor || "",
+      travelDatesText: raw.travelDatesText || "",
+      guestsText: raw.guestsText || "",
+      map,
+      destinations: raw.destinations || [],
+      planningTitle: raw.planningTitle || "",
+      planningDescription: raw.planningDescription || "",
+      itinerary,
+      landscapesTitle: raw.landscapesTitle || "",
+      landscapes: (raw.landscapes || []).map((landscape, index) => ({
+        key: landscape._key || `landscape-${index + 1}`,
+        icon: landscapeIcons[landscape.iconKey || ""] || "•",
+        title: landscape.name || "Landscape",
+        descriptor: landscape.descriptor || "",
+        image: presentImage(landscape.image, 1600),
+        description: landscape.description || "",
+      })).filter((landscape): landscape is typeof landscape & { image: CmsImage } => Boolean(landscape.image)),
+      inclusionsEyebrow: raw.inclusionsEyebrow || "",
+      inclusionsTitle: raw.inclusionsTitle || "",
+      inclusionsDescription: raw.inclusionsDescription || "",
+      inclusionGroups: (raw.inclusionGroups || []).map((group, groupIndex) => ({
+        key: group._key || `group-${groupIndex + 1}`,
+        marker: group.marker || "",
+        title: group.title || "Included services",
+        description: group.description || "",
+        items: (group.items || []).map((item, itemIndex) => ({
+          key: item._key || `item-${itemIndex + 1}`,
+          icon: item.iconKey || "route",
+          title: item.title || "Included service",
+          description: item.description || "",
+        })),
+      })),
+      relatedTrips: (raw.relatedTrips || []).map(trip => {
+        const image = presentImage(trip.image, 1200);
+        return {
+          title: trip.title || "Related trip",
+          copy: trip.summary || "",
+          note: trip.durationLabel || "",
+          image: image?.src || "",
+          href: trip.href || "/trips",
+        };
+      }).filter((trip: { image: string }) => Boolean(trip.image)),
+    };
+  } catch (error) {
+    console.error(`Unable to load Sanity trip content for ${slug}.`, error);
+    return null;
+  }
+}
+
+export async function getGroupClimbsContent(): Promise<CmsGroupClimbsData | null> {
+  try {
+    const raw = await fetchSanity(GROUP_CLIMBS_QUERY, {}, ["sanity", "groupClimbsPage", "groupDeparture"]);
+    const heroImage = presentImage(raw?.page?.heroImage);
+    if (!raw?.page || !heroImage) return null;
+    const departures: CmsGroupDeparture[] = (raw.departures || []).flatMap(departure => {
+      if (!departure.startDate || !departure.endDate || !departure.routeName) return [];
+      const start = new Date(`${departure.startDate}T12:00:00Z`);
+      const end = new Date(`${departure.endDate}T12:00:00Z`);
+      const month = new Intl.DateTimeFormat("en-US", { month: "short", timeZone: "UTC" }).format(start);
+      const longStartMonth = new Intl.DateTimeFormat("en-US", { month: "long", timeZone: "UTC" }).format(start);
+      const longEndMonth = new Intl.DateTimeFormat("en-US", { month: "long", timeZone: "UTC" }).format(end);
+      const startDay = String(start.getUTCDate()).padStart(2, "0");
+      const endDay = String(end.getUTCDate()).padStart(2, "0");
+      const price = departure.price?.amount || 0;
+      const originalPrice = departure.originalPrice?.amount || 0;
+      return {
+        id: departure._id,
+        day: startDay,
+        month,
+        monthIndex: start.getUTCMonth(),
+        year: String(start.getUTCFullYear()),
+        dateTime: departure.startDate,
+        title: departure.routeName,
+        range: `From ${startDay} ${longStartMonth} - ${endDay} ${longEndMonth}`,
+        highlights: departure.highlights || [],
+        price: formatMoney(departure.price, false),
+        deposit: formatMoney(departure.deposit, false),
+        originalPrice: originalPrice ? formatMoney(departure.originalPrice, false) : undefined,
+        discountPercent: originalPrice > price ? Math.round(((originalPrice - price) / originalPrice) * 100) : undefined,
+        seasonLabel: departure.seasonStatus === "rain" ? departure.seasonLabel || "Rain Season" : undefined,
+      } satisfies CmsGroupDeparture;
+    });
+
+    return {
+      heroEyebrow: raw.page.heroEyebrow || "",
+      heroTitle: raw.page.heroTitle || "",
+      heroDescription: raw.page.heroDescription || "",
+      heroImage,
+      benefits: (raw.page.benefits || []).map((benefit, index) => ({
+        key: benefit._key || `benefit-${index + 1}`,
+        iconKey: benefit.iconKey || "calendar",
+        title: benefit.title || "Group benefit",
+        description: benefit.description || "",
+      })),
+      scheduleEyebrow: raw.page.scheduleEyebrow || "",
+      scheduleTitle: raw.page.scheduleTitle || "",
+      emptyStateTitle: raw.page.emptyStateTitle || "",
+      emptyStateDescription: raw.page.emptyStateDescription || "",
+      departures,
+    };
+  } catch (error) {
+    console.error("Unable to load Sanity group-climb content.", error);
+    return null;
+  }
+}
+
+export async function getTripSeo(slug: string): Promise<CmsSeo | null> {
+  try {
+    return presentSeo(await fetchSanity(TRIP_SEO_QUERY, { slug }, ["sanity", "trip", `trip:${slug}`]));
+  } catch (error) {
+    console.error(`Unable to load Sanity SEO for ${slug}.`, error);
+    return null;
+  }
+}
+
+export async function getGroupClimbsSeo(): Promise<CmsSeo | null> {
+  try {
+    return presentSeo(await fetchSanity(GROUP_CLIMBS_SEO_QUERY, {}, ["sanity", "groupClimbsPage"]));
+  } catch (error) {
+    console.error("Unable to load Sanity group-climb SEO.", error);
+    return null;
+  }
+}

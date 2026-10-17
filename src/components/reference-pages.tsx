@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { HomeFooter } from "@/components/home-footer";
 import { whatsappHref } from "@/lib/whatsapp";
+import type { CmsTripPageData } from "@/sanity/content-types";
 import {
   Accordion,
   ArrowIcon,
@@ -22,9 +23,10 @@ import {
 
 type Card = { title: string; copy: string; note?: string; image: string; href?: string };
 type AccommodationTier = "Luxury" | "Mid-range" | "Budget";
-type TripStayOption = { property: string; tier: AccommodationTier; image: string; alt: string };
+type TripStayOption = { property: string; tier: AccommodationTier; image: string; alt: string; slides?: TripStayOption[] };
 type StayOption = { name: string; text: string; property: string; tier: AccommodationTier; photo: string; slides: TripStayOption[] };
 const image = (name: string) => `/images/${name}`;
+const contentImage = (source: string) => source.startsWith("http://") || source.startsWith("https://") || source.startsWith("/") ? source : image(source);
 const galleryStay = (property: string, tier: AccommodationTier, source: string): TripStayOption => ({ property, tier, image: `accommodations/gallery/${source}`, alt: `${property} ${tier.toLowerCase()} accommodation` });
 
 const safariStayChoices: StayOption[] = [
@@ -711,7 +713,7 @@ function TripAccommodation({ day, mealPlan, options }: { day: number; mealPlan: 
   const [mealInfoOpen, setMealInfoOpen] = useState(false);
   const selected = options[selectedIndex];
   const tierSlides = safariStayChoices.flatMap(choice => choice.slides).filter((stay, index, all) => stay.tier === selected.tier && stay.property !== selected.property && all.findIndex(candidate => candidate.image === stay.image) === index);
-  const slides = [selected, ...tierSlides];
+  const slides = selected.slides?.length ? selected.slides : [selected, ...tierSlides];
   const slide = slides[slideIndex] || slides[0];
   const chooseOption = (index: number) => { setSelectedIndex(index); setSlideIndex(0); };
   const move = (direction: number) => setSlideIndex(index => (index + direction + slides.length) % slides.length);
@@ -736,7 +738,7 @@ function TripAccommodation({ day, mealPlan, options }: { day: number; mealPlan: 
         })}
         <small>Property availability and the final room category are confirmed in your trip proposal.</small>
       </div>
-      <figure aria-live="polite" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}><Photo key={`${selectedIndex}-${slideIndex}-${slide.image}`} src={image(slide.image)} alt={slide.alt} /><span className={`accommodation-tier accommodation-tier-${slide.tier.toLowerCase().replace("-", "")}`}>{slide.tier}</span><div className="trip-ref-lodge-arrows"><button type="button" aria-label={`Previous ${selected.tier.toLowerCase()} accommodation`} onClick={() => move(-1)}>‹</button><span>{slideIndex + 1} / {slides.length}</span><button type="button" aria-label={`Next ${selected.tier.toLowerCase()} accommodation`} onClick={() => move(1)}>›</button></div><figcaption>{slide.property}</figcaption></figure>
+      <figure aria-live="polite" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}><Photo key={`${selectedIndex}-${slideIndex}-${slide.image}`} src={contentImage(slide.image)} alt={slide.alt} /><span className={`accommodation-tier accommodation-tier-${slide.tier.toLowerCase().replace("-", "")}`}>{slide.tier}</span><div className="trip-ref-lodge-arrows"><button type="button" aria-label={`Previous ${selected.tier.toLowerCase()} accommodation`} onClick={() => move(-1)}>‹</button><span>{slideIndex + 1} / {slides.length}</span><button type="button" aria-label={`Next ${selected.tier.toLowerCase()} accommodation`} onClick={() => move(1)}>›</button></div><figcaption>{slide.property}</figcaption></figure>
     </div>
   </>;
 }
@@ -769,11 +771,11 @@ const tripInclusionChapters = [
   },
 ];
 
-function TripFacts() {
+function TripFacts({ itineraryFor = "Northern Serengeti Safari", travelDatesText = "To be confirmed", guestsText = "2 Adults" }: { itineraryFor?: string; travelDatesText?: string; guestsText?: string }) {
   const facts = [
-    { label: "Itinerary for", value: "Northern Serengeti Safari", icon: "route" },
-    { label: "Travel Dates", value: "To be confirmed", icon: "calendar" },
-    { label: "Guests", value: "2 Adults", icon: "guests" },
+    { label: "Itinerary for", value: itineraryFor, icon: "route" },
+    { label: "Travel Dates", value: travelDatesText, icon: "calendar" },
+    { label: "Guests", value: guestsText, icon: "guests" },
   ] as const;
   return <div className="trip-ref-facts">{facts.map(fact => <div className="trip-ref-fact" key={fact.label}><span className="trip-ref-fact-icon" aria-hidden="true"><TripFactIcon type={fact.icon} /></span><span><small>{fact.label}</small><strong>{fact.value}</strong></span></div>)}</div>;
 }
@@ -794,12 +796,12 @@ const tripEnvironments = [
   { icon: "🌊", title: "Mara River", altitude: "Seasonal crossings", photo: "figma-trips-hero.png", copy: "The Mara River is a dramatic landscape to explore with your guide. Wildlife movements, water levels and road conditions guide the day’s plan." },
 ];
 
-function TripEnvironments() {
+function TripEnvironments({ title = "Landscapes of Northern Tanzania", environments = tripEnvironments }: { title?: string; environments?: typeof tripEnvironments }) {
   const [selected, setSelected] = useState(1);
-  const current = tripEnvironments[selected];
+  const current = environments[selected] || environments[0];
   return <section className="ref-section ref-dark trip-ref-environments" aria-labelledby="trip-environments-title"><div className="shell trip-ref-environments-grid">
-    <div className="trip-ref-environment-photo" aria-live="polite"><Photo src={image(current.photo)} alt={`${current.title} on safari`} /></div>
-    <div className="trip-ref-environment-content"><h2 id="trip-environments-title">Landscapes of Northern Tanzania</h2><div className="trip-ref-environment-options">{tripEnvironments.map((zone, index) => <div className="trip-ref-environment-option" key={zone.title}><button type="button" aria-expanded={selected === index} aria-controls={`trip-environment-detail-${index}`} onClick={() => setSelected(index)}><span aria-hidden="true">{zone.icon}</span>{zone.title} <small>{zone.altitude}</small></button>{selected === index && <p id={`trip-environment-detail-${index}`}>{zone.copy}</p>}</div>)}</div></div>
+    <div className="trip-ref-environment-photo" aria-live="polite"><Photo src={contentImage(current.photo)} alt={`${current.title} on safari`} /></div>
+    <div className="trip-ref-environment-content"><h2 id="trip-environments-title">{title}</h2><div className="trip-ref-environment-options">{environments.map((zone, index) => <div className="trip-ref-environment-option" key={zone.title}><button type="button" aria-expanded={selected === index} aria-controls={`trip-environment-detail-${index}`} onClick={() => setSelected(index)}><span aria-hidden="true">{zone.icon}</span>{zone.title} <small>{zone.altitude}</small></button>{selected === index && <p id={`trip-environment-detail-${index}`}>{zone.copy}</p>}</div>)}</div></div>
   </div></section>;
 }
 
@@ -831,10 +833,18 @@ export function TripsReferencePage() {
     </main><Footer /></>;
 }
 
-export function TripDetailReferencePage() {
+export function TripDetailReferencePage({ data }: { data?: CmsTripPageData | null } = {}) {
   const [openDays, setOpenDays] = useState<Set<number>>(() => new Set([0]));
   const [mapOpen, setMapOpen] = useState(false);
-  const days = [
+  const days = data?.itinerary.map(day => ({
+    title: day.title,
+    copy: day.summary,
+    image: day.image.src,
+    alt: day.image.alt,
+    experience: day.experience,
+    mealPlan: day.mealPlan,
+    stays: day.stays,
+  })) ?? [
     { title: "Arrival", copy: "The group arrives at Kilimanjaro International Airport (JRO). A Betheli Expeditions representative meets you and transfers you to your hotel in Arusha.", image: "figma-safari-destinations-destination-photograph4.png", alt: "Giraffes near Mount Meru outside Arusha", experience: "Settle in, meet your travel team and take time to rest after your flight. Your guide will confirm the following morning’s departure, luggage arrangements and the rhythm of the safari ahead.", mealPlan: "Half Board", stays: [
       { property: "Mount Meru Hotel", tier: "Mid-range", image: "accommodations/mount-meru-hotel.jpg", alt: "Mount Meru Hotel in Arusha" },
       { property: "Arusha Coffee Lodge", tier: "Luxury", image: "accommodations/arusha-coffee-lodge.jpg", alt: "Arusha Coffee Lodge" },
@@ -869,15 +879,20 @@ export function TripDetailReferencePage() {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [mapOpen]);
-  return <><section className="trip-ref-hero" id="general"><Photo src={image("figma-trips-hero.png")} alt="" priority sizes="100vw" /><div className="trip-ref-hero-shade" /><Header active="Home" variant="classic" /><div className="shell trip-ref-hero-copy"><p>From <b>$1,732</b></p><h1>6-Day Northern Serengeti River Crossing Safari</h1><p>A migration-focused safari through Tarangire, Central Serengeti, Northern Serengeti and Ngorongoro, with a full day at the Mara River.</p><div className="trip-ref-rating"><TripadvisorLogo light compact /><small>5.0 <RatingStars size={14} /></small></div></div></section>
+  const environments = data?.landscapes.map(item => ({ icon: item.icon, title: item.title, altitude: item.descriptor, photo: item.image.src, copy: item.description }));
+  const inclusionChapters = data?.inclusionGroups ?? tripInclusionChapters;
+  const relatedTripCards = data?.relatedTrips ?? relatedTrips;
+  const mapImage = data?.map.src ?? image("tanzania-national-parks-map.png");
+  const mapAlt = data?.map.alt || "Map of Tanzania showing its national parks";
+  return <><section className="trip-ref-hero" id="general"><Photo src={data?.heroImage.src ?? image("figma-trips-hero.png")} alt={data?.heroImage.alt || ""} priority sizes="100vw" /><div className="trip-ref-hero-shade" /><Header active="Home" variant="classic" /><div className="shell trip-ref-hero-copy"><p>From <b>{data?.startingPrice ?? "$1,732"}</b></p><h1>{data?.title ?? "6-Day Northern Serengeti River Crossing Safari"}</h1><p>{data?.heroSummary ?? "A migration-focused safari through Tarangire, Central Serengeti, Northern Serengeti and Ngorongoro, with a full day at the Mara River."}</p><div className="trip-ref-rating"><TripadvisorLogo light compact /><small>5.0 <RatingStars size={14} /></small></div></div></section>
     <TripSectionNav />
-    <main><section className="ref-section ref-dark trip-ref-overview" id="overview"><div className="shell"><div><h2>6-Day Northern Serengeti River Crossing Safari</h2><p>Experience Tanzania’s Great Migration on this 6-day safari through Tarangire, Central Serengeti, Northern Serengeti and Ngorongoro Crater. Designed around the river-crossing season, the journey includes a full day exploring Northern Serengeti and the Mara River, where wildebeest and zebra gather in dramatic numbers.</p><p>From the elephant-filled plains of Tarangire to the dramatic Mara River and the endless Serengeti, this safari brings together Tanzania’s unforgettable landscapes, diverse wildlife and the extraordinary spectacle of the Great Migration.</p><TripFacts /></div><Photo src={image("figma-safari-destinations-destination-photograph.png")} alt="Hot-air balloons over the Serengeti at sunset" /></div></section>
-<section className="ref-section trip-ref-itinerary" id="itinerary"><div className="shell"><aside><div className="trip-ref-itinerary-sticky"><button type="button" className="trip-ref-map-button" onClick={() => setMapOpen(true)} aria-haspopup="dialog"><Photo src={image("tanzania-national-parks-map.png")} alt="Map of Tanzania showing its national parks" /><span className="trip-ref-map-hint">Tap for a closer look <Image src={image("figma-trips-map-search.svg")} alt="" width={20} height={20} /></span></button><h3>Destinations Included</h3><ul><li>Tarangire National Park</li><li>Ngorongoro Crater</li><li>Central Serengeti</li><li>Northern Serengeti – Mara River</li></ul><div className="trip-ref-quote"><div className="trip-ref-quote-heading"><Image src={image("figma-trips-quote-plan.svg")} alt="" width={20} height={18} /><span>Plan Trip</span></div><h3>Experience the 6-Day Northern Serengeti Safari for yourself.</h3><p>Speak with a senior planner for a thoughtful first proposal built around your dates and priorities.</p><div className="trip-ref-quote-actions"><Link href="/plan-your-trip" className="trip-ref-quote-button">Request a Quote<Image src={image("figma-trips-quote-arrow.svg")} alt="" width={34} height={34} /></Link><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="trip-ref-quote-whatsapp"><Image src={image("figma-trips-quote-whatsapp.svg")} alt="" width={31} height={31} />WhatsApp Us</a></div></div></div></aside><div><div className="trip-ref-itinerary-title"><h2>Itinerary</h2><button type="button" aria-expanded={allDaysOpen} onClick={()=>setOpenDays(allDaysOpen ? new Set() : new Set(days.map((_, index) => index)))}>{allDaysOpen ? "Collapse All Days" : "Show All Days"}</button></div>{days.map((day,i)=><details key={day.title} open={openDays.has(i)}><summary onClick={(event)=>{event.preventDefault();setOpenDays(current=>{const next=new Set(current);if(next.has(i))next.delete(i);else next.add(i);return next;});}}><span className="trip-ref-day-number">Day {i+1}</span><span className="trip-ref-day-dot" aria-hidden="true" /><span className="trip-ref-day-name">{day.title}</span><Image className="trip-ref-day-chevron" src={image("figma-trips-itinerary-chevron.svg")} alt="" width={50} height={50} /></summary><p>{day.copy}</p><div className="trip-ref-day-experience"><Photo src={image(day.image)} alt={day.alt} /><p>{day.experience}</p></div><TripAccommodation day={i+1} mealPlan={day.mealPlan} options={day.stays} /></details>)}</div></div></section>
-      {mapOpen && <div className="trip-ref-map-modal" role="dialog" aria-modal="true" aria-label="Map of Tanzania showing its national parks"><button type="button" className="trip-ref-map-backdrop" aria-label="Close map" onClick={() => setMapOpen(false)} /><div className="trip-ref-map-modal-panel"><button type="button" className="trip-ref-map-close" aria-label="Close map" onClick={() => setMapOpen(false)}>×</button><Photo src={image("tanzania-national-parks-map.png")} alt="Expanded map of Tanzania showing its national parks" /></div></div>}
-      <TripEnvironments />
-      <section className="ref-section trip-ref-inclusions" id="inclusions"><div className="shell"><Intro eyebrow="YOUR SAFARI, TAKEN CARE OF" title="What’s included in your safari" copy="Use this checklist when planning your enquiry. All package details are subject to confirmation in your quote." /><div className="trip-ref-chapters">{tripInclusionChapters.map(chapter=><article className="trip-ref-chapter" key={chapter.title}><div className="trip-ref-chapter-heading"><span>{chapter.marker}</span><h3>{chapter.title}</h3><p>{chapter.description}</p></div><div className="trip-ref-chapter-items">{chapter.items.map(item=><div className="trip-ref-chapter-item" key={item.title}><Image src={image(`figma-trips-inclusion-${item.icon}.svg`)} alt="" width={24} height={24} /><h4>{item.title}</h4><p>{item.description}</p></div>)}</div></article>)}</div></div></section>
+    <main><section className="ref-section ref-dark trip-ref-overview" id="overview"><div className="shell"><div><h2>{data?.title ?? "6-Day Northern Serengeti River Crossing Safari"}</h2>{data?.overviewParagraphs?.length ? data.overviewParagraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>) : <><p>Experience Tanzania’s Great Migration on this 6-day safari through Tarangire, Central Serengeti, Northern Serengeti and Ngorongoro Crater. Designed around the river-crossing season, the journey includes a full day exploring Northern Serengeti and the Mara River, where wildebeest and zebra gather in dramatic numbers.</p><p>From the elephant-filled plains of Tarangire to the dramatic Mara River and the endless Serengeti, this safari brings together Tanzania’s unforgettable landscapes, diverse wildlife and the extraordinary spectacle of the Great Migration.</p></>}<TripFacts itineraryFor={data?.itineraryFor} travelDatesText={data?.travelDatesText} guestsText={data?.guestsText} /></div><Photo src={data?.overviewImage.src ?? image("figma-safari-destinations-destination-photograph.png")} alt={data?.overviewImage.alt || "Hot-air balloons over the Serengeti at sunset"} /></div></section>
+<section className="ref-section trip-ref-itinerary" id="itinerary"><div className="shell"><aside><div className="trip-ref-itinerary-sticky"><button type="button" className="trip-ref-map-button" onClick={() => setMapOpen(true)} aria-haspopup="dialog"><Photo src={mapImage} alt={mapAlt} /><span className="trip-ref-map-hint">Tap for a closer look <Image src={image("figma-trips-map-search.svg")} alt="" width={20} height={20} /></span></button><h3>Destinations Included</h3><ul>{(data?.destinations ?? ["Tarangire National Park", "Ngorongoro Crater", "Central Serengeti", "Northern Serengeti – Mara River"]).map(destination => <li key={destination}>{destination}</li>)}</ul><div className="trip-ref-quote"><div className="trip-ref-quote-heading"><Image src={image("figma-trips-quote-plan.svg")} alt="" width={20} height={18} /><span>Plan Trip</span></div><h3>{data?.planningTitle ?? "Experience the 6-Day Northern Serengeti Safari for yourself."}</h3><p>{data?.planningDescription ?? "Speak with a senior planner for a thoughtful first proposal built around your dates and priorities."}</p><div className="trip-ref-quote-actions"><Link href="/plan-your-trip" className="trip-ref-quote-button">Request a Quote<Image src={image("figma-trips-quote-arrow.svg")} alt="" width={34} height={34} /></Link><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="trip-ref-quote-whatsapp"><Image src={image("figma-trips-quote-whatsapp.svg")} alt="" width={31} height={31} />WhatsApp Us</a></div></div></div></aside><div><div className="trip-ref-itinerary-title"><h2>Itinerary</h2><button type="button" aria-expanded={allDaysOpen} onClick={()=>setOpenDays(allDaysOpen ? new Set() : new Set(days.map((_, index) => index)))}>{allDaysOpen ? "Collapse All Days" : "Show All Days"}</button></div>{days.map((day,i)=><details key={day.title} open={openDays.has(i)}><summary onClick={(event)=>{event.preventDefault();setOpenDays(current=>{const next=new Set(current);if(next.has(i))next.delete(i);else next.add(i);return next;});}}><span className="trip-ref-day-number">Day {i+1}</span><span className="trip-ref-day-dot" aria-hidden="true" /><span className="trip-ref-day-name">{day.title}</span><Image className="trip-ref-day-chevron" src={image("figma-trips-itinerary-chevron.svg")} alt="" width={50} height={50} /></summary><p>{day.copy}</p><div className="trip-ref-day-experience"><Photo src={contentImage(day.image)} alt={day.alt} /><p>{day.experience}</p></div><TripAccommodation day={i+1} mealPlan={day.mealPlan} options={day.stays} /></details>)}</div></div></section>
+      {mapOpen && <div className="trip-ref-map-modal" role="dialog" aria-modal="true" aria-label={mapAlt}><button type="button" className="trip-ref-map-backdrop" aria-label="Close map" onClick={() => setMapOpen(false)} /><div className="trip-ref-map-modal-panel"><button type="button" className="trip-ref-map-close" aria-label="Close map" onClick={() => setMapOpen(false)}>×</button><Photo src={mapImage} alt={`Expanded ${mapAlt}`} /></div></div>}
+      <TripEnvironments title={data?.landscapesTitle} environments={environments} />
+      <section className="ref-section trip-ref-inclusions" id="inclusions"><div className="shell"><Intro eyebrow={data?.inclusionsEyebrow ?? "YOUR SAFARI, TAKEN CARE OF"} title={data?.inclusionsTitle ?? "What’s included in your safari"} copy={data?.inclusionsDescription ?? "Use this checklist when planning your enquiry. All package details are subject to confirmation in your quote."} /><div className="trip-ref-chapters">{inclusionChapters.map(chapter=><article className="trip-ref-chapter" key={chapter.title}><div className="trip-ref-chapter-heading"><span>{chapter.marker}</span><h3>{chapter.title}</h3><p>{chapter.description}</p></div><div className="trip-ref-chapter-items">{chapter.items.map(item=><div className="trip-ref-chapter-item" key={item.title}><Image src={image(`figma-trips-inclusion-${item.icon}.svg`)} alt="" width={24} height={24} /><h4>{item.title}</h4><p>{item.description}</p></div>)}</div></article>)}</div></div></section>
       <CtaBanner title="Unforgettable Moments in the Heart of Mount Kilimanjaro" text="Experience breathtaking sunrises, explore volcanic landscapes, and create memories at one of Africa’s most iconic destinations." image={image("figma-kili-group-trip-landscape3.png")} centerImage={image("figma-kili-group-trip-landscape3.png")} />
       <Testimonials />
-      <ImageCards eyebrow="Related Trips" title="You Might Also Like" cards={relatedTrips} variant="climbs" className="trip-ref-related" />
+      <ImageCards eyebrow="Related Trips" title="You Might Also Like" cards={relatedTripCards} variant="climbs" className="trip-ref-related" />
       <TripFaq /></main><Footer /></>;
 }
