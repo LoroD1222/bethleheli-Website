@@ -1,9 +1,10 @@
-# Sanity Clean Content Studio
+# Betheli Expeditions Content Studio
 
-Congratulations, you have now installed the Sanity Content Studio, an open-source real-time content editing environment connected to the Sanity backend.
+This is the standalone Sanity Studio for the Betheli Expeditions website.
 
-Now you can do the following things:
+- Hosted Studio: https://betleheli.sanity.studio/
+- Project: `ife51h63`
+- Dataset: `production`
+- Local Studio: `npm run studio:dev` from the repository root
 
-- [Read “getting started” in the docs](https://www.sanity.io/docs/introduction/getting-started?utm_source=readme)
-- [Join the Sanity community](https://www.sanity.io/community/join?utm_source=readme)
-- [Extend and build plugins](https://www.sanity.io/docs/content-studio/extending?utm_source=readme)
+The Studio manages trips, itinerary days, accommodation records and galleries, the group-climbs page, group departures, shared trip settings, and page SEO. Keep the Studio standalone; do not embed it in the Next.js application.
