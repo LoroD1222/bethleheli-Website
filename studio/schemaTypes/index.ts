@@ -10,6 +10,7 @@ import {inclusionItem} from './objects/inclusionItem'
 import {itineraryDay} from './objects/itineraryDay'
 import {landscape} from './objects/landscape'
 import {money} from './objects/money'
+import {relatedTripCard} from './objects/relatedTripCard'
 import {seo} from './objects/seo'
 
 export const schemaTypes = [
@@ -21,6 +22,7 @@ export const schemaTypes = [
   contentImage,
   money,
   seo,
+  relatedTripCard,
   itineraryDay,
   landscape,
   inclusionGroup,

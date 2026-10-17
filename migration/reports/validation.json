@@ -1,0 +1,140 @@
+{
+  "generatedAt": "2026-10-17T18:45:43.969Z",
+  "projectId": "ife51h63",
+  "dataset": "production",
+  "status": "passed",
+  "counts": {
+    "trips": 1,
+    "accommodations": 10,
+    "groupDepartures": 5,
+    "tripSettings": 1,
+    "groupClimbsPages": 1
+  },
+  "errors": [],
+  "sample": {
+    "accommodations": [
+      {
+        "_id": "NJnMV77vCyO9g8HOX8MTUf",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "slug": "mount-meru-hotel"
+      },
+      {
+        "_id": "NJnMV77vCyO9g8HOX8MTcd",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "slug": "neptune-ngorongoro-luxury-lodge"
+      },
+      {
+        "_id": "NJnMV77vCyO9g8HOX8MTgv",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "slug": "karibu-river-camp"
+      },
+      {
+        "_id": "NJnMV77vCyO9g8HOX8MTjN",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "slug": "melia-serengeti-lodge"
+      },
+      {
+        "_id": "uvXbntIeGC8OhCODUVMQKo",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "slug": "arusha-coffee-lodge"
+      },
+      {
+        "_id": "uvXbntIeGC8OhCODUVMQfG",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "slug": "arumeru-river-lodge"
+      },
+      {
+        "_id": "uvXbntIeGC8OhCODUVMRUO",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "slug": "lemala-kuria-hills"
+      },
+      {
+        "_id": "xDXE1b5fzFsIAlmDXMIqD5",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "slug": "nimali-tarangire"
+      },
+      {
+        "_id": "xDXE1b5fzFsIAlmDXMIqK7",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "slug": "lake-masek-tented-lodge"
+      },
+      {
+        "_id": "xDXE1b5fzFsIAlmDXMIqR9",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "slug": "gran-melia-arusha"
+      }
+    ],
+    "departures": [
+      {
+        "_id": "NJnMV77vCyO9g8HOX8MTsZ",
+        "endDate": "2026-10-17",
+        "promotionStatus": "standard",
+        "routeName": "Kilimanjaro via Machame route - 7 days",
+        "seasonStatus": "standard",
+        "startDate": "2026-10-09"
+      },
+      {
+        "_id": "uvXbntIeGC8OhCODUVMUmu",
+        "endDate": "2026-10-17",
+        "promotionStatus": "standard",
+        "routeName": "Kilimanjaro via Rongai route - 6 days",
+        "seasonStatus": "standard",
+        "startDate": "2026-10-10"
+      },
+      {
+        "_id": "uvXbntIeGC8OhCODUVMV7M",
+        "endDate": "2026-11-06",
+        "promotionStatus": "standard",
+        "routeName": "Kilimanjaro via Marangu route - 6 days",
+        "seasonStatus": "standard",
+        "startDate": "2026-10-30"
+      },
+      {
+        "_id": "xDXE1b5fzFsIAlmDXMIshn",
+        "endDate": "2026-10-14",
+        "promotionStatus": "standard",
+        "routeName": "Kilimanjaro via Lemosho route - 7 days",
+        "seasonStatus": "standard",
+        "startDate": "2026-10-06"
+      },
+      {
+        "_id": "xDXE1b5fzFsIAlmDXMIsxc",
+        "endDate": "2026-11-08",
+        "promotionStatus": "discounted",
+        "routeName": "Kilimanjaro via Machame route - 7 days",
+        "seasonStatus": "rain",
+        "startDate": "2026-10-31"
+      }
+    ],
+    "groupClimbsPage": {
+      "_id": "groupClimbsPage",
+      "benefitCount": 3,
+      "hasHeroImage": true
+    },
+    "tripSettings": {
+      "_id": "tripSettings",
+      "hasMap": true
+    },
+    "trips": [
+      {
+        "_id": "NJnMV77vCyO9g8HOX8MTlp",
+        "durationDays": 6,
+        "itineraryCount": 6,
+        "missingAccommodationReferences": 0,
+        "missingImages": 0,
+        "relatedTripCount": 4,
+        "title": "6-Day Northern Serengeti River Crossing Safari"
+      }
+    ]
+  }
+}

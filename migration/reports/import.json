@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-10-17T18:41:41.539Z",
+  "mode": "production-write",
+  "projectId": "ife51h63",
+  "dataset": "production",
+  "source": {
+    "source": "Existing hardcoded React content and local public/images assets",
+    "locales": [
+      "en"
+    ],
+    "publishingScope": "Published content only; the source has no draft or version history.",
+    "listingCardsFound": 8,
+    "detailedTripsFound": 1,
+    "skippedListingCards": 7,
+    "skippedReason": "These cards intentionally redirect to /trips/northern-serengeti and have no unique itinerary content. No fake trip documents are created."
+  },
+  "counts": {
+    "tripSettings": 1,
+    "groupClimbsPages": 1,
+    "trips": 1,
+    "accommodations": 10,
+    "groupDepartures": 5,
+    "itineraryDays": 6,
+    "itineraryAccommodationReferences": 12,
+    "relatedTripCards": 4,
+    "uniqueImages": 42
+  },
+  "qualityIssues": [],
+  "status": "import-complete-pending-validation",
+  "documentIds": {
+    "accommodations": {
+      "mount-meru-hotel": "NJnMV77vCyO9g8HOX8MTUf",
+      "arusha-coffee-lodge": "uvXbntIeGC8OhCODUVMQKo",
+      "arumeru-river-lodge": "uvXbntIeGC8OhCODUVMQfG",
+      "nimali-tarangire": "xDXE1b5fzFsIAlmDXMIqD5",
+      "lake-masek-tented-lodge": "xDXE1b5fzFsIAlmDXMIqK7",
+      "neptune-ngorongoro-luxury-lodge": "NJnMV77vCyO9g8HOX8MTcd",
+      "karibu-river-camp": "NJnMV77vCyO9g8HOX8MTgv",
+      "melia-serengeti-lodge": "NJnMV77vCyO9g8HOX8MTjN",
+      "lemala-kuria-hills": "uvXbntIeGC8OhCODUVMRUO",
+      "gran-melia-arusha": "xDXE1b5fzFsIAlmDXMIqR9"
+    },
+    "departures": [
+      "xDXE1b5fzFsIAlmDXMIshn",
+      "NJnMV77vCyO9g8HOX8MTsZ",
+      "uvXbntIeGC8OhCODUVMUmu",
+      "uvXbntIeGC8OhCODUVMV7M",
+      "xDXE1b5fzFsIAlmDXMIsxc"
+    ],
+    "trip": "NJnMV77vCyO9g8HOX8MTlp"
+  }
+}

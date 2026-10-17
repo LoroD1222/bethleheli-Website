@@ -1,0 +1,30 @@
+{
+  "generatedAt": "2026-10-17T15:37:58.306Z",
+  "mode": "dry-run",
+  "projectId": "ife51h63",
+  "dataset": "production",
+  "source": {
+    "source": "Existing hardcoded React content and local public/images assets",
+    "locales": [
+      "en"
+    ],
+    "publishingScope": "Published content only; the source has no draft or version history.",
+    "listingCardsFound": 8,
+    "detailedTripsFound": 1,
+    "skippedListingCards": 7,
+    "skippedReason": "These cards intentionally redirect to /trips/northern-serengeti and have no unique itinerary content. No fake trip documents are created."
+  },
+  "counts": {
+    "tripSettings": 1,
+    "groupClimbsPages": 1,
+    "trips": 1,
+    "accommodations": 10,
+    "groupDepartures": 5,
+    "itineraryDays": 6,
+    "itineraryAccommodationReferences": 12,
+    "relatedTripCards": 4,
+    "uniqueImages": 42
+  },
+  "qualityIssues": [],
+  "status": "ready-for-review"
+}

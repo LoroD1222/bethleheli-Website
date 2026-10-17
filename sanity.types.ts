@@ -71,6 +71,15 @@ export type ItineraryDay = {
   >;
 };
 
+export type RelatedTripCard = {
+  _type: "relatedTripCard";
+  title?: string;
+  summary?: string;
+  durationLabel?: string;
+  image?: ContentImage;
+  href?: string;
+};
+
 export type Seo = {
   _type: "seo";
   title?: string;
@@ -187,13 +196,6 @@ export type Slug = {
   source?: string;
 };
 
-export type TripReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "trip";
-};
-
 export type Trip = {
   _id: string;
   _type: "trip";
@@ -240,7 +242,7 @@ export type Trip = {
   relatedTrips?: Array<
     {
       _key: string;
-    } & TripReference
+    } & RelatedTripCard
   >;
   seo?: Seo;
 };
@@ -365,6 +367,7 @@ export type AllSanitySchemaTypes =
   | Landscape
   | AccommodationReference
   | ItineraryDay
+  | RelatedTripCard
   | Seo
   | Money
   | SanityImageAssetReference
@@ -374,7 +377,6 @@ export type AllSanitySchemaTypes =
   | GroupDeparture
   | Accommodation
   | Slug
-  | TripReference
   | Trip
   | SanityImageCrop
   | SanityImageHotspot

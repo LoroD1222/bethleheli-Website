@@ -214,12 +214,8 @@ export const trip = defineType({
       title: 'Related Trips',
       type: 'array',
       group: 'relationships',
-      of: [
-        defineArrayMember({
-          type: 'reference',
-          to: [{type: 'trip'}],
-        }),
-      ],
+      description: 'Cards linking to existing trip or Kilimanjaro route pages.',
+      of: [defineArrayMember({type: 'relatedTripCard'})],
       validation: (rule) => rule.required().min(1).unique(),
     }),
     defineField({
