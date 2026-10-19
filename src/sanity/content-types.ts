@@ -90,24 +90,6 @@ export type CmsGroupDeparture = {
   seasonLabel?: string;
 };
 
-export type CmsGroupClimbsData = {
-  heroEyebrow: string;
-  heroTitle: string;
-  heroDescription: string;
-  heroImage: CmsImage;
-  benefits: Array<{
-    key: string;
-    iconKey: string;
-    title: string;
-    description: string;
-  }>;
-  scheduleEyebrow: string;
-  scheduleTitle: string;
-  emptyStateTitle: string;
-  emptyStateDescription: string;
-  departures: CmsGroupDeparture[];
-};
-
 export type CmsSeo = {
   title: string;
   description: string;

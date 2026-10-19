@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T18:45:43.969Z",
+  "generatedAt": "2026-10-19T09:04:47.489Z",
   "projectId": "ife51h63",
   "dataset": "production",
   "status": "passed",
@@ -7,8 +7,7 @@
     "trips": 1,
     "accommodations": 10,
     "groupDepartures": 5,
-    "tripSettings": 1,
-    "groupClimbsPages": 1
+    "tripSettings": 1
   },
   "errors": [],
   "sample": {
@@ -116,11 +115,6 @@
         "startDate": "2026-10-31"
       }
     ],
-    "groupClimbsPage": {
-      "_id": "groupClimbsPage",
-      "benefitCount": 3,
-      "hasHeroImage": true
-    },
     "tripSettings": {
       "_id": "tripSettings",
       "hasMap": true

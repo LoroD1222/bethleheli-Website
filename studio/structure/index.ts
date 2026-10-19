@@ -5,7 +5,6 @@ export const structure: StructureResolver = (S) =>
     .title('Website Content')
     .items([
       S.listItem().singleton('tripSettings'),
-      S.listItem().singleton('groupClimbsPage'),
       S.divider(),
       S.documentTypeListItem('trip').title('Trips'),
       S.documentTypeListItem('accommodation').title('Accommodations'),

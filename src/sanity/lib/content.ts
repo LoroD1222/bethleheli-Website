@@ -3,12 +3,11 @@ import "server-only";
 import type { ClientReturn } from "@sanity/client";
 import type { SanityImageSource } from "@sanity/image-url";
 import type {
-  GROUP_CLIMBS_SEO_QUERY_RESULT,
+  GROUP_DEPARTURES_QUERY_RESULT,
   TRIP_PAGE_QUERY_RESULT,
   TRIP_SEO_QUERY_RESULT,
 } from "../../../sanity.types";
 import type {
-  CmsGroupClimbsData,
   CmsGroupDeparture,
   CmsImage,
   CmsSeo,
@@ -18,8 +17,7 @@ import type {
 import { sanityClient } from "./client";
 import { urlForImage } from "./image";
 import {
-  GROUP_CLIMBS_QUERY,
-  GROUP_CLIMBS_SEO_QUERY,
+  GROUP_DEPARTURES_QUERY,
   TRIP_PAGE_QUERY,
   TRIP_SEO_QUERY,
 } from "./queries";
@@ -27,7 +25,7 @@ import {
 type RawTrip = NonNullable<TRIP_PAGE_QUERY_RESULT>;
 type RawImage = NonNullable<RawTrip["heroImage"]>;
 type RawMoney = { amount?: number | null; currency?: string | null };
-type RawSeo = TRIP_SEO_QUERY_RESULT | GROUP_CLIMBS_SEO_QUERY_RESULT;
+type RawSeo = TRIP_SEO_QUERY_RESULT;
 
 const mealPlanLabels: Record<string, string> = {
   breakfast: "Breakfast",
@@ -190,12 +188,10 @@ export async function getTripPageContent(slug: string): Promise<CmsTripPageData 
   }
 }
 
-export async function getGroupClimbsContent(): Promise<CmsGroupClimbsData | null> {
+export async function getGroupDepartures(): Promise<CmsGroupDeparture[]> {
   try {
-    const raw = await fetchSanity(GROUP_CLIMBS_QUERY, {}, ["sanity", "groupClimbsPage", "groupDeparture"]);
-    const heroImage = presentImage(raw?.page?.heroImage);
-    if (!raw?.page || !heroImage) return null;
-    const departures: CmsGroupDeparture[] = (raw.departures || []).flatMap(departure => {
+    const raw: GROUP_DEPARTURES_QUERY_RESULT = await fetchSanity(GROUP_DEPARTURES_QUERY, {}, ["sanity", "groupDeparture"]);
+    return (raw || []).flatMap(departure => {
       if (!departure.startDate || !departure.endDate || !departure.routeName) return [];
       const start = new Date(`${departure.startDate}T12:00:00Z`);
       const end = new Date(`${departure.endDate}T12:00:00Z`);
@@ -224,26 +220,9 @@ export async function getGroupClimbsContent(): Promise<CmsGroupClimbsData | null
       } satisfies CmsGroupDeparture;
     });
 
-    return {
-      heroEyebrow: raw.page.heroEyebrow || "",
-      heroTitle: raw.page.heroTitle || "",
-      heroDescription: raw.page.heroDescription || "",
-      heroImage,
-      benefits: (raw.page.benefits || []).map((benefit, index) => ({
-        key: benefit._key || `benefit-${index + 1}`,
-        iconKey: benefit.iconKey || "calendar",
-        title: benefit.title || "Group benefit",
-        description: benefit.description || "",
-      })),
-      scheduleEyebrow: raw.page.scheduleEyebrow || "",
-      scheduleTitle: raw.page.scheduleTitle || "",
-      emptyStateTitle: raw.page.emptyStateTitle || "",
-      emptyStateDescription: raw.page.emptyStateDescription || "",
-      departures,
-    };
   } catch (error) {
-    console.error("Unable to load Sanity group-climb content.", error);
-    return null;
+    console.error("Unable to load Sanity group departures.", error);
+    return [];
   }
 }
 
@@ -252,15 +231,6 @@ export async function getTripSeo(slug: string): Promise<CmsSeo | null> {
     return presentSeo(await fetchSanity(TRIP_SEO_QUERY, { slug }, ["sanity", "trip", `trip:${slug}`]));
   } catch (error) {
     console.error(`Unable to load Sanity SEO for ${slug}.`, error);
-    return null;
-  }
-}
-
-export async function getGroupClimbsSeo(): Promise<CmsSeo | null> {
-  try {
-    return presentSeo(await fetchSanity(GROUP_CLIMBS_SEO_QUERY, {}, ["sanity", "groupClimbsPage"]));
-  } catch (error) {
-    console.error("Unable to load Sanity group-climb SEO.", error);
     return null;
   }
 }

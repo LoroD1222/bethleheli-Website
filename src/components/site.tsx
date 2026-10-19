@@ -9,7 +9,7 @@ import type { PageKey } from "@/lib/routes";
 import { sendEnquiry } from "@/lib/enquiry";
 import { whatsappHref, whatsappNumber } from "@/lib/whatsapp";
 import { HomeFooter } from "@/components/home-footer";
-import type { CmsGroupClimbsData, CmsGroupDeparture } from "@/sanity/content-types";
+import type { CmsGroupDeparture } from "@/sanity/content-types";
 
 const navItems = [
   ["Home", "/"], ["Kilimanjaro", "/kilimanjaro"], ["Safari", "/safari"], ["Zanzibar", "/zanzibar"], ["Trips", "/trips"],
@@ -512,8 +512,8 @@ const groupBenefitIcons: Record<string, string> = {
   calendar: "/images/figma-trips-fact-dates.svg",
 };
 
-export function GroupsPage({ data }: { data?: CmsGroupClimbsData | null } = {}) {
-  const trips = data?.departures.length ? data.departures : fallbackGroupDepartures;
+export function GroupsPage({ departures }: { departures?: CmsGroupDeparture[] } = {}) {
+  const trips = departures ?? fallbackGroupDepartures;
   const [year, setYear] = useState(() => trips[0]?.year || "2026");
   const [month, setMonth] = useState(() => trips[0]?.month || "Oct");
   const [selectedDeparture, setSelectedDeparture] = useState<string | null>(null);
@@ -521,20 +521,20 @@ export function GroupsPage({ data }: { data?: CmsGroupClimbsData | null } = {}) 
   const years = Array.from(new Set(trips.map(trip => trip.year))).sort();
   const visibleTrips = trips.filter(trip => trip.year === year && trip.month === month);
   const selectedTrip = trips.find(trip => trip.id === selectedDeparture);
-  const benefits = data?.benefits ?? [
+  const benefits = [
     { key: "small-groups", iconKey: "users", title: "Small groups", description: "Shared pace, personal support" },
     { key: "local-team", iconKey: "localTeam", title: "Local mountain team", description: "Guides, cooks and porters" },
     { key: "scheduled", iconKey: "calendar", title: "Scheduled departures", description: "Clear dates and route choices" },
   ];
 
-  return <><main className="groups-page"><section className="group-climb-hero"><Photo className="group-climb-hero-image" src={data?.heroImage.src ?? "/images/figma-kili-group-trip-landscape.png"} alt={data?.heroImage.alt || "A small group climbing together on the snowy slopes of Mount Kilimanjaro"} priority /><div className="group-climb-hero-scrim" /><Header overlay variant="classic" /><div className="group-climb-hero-content shell"><p className="eyebrow light">{data?.heroEyebrow ?? "CLIMB TOGETHER"}</p><h1>{data?.heroTitle ?? <>Share the journey.<br />Reach the Summit together.</>}</h1><p>{data?.heroDescription ?? "Join a scheduled Kilimanjaro departure with other travellers, supported by an experienced local mountain team from the first step to the summit attempt."}</p><div className="group-climb-hero-actions"><a className="button" href="#group-departures">View group dates <Arrow /></a><Link className="ghost-button" href="/contact">Ask about a climb <Arrow /></Link></div><div className="group-climb-benefits" aria-label="Group climb benefits">{benefits.map(benefit => <span key={benefit.key}><Image src={groupBenefitIcons[benefit.iconKey] || groupBenefitIcons.calendar} alt="" width={28} height={28} /><span><b>{benefit.title}</b>{benefit.description}</span></span>)}</div></div></section><section id="group-departures" className="group-schedule shell"><header>
-    <p className="eyebrow">{data?.scheduleEyebrow ?? "UPCOMING DEPARTURES"}</p><h2>{data?.scheduleTitle ?? "This is the best time to join a Kilimanjaro climbing group!"}</h2>
+  return <><main className="groups-page"><section className="group-climb-hero"><Photo className="group-climb-hero-image" src="/images/figma-kili-group-trip-landscape.png" alt="A small group climbing together on the snowy slopes of Mount Kilimanjaro" priority /><div className="group-climb-hero-scrim" /><Header overlay variant="classic" /><div className="group-climb-hero-content shell"><p className="eyebrow light">CLIMB TOGETHER</p><h1>Share the journey.<br />Reach the Summit together.</h1><p>Join a scheduled Kilimanjaro departure with other travellers, supported by an experienced local mountain team from the first step to the summit attempt.</p><div className="group-climb-hero-actions"><a className="button" href="#group-departures">View group dates <Arrow /></a><Link className="ghost-button" href="/contact">Ask about a climb <Arrow /></Link></div><div className="group-climb-benefits" aria-label="Group climb benefits">{benefits.map(benefit => <span key={benefit.key}><Image src={groupBenefitIcons[benefit.iconKey] || groupBenefitIcons.calendar} alt="" width={28} height={28} /><span><b>{benefit.title}</b>{benefit.description}</span></span>)}</div></div></section><section id="group-departures" className="group-schedule shell"><header>
+    <p className="eyebrow">UPCOMING DEPARTURES</p><h2>This is the best time to join a Kilimanjaro climbing group!</h2>
     <div className="year-tabs" role="group" aria-label="Departure year">{years.map(value => <button type="button" aria-pressed={year === value} onClick={() => setYear(value)} className={year === value ? "active" : ""} key={value}>{value}</button>)}</div>
     <div className="months" role="group" aria-label="Departure month">{months.map(value => <button type="button" aria-pressed={month === value} onClick={() => setMonth(value)} className={month === value ? "active" : ""} key={value}>{value}{trips.some(trip => trip.year === year && trip.month === value && trip.seasonLabel) ? " ☔" : ""}</button>)}</div>
   </header>
   <section className="group-list" aria-live="polite" aria-label={`Departures for ${month} ${year}`}>
     {visibleTrips.length ? visibleTrips.map(trip => <article key={trip.id}><time dateTime={trip.dateTime}><b>{trip.day}</b><span>{trip.month}</span></time><div className="group-title"><h2>{trip.title}</h2><p>{trip.range}</p>{trip.seasonLabel && <small>☔ {trip.seasonLabel}</small>}</div><ul>{trip.highlights.map(x => <li key={x}>{x}</li>)}</ul><strong>{trip.originalPrice && <del>{trip.originalPrice}</del>}{trip.price}{trip.discountPercent && <em>{trip.discountPercent}%</em>}</strong><div><button type="button" className={trip.originalPrice ? "join secondary" : "join"} onClick={() => setSelectedDeparture(trip.id)}>JOIN GROUP</button><span>Deposit {trip.deposit}</span></div></article>) :
-      <div className="group-empty"><h2>{data?.emptyStateTitle ?? `No published departures for ${month} ${year} yet.`}</h2><p>{data?.emptyStateDescription ?? "Ask our team about group dates or a private Kilimanjaro climb that fits your calendar."}</p><Link className="join" href="/plan-your-trip">Ask about dates <Arrow /></Link></div>}
+      <div className="group-empty"><h2>{`No published departures for ${month} ${year} yet.`}</h2><p>Ask our team about group dates or a private Kilimanjaro climb that fits your calendar.</p><Link className="join" href="/plan-your-trip">Ask about dates <Arrow /></Link></div>}
   </section></section><div className="group-advisor-wrap shell"><AdvisorCard /></div><Testimonials groupClimbsOnly title="Stories from the mountain" text="Hear from travellers who shared the trail, supported one another and climbed with the Betheli mountain team." /></main><Footer />{selectedTrip && <GroupJoinForm departure={selectedTrip} onClose={() => setSelectedDeparture(null)} />}</>;
 }
 

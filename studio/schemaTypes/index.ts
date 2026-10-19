@@ -1,9 +1,7 @@
 import {accommodation} from './documents/accommodation'
-import {groupClimbsPage} from './documents/groupClimbsPage'
 import {groupDeparture} from './documents/groupDeparture'
 import {trip} from './documents/trip'
 import {tripSettings} from './documents/tripSettings'
-import {benefit} from './objects/benefit'
 import {contentImage} from './objects/contentImage'
 import {inclusionGroup} from './objects/inclusionGroup'
 import {inclusionItem} from './objects/inclusionItem'
@@ -18,7 +16,6 @@ export const schemaTypes = [
   accommodation,
   groupDeparture,
   tripSettings,
-  groupClimbsPage,
   contentImage,
   money,
   seo,
@@ -27,5 +24,4 @@ export const schemaTypes = [
   landscape,
   inclusionGroup,
   inclusionItem,
-  benefit,
 ]

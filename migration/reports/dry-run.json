@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T15:37:58.306Z",
+  "generatedAt": "2026-10-19T08:54:59.998Z",
   "mode": "dry-run",
   "projectId": "ife51h63",
   "dataset": "production",
@@ -16,7 +16,6 @@
   },
   "counts": {
     "tripSettings": 1,
-    "groupClimbsPages": 1,
     "trips": 1,
     "accommodations": 10,
     "groupDepartures": 5,

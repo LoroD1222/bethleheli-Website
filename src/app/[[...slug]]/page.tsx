@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { GroupsPage, SitePage } from "@/components/site";
 import { HomeReferencePage, KilimanjaroReferencePage, KilimanjaroRouteDetailPage, SafariReferencePage, TripDetailReferencePage, TripsReferencePage, ZanzibarReferencePage } from "@/components/reference-pages";
 import { pageMeta, routeKeyFromSlug } from "@/lib/routes";
-import { getGroupClimbsContent, getGroupClimbsSeo, getTripPageContent, getTripSeo } from "@/sanity/lib/content";
+import { getGroupDepartures, getTripPageContent, getTripSeo } from "@/sanity/lib/content";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug?: string[] }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -12,9 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug?: st
   const meta = pageMeta[key];
   const cmsSeo = key === "northernSerengeti"
     ? await getTripSeo("northern-serengeti")
-    : key === "groups"
-      ? await getGroupClimbsSeo()
-      : null;
+    : null;
   const title = cmsSeo?.title ?? meta.title;
   const description = cmsSeo?.description ?? meta.description;
   const canonical = cmsSeo?.canonicalPath ?? meta.path;
@@ -45,7 +43,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
     case "zanzibar": return <ZanzibarReferencePage />;
     case "trips": return <TripsReferencePage />;
     case "northernSerengeti": return <TripDetailReferencePage data={await getTripPageContent("northern-serengeti")} />;
-    case "groups": return <GroupsPage data={await getGroupClimbsContent()} />;
+    case "groups": return <GroupsPage departures={await getGroupDepartures()} />;
     default: return <SitePage page={key} />;
   }
 }

@@ -385,36 +385,6 @@ export const source = {
       shareImage: image('figma-trips-hero.png', 'Northern Serengeti river-crossing safari'),
     },
   },
-  groupClimbsPage: {
-    heroEyebrow: 'CLIMB TOGETHER',
-    heroTitle: 'Share the journey. Reach the Summit together.',
-    heroDescription:
-      'Join a scheduled Kilimanjaro departure with other travellers, supported by an experienced local mountain team from the first step to the summit attempt.',
-    heroImage: image(
-      'figma-kili-group-trip-landscape.png',
-      'A small group climbing together on the snowy slopes of Mount Kilimanjaro',
-    ),
-    benefits: [
-      {iconKey: 'users', title: 'Small groups', description: 'Shared pace, personal support'},
-      {iconKey: 'localTeam', title: 'Local mountain team', description: 'Guides, cooks and porters'},
-      {iconKey: 'calendar', title: 'Scheduled departures', description: 'Clear dates and route choices'},
-    ],
-    scheduleEyebrow: 'UPCOMING DEPARTURES',
-    scheduleTitle: 'This is the best time to join a Kilimanjaro climbing group!',
-    emptyStateTitle: 'No published departures for this month yet.',
-    emptyStateDescription:
-      'Ask our team about group dates or a private Kilimanjaro climb that fits your calendar.',
-    seo: {
-      title: 'Kilimanjaro Group Climbs and Departures | Betheli',
-      description:
-        'View scheduled Kilimanjaro group departures and join other travellers with support from Betheli Expeditions’ local mountain team.',
-      canonicalPath: '/groups',
-      shareImage: image(
-        'figma-kili-group-trip-landscape.png',
-        'Kilimanjaro group climbing departure',
-      ),
-    },
-  },
   groupDepartures: [
     {
       routeName: 'Kilimanjaro via Lemosho route - 7 days',

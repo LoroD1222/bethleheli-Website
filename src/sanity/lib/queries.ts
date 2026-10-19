@@ -77,54 +77,25 @@ export const TRIP_PAGE_QUERY = defineQuery(/* groq */ `
   }
 `);
 
-export const GROUP_CLIMBS_QUERY = defineQuery(/* groq */ `
-  {
-    "page": *[_id == "groupClimbsPage"][0] {
-      _id,
-      heroEyebrow,
-      heroTitle,
-      heroDescription,
-      heroImage { ${imageFields} },
-      benefits[] { _key, iconKey, title, description },
-      scheduleEyebrow,
-      scheduleTitle,
-      emptyStateTitle,
-      emptyStateDescription,
-      seo {
-        title,
-        description,
-        canonicalPath,
-        shareImage { ${imageFields} }
-      }
-    },
-    "departures": *[_type == "groupDeparture" && bookingStatus == "scheduled"] | order(startDate asc) {
-      _id,
-      routeName,
-      durationDays,
-      startDate,
-      endDate,
-      highlights,
-      price { amount, currency },
-      deposit { amount, currency },
-      promotionStatus,
-      originalPrice { amount, currency },
-      seasonStatus,
-      seasonLabel
-    }
+export const GROUP_DEPARTURES_QUERY = defineQuery(/* groq */ `
+  *[_type == "groupDeparture" && bookingStatus == "scheduled"] | order(startDate asc) {
+    _id,
+    routeName,
+    durationDays,
+    startDate,
+    endDate,
+    highlights,
+    price { amount, currency },
+    deposit { amount, currency },
+    promotionStatus,
+    originalPrice { amount, currency },
+    seasonStatus,
+    seasonLabel
   }
 `);
 
 export const TRIP_SEO_QUERY = defineQuery(/* groq */ `
   *[_type == "trip" && slug.current == $slug][0].seo {
-    title,
-    description,
-    canonicalPath,
-    shareImage { ${imageFields} }
-  }
-`);
-
-export const GROUP_CLIMBS_SEO_QUERY = defineQuery(/* groq */ `
-  *[_id == "groupClimbsPage"][0].seo {
     title,
     description,
     canonicalPath,

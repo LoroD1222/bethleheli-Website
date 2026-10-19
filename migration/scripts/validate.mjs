@@ -15,7 +15,6 @@ const client = getCliClient({apiVersion: '2026-10-16'})
 
 const data = await client.fetch(`{
   "tripSettings": *[_id == "tripSettings"][0]{_id, "hasMap": defined(map.asset->_id)},
-  "groupClimbsPage": *[_id == "groupClimbsPage"][0]{_id, "benefitCount": count(benefits), "hasHeroImage": defined(heroImage.asset->_id)},
   "trips": *[_type == "trip" && slug.current == $tripSlug]{
     _id,
     title,
@@ -49,8 +48,6 @@ const data = await client.fetch(`{
 
 const errors = []
 if (!data.tripSettings?.hasMap) errors.push('Trip Settings map is missing or unresolved.')
-if (data.groupClimbsPage?.benefitCount !== 3) errors.push('Group Climbs page does not have three benefits.')
-if (!data.groupClimbsPage?.hasHeroImage) errors.push('Group Climbs hero image is missing.')
 if (data.trips.length !== 1) errors.push(`Expected 1 migrated trip; found ${data.trips.length}.`)
 if (data.accommodations.length !== source.accommodations.length) {
   errors.push(
@@ -87,7 +84,6 @@ const report = {
     accommodations: data.accommodations.length,
     groupDepartures: data.departures.length,
     tripSettings: data.tripSettings ? 1 : 0,
-    groupClimbsPages: data.groupClimbsPage ? 1 : 0,
   },
   errors,
   sample: data,

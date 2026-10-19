@@ -11,13 +11,6 @@ const tripSettingsSingleton = defineSingleton({
   documentId: 'tripSettings',
 })
 
-const groupClimbsPageSingleton = defineSingleton({
-  id: 'groupClimbsPage',
-  title: 'Group Climbs Page',
-  schemaType: 'groupClimbsPage',
-  documentId: 'groupClimbsPage',
-})
-
 export default defineConfig({
   name: 'default',
   title: 'betleheli',
@@ -28,7 +21,7 @@ export default defineConfig({
   plugins: [structureTool({structure}), visionTool()],
 
   document: {
-    singletons: [tripSettingsSingleton, groupClimbsPageSingleton],
+    singletons: [tripSettingsSingleton],
   },
 
   schema: {

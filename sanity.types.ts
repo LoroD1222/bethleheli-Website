@@ -15,13 +15,6 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
-export type Benefit = {
-  _type: "benefit";
-  iconKey?: string;
-  title?: string;
-  description?: string;
-};
-
 export type InclusionItem = {
   _type: "inclusionItem";
   iconKey?: string;
@@ -108,28 +101,6 @@ export type ContentImage = {
   hotspot?: SanityImageHotspot;
   crop?: SanityImageCrop;
   alt?: string;
-};
-
-export type GroupClimbsPage = {
-  _id: string;
-  _type: "groupClimbsPage";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  heroEyebrow?: string;
-  heroTitle?: string;
-  heroDescription?: string;
-  heroImage?: ContentImage;
-  benefits?: Array<
-    {
-      _key: string;
-    } & Benefit
-  >;
-  scheduleEyebrow?: string;
-  scheduleTitle?: string;
-  emptyStateTitle?: string;
-  emptyStateDescription?: string;
-  seo?: Seo;
 };
 
 export type TripSettings = {
@@ -361,7 +332,6 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
-  | Benefit
   | InclusionItem
   | InclusionGroup
   | Landscape
@@ -372,7 +342,6 @@ export type AllSanitySchemaTypes =
   | Money
   | SanityImageAssetReference
   | ContentImage
-  | GroupClimbsPage
   | TripSettings
   | GroupDeparture
   | Accommodation
@@ -530,117 +499,31 @@ export type TRIP_PAGE_QUERY_RESULT = {
 } | null;
 
 // Source: ../src/sanity/lib/queries.ts
-// Variable: GROUP_CLIMBS_QUERY
-// Query: {    "page": *[_id == "groupClimbsPage"][0] {      _id,      heroEyebrow,      heroTitle,      heroDescription,      heroImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions },      benefits[] { _key, iconKey, title, description },      scheduleEyebrow,      scheduleTitle,      emptyStateTitle,      emptyStateDescription,      seo {        title,        description,        canonicalPath,        shareImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions }      }    },    "departures": *[_type == "groupDeparture" && bookingStatus == "scheduled"] | order(startDate asc) {      _id,      routeName,      durationDays,      startDate,      endDate,      highlights,      price { amount, currency },      deposit { amount, currency },      promotionStatus,      originalPrice { amount, currency },      seasonStatus,      seasonLabel    }  }
-export type GROUP_CLIMBS_QUERY_RESULT = {
-  page:
-    | {
-        _id: "groupClimbsPage";
-        heroEyebrow: null;
-        heroTitle: null;
-        heroDescription: null;
-        heroImage: null;
-        benefits: null;
-        scheduleEyebrow: null;
-        scheduleTitle: null;
-        emptyStateTitle: null;
-        emptyStateDescription: null;
-        seo: null;
-      }
-    | {
-        _id: "groupClimbsPage";
-        heroEyebrow: null;
-        heroTitle: null;
-        heroDescription: null;
-        heroImage: {
-          asset: SanityImageAssetReference | null;
-          alt: string | null;
-          crop: SanityImageCrop | null;
-          hotspot: SanityImageHotspot | null;
-          lqip: string | null;
-          dimensions: SanityImageDimensions | null;
-        } | null;
-        benefits: null;
-        scheduleEyebrow: null;
-        scheduleTitle: null;
-        emptyStateTitle: null;
-        emptyStateDescription: null;
-        seo: {
-          title: string | null;
-          description: string | null;
-          canonicalPath: string | null;
-          shareImage: {
-            asset: SanityImageAssetReference | null;
-            alt: string | null;
-            crop: SanityImageCrop | null;
-            hotspot: SanityImageHotspot | null;
-            lqip: string | null;
-            dimensions: SanityImageDimensions | null;
-          } | null;
-        } | null;
-      }
-    | {
-        _id: "groupClimbsPage";
-        heroEyebrow: string | null;
-        heroTitle: string | null;
-        heroDescription: string | null;
-        heroImage: {
-          asset: SanityImageAssetReference | null;
-          alt: string | null;
-          crop: SanityImageCrop | null;
-          hotspot: SanityImageHotspot | null;
-          lqip: string | null;
-          dimensions: SanityImageDimensions | null;
-        } | null;
-        benefits: Array<{
-          _key: string;
-          iconKey: string | null;
-          title: string | null;
-          description: string | null;
-        }> | null;
-        scheduleEyebrow: string | null;
-        scheduleTitle: string | null;
-        emptyStateTitle: string | null;
-        emptyStateDescription: string | null;
-        seo: {
-          title: string | null;
-          description: string | null;
-          canonicalPath: string | null;
-          shareImage: {
-            asset: SanityImageAssetReference | null;
-            alt: string | null;
-            crop: SanityImageCrop | null;
-            hotspot: SanityImageHotspot | null;
-            lqip: string | null;
-            dimensions: SanityImageDimensions | null;
-          } | null;
-        } | null;
-      }
-    | null;
-  departures: Array<{
-    _id: string;
-    routeName: string | null;
-    durationDays: number | null;
-    startDate: string | null;
-    endDate: string | null;
-    highlights: Array<string> | null;
-    price: {
-      amount: number | null;
-      currency: "USD" | null;
-    } | null;
-    deposit: {
-      amount: number | null;
-      currency: "USD" | null;
-    } | null;
-    promotionStatus: "discounted" | "standard" | null;
-    originalPrice: {
-      amount: number | null;
-      currency: "USD" | null;
-    } | null;
-    seasonStatus: "rain" | "standard" | null;
-    seasonLabel: string | null;
-  }>;
-};
+// Variable: GROUP_DEPARTURES_QUERY
+// Query: *[_type == "groupDeparture" && bookingStatus == "scheduled"] | order(startDate asc) {    _id,    routeName,    durationDays,    startDate,    endDate,    highlights,    price { amount, currency },    deposit { amount, currency },    promotionStatus,    originalPrice { amount, currency },    seasonStatus,    seasonLabel  }
+export type GROUP_DEPARTURES_QUERY_RESULT = Array<{
+  _id: string;
+  routeName: string | null;
+  durationDays: number | null;
+  startDate: string | null;
+  endDate: string | null;
+  highlights: Array<string> | null;
+  price: {
+    amount: number | null;
+    currency: "USD" | null;
+  } | null;
+  deposit: {
+    amount: number | null;
+    currency: "USD" | null;
+  } | null;
+  promotionStatus: "discounted" | "standard" | null;
+  originalPrice: {
+    amount: number | null;
+    currency: "USD" | null;
+  } | null;
+  seasonStatus: "rain" | "standard" | null;
+  seasonLabel: string | null;
+}>;
 
 // Source: ../src/sanity/lib/queries.ts
 // Variable: TRIP_SEO_QUERY
@@ -659,30 +542,12 @@ export type TRIP_SEO_QUERY_RESULT = {
   } | null;
 } | null;
 
-// Source: ../src/sanity/lib/queries.ts
-// Variable: GROUP_CLIMBS_SEO_QUERY
-// Query: *[_id == "groupClimbsPage"][0].seo {    title,    description,    canonicalPath,    shareImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions }  }
-export type GROUP_CLIMBS_SEO_QUERY_RESULT = {
-  title: string | null;
-  description: string | null;
-  canonicalPath: string | null;
-  shareImage: {
-    asset: SanityImageAssetReference | null;
-    alt: string | null;
-    crop: SanityImageCrop | null;
-    hotspot: SanityImageHotspot | null;
-    lqip: string | null;
-    dimensions: SanityImageDimensions | null;
-  } | null;
-} | null;
-
 // Query TypeMap
 declare global {
   interface SanityQueries {
     '\n  *[_type == "trip" && slug.current == $slug][0] {\n    _id,\n    title,\n    durationDays,\n    startingPrice { amount, currency },\n    heroImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n    heroSummary,\n    overviewParagraphs,\n    overviewImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n    itineraryFor,\n    travelDatesText,\n    guestsText,\n    destinations,\n    planningTitle,\n    planningDescription,\n    itinerary[] {\n      _key,\n      title,\n      summary,\n      image { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n      experience,\n      mealPlan,\n      accommodations[]-> {\n        _id,\n        propertyName,\n        tier,\n        coverImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n        gallery[] { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n      }\n    },\n    landscapesTitle,\n    landscapes[] {\n      _key,\n      name,\n      descriptor,\n      iconKey,\n      image { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n      description\n    },\n    inclusionsEyebrow,\n    inclusionsTitle,\n    inclusionsDescription,\n    inclusionGroups[] {\n      _key,\n      marker,\n      title,\n      description,\n      items[] { _key, iconKey, title, description }\n    },\n    relatedTrips[] {\n      _key,\n      title,\n      summary,\n      durationLabel,\n      image { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n      href\n    },\n    seo {\n      title,\n      description,\n      canonicalPath,\n      shareImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n    },\n    "sharedMap": *[_id == "tripSettings"][0].map { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n  }\n': TRIP_PAGE_QUERY_RESULT;
-    '\n  {\n    "page": *[_id == "groupClimbsPage"][0] {\n      _id,\n      heroEyebrow,\n      heroTitle,\n      heroDescription,\n      heroImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n      benefits[] { _key, iconKey, title, description },\n      scheduleEyebrow,\n      scheduleTitle,\n      emptyStateTitle,\n      emptyStateDescription,\n      seo {\n        title,\n        description,\n        canonicalPath,\n        shareImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n      }\n    },\n    "departures": *[_type == "groupDeparture" && bookingStatus == "scheduled"] | order(startDate asc) {\n      _id,\n      routeName,\n      durationDays,\n      startDate,\n      endDate,\n      highlights,\n      price { amount, currency },\n      deposit { amount, currency },\n      promotionStatus,\n      originalPrice { amount, currency },\n      seasonStatus,\n      seasonLabel\n    }\n  }\n': GROUP_CLIMBS_QUERY_RESULT;
+    '\n  *[_type == "groupDeparture" && bookingStatus == "scheduled"] | order(startDate asc) {\n    _id,\n    routeName,\n    durationDays,\n    startDate,\n    endDate,\n    highlights,\n    price { amount, currency },\n    deposit { amount, currency },\n    promotionStatus,\n    originalPrice { amount, currency },\n    seasonStatus,\n    seasonLabel\n  }\n': GROUP_DEPARTURES_QUERY_RESULT;
     '\n  *[_type == "trip" && slug.current == $slug][0].seo {\n    title,\n    description,\n    canonicalPath,\n    shareImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n  }\n': TRIP_SEO_QUERY_RESULT;
-    '\n  *[_id == "groupClimbsPage"][0].seo {\n    title,\n    description,\n    canonicalPath,\n    shareImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n  }\n': GROUP_CLIMBS_SEO_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

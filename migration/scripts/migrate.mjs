@@ -63,9 +63,6 @@ const validateSource = () => {
       }
     })
   })
-  if (source.groupClimbsPage.benefits.length !== 3) {
-    errors.push('The Group Climbs page must contain exactly three benefits.')
-  }
   source.groupDepartures.forEach((departure) => {
     if (departure.endDate < departure.startDate) {
       errors.push(`${departure.routeName} ends before it starts.`)
@@ -84,10 +81,7 @@ const validateSource = () => {
     if (!existsSync(absolutePath)) errors.push(`Missing image: ${path}`)
     if (alt.trim().length < 5) errors.push(`Image alt text is too short: ${path}`)
   })
-  for (const [name, seo] of [
-    ['trip', source.trip.seo],
-    ['groupClimbsPage', source.groupClimbsPage.seo],
-  ]) {
+  for (const [name, seo] of [['trip', source.trip.seo]]) {
     if (seo.title.length < 20 || seo.title.length > 60) {
       errors.push(`${name} SEO title must be between 20 and 60 characters.`)
     }
@@ -118,7 +112,6 @@ const baseReport = {
   source: source.inventory,
   counts: {
     tripSettings: 1,
-    groupClimbsPages: 1,
     trips: 1,
     accommodations: source.accommodations.length,
     groupDepartures: source.groupDepartures.length,
@@ -291,27 +284,6 @@ if (errors.length) {
   })
   documentIds.trip = tripResult._id
   console.log(`Upserted trip ${trip.title}`)
-
-  const groupPage = source.groupClimbsPage
-  await client.createOrReplace({
-    _id: 'groupClimbsPage',
-    _type: 'groupClimbsPage',
-    heroEyebrow: groupPage.heroEyebrow,
-    heroTitle: groupPage.heroTitle,
-    heroDescription: groupPage.heroDescription,
-    heroImage: contentImage(groupPage.heroImage),
-    benefits: groupPage.benefits.map((benefit, index) => ({
-      _key: `benefit-${index + 1}`,
-      _type: 'benefit',
-      ...benefit,
-    })),
-    scheduleEyebrow: groupPage.scheduleEyebrow,
-    scheduleTitle: groupPage.scheduleTitle,
-    emptyStateTitle: groupPage.emptyStateTitle,
-    emptyStateDescription: groupPage.emptyStateDescription,
-    seo: seo(groupPage.seo),
-  })
-  console.log('Upserted Group Climbs page singleton')
 
   for (const departure of source.groupDepartures) {
     const departureDocument = {
