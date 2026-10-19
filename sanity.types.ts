@@ -176,7 +176,8 @@ export type Trip = {
   title?: string;
   cardTitle?: string;
   slug?: Slug;
-  category?: "safari" | "zanzibar" | "kilimanjaro";
+  categories?: Array<string>;
+  category?: string;
   locationLabel?: string;
   durationDays?: number;
   startingPrice?: Money;

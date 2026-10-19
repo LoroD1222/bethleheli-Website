@@ -53,6 +53,18 @@ const validateSource = () => {
       `Trip duration is ${source.trip.durationDays} days but ${source.trip.itinerary.length} itinerary days were supplied.`,
     )
   }
+  const allowedTripCategories = new Set(['safari', 'zanzibar', 'kilimanjaro'])
+  if (!source.trip.categories.length) {
+    errors.push('The trip must have at least one category.')
+  }
+  if (new Set(source.trip.categories).size !== source.trip.categories.length) {
+    errors.push('Trip categories must be unique.')
+  }
+  source.trip.categories.forEach((category) => {
+    if (!allowedTripCategories.has(category)) {
+      errors.push(`Unknown trip category: ${category}.`)
+    }
+  })
   source.trip.itinerary.forEach((day, dayIndex) => {
     if (!day.accommodationSlugs.length) {
       errors.push(`Itinerary day ${dayIndex + 1} has no accommodation references.`)
@@ -215,7 +227,7 @@ if (errors.length) {
     title: trip.title,
     cardTitle: trip.cardTitle,
     slug: {_type: 'slug', current: trip.slug},
-    category: trip.category,
+    categories: trip.categories,
     locationLabel: trip.locationLabel,
     durationDays: trip.durationDays,
     startingPrice: money(trip.startingPrice),

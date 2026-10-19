@@ -18,6 +18,7 @@ const data = await client.fetch(`{
   "trips": *[_type == "trip" && slug.current == $tripSlug]{
     _id,
     title,
+    categories,
     durationDays,
     "itineraryCount": count(itinerary),
     "relatedTripCount": count(relatedTrips),
@@ -58,6 +59,9 @@ if (data.departures.length !== source.groupDepartures.length) {
   errors.push(`Expected ${source.groupDepartures.length} departures; found ${data.departures.length}.`)
 }
 for (const trip of data.trips) {
+  if (!trip.categories?.length) {
+    errors.push(`${trip.title} has no trip categories.`)
+  }
   if (trip.itineraryCount !== trip.durationDays) {
     errors.push(`${trip.title} itinerary count does not match its duration.`)
   }

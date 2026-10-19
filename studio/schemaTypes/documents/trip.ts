@@ -40,19 +40,30 @@ export const trip = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'string',
+      name: 'categories',
+      title: 'Categories',
+      type: 'array',
       group: 'listing',
+      description: 'Select every category this itinerary belongs to.',
+      of: [defineArrayMember({type: 'string'})],
       options: {
         list: [
           {title: 'Safari', value: 'safari'},
           {title: 'Zanzibar', value: 'zanzibar'},
           {title: 'Kilimanjaro', value: 'kilimanjaro'},
         ],
-        layout: 'radio',
+        layout: 'grid',
       },
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.required().min(1).max(3).unique(),
+    }),
+    defineField({
+      name: 'category',
+      title: 'Legacy Category',
+      type: 'string',
+      group: 'listing',
+      hidden: true,
+      readOnly: true,
+      deprecated: {reason: 'Replaced by the multi-select Categories field.'},
     }),
     defineField({
       name: 'locationLabel',
@@ -240,14 +251,19 @@ export const trip = defineType({
   preview: {
     select: {
       title: 'title',
-      category: 'category',
+      categories: 'categories',
       durationDays: 'durationDays',
       media: 'cardImage',
     },
-    prepare({title, category, durationDays, media}) {
+    prepare({title, categories, durationDays, media}) {
+      const categoryLabel = Array.isArray(categories)
+        ? categories
+            .map((category) => category.charAt(0).toUpperCase() + category.slice(1))
+            .join(', ')
+        : ''
       return {
         title,
-        subtitle: [category, durationDays ? `${durationDays} days` : null]
+        subtitle: [categoryLabel, durationDays ? `${durationDays} days` : null]
           .filter(Boolean)
           .join(' · '),
         media,

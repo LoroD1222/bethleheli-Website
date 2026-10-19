@@ -175,7 +175,7 @@ export const source = {
     title: '6-Day Northern Serengeti River Crossing Safari',
     cardTitle: 'Northern Serengeti River Crossing',
     slug: 'northern-serengeti',
-    category: 'safari',
+    categories: ['safari'],
     locationLabel: 'Safari',
     durationDays: 6,
     startingPrice: {amount: 1732, currency: 'USD'},

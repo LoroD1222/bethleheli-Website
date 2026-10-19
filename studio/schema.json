@@ -954,24 +954,20 @@
         },
         "optional": true
       },
+      "categories": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
       "category": {
         "type": "objectAttribute",
         "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "safari"
-            },
-            {
-              "type": "string",
-              "value": "zanzibar"
-            },
-            {
-              "type": "string",
-              "value": "kilimanjaro"
-            }
-          ]
+          "type": "string"
         },
         "optional": true
       },

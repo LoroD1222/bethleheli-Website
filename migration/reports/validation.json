@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-19T09:04:47.489Z",
+  "generatedAt": "2026-10-19T09:47:14.022Z",
   "projectId": "ife51h63",
   "dataset": "production",
   "status": "passed",
@@ -122,6 +122,9 @@
     "trips": [
       {
         "_id": "NJnMV77vCyO9g8HOX8MTlp",
+        "categories": [
+          "safari"
+        ],
         "durationDays": 6,
         "itineraryCount": 6,
         "missingAccommodationReferences": 0,
