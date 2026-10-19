@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-19T09:47:14.022Z",
+  "generatedAt": "2026-10-19T10:24:42.843Z",
   "projectId": "ife51h63",
   "dataset": "production",
   "status": "passed",
@@ -129,6 +129,8 @@
         "itineraryCount": 6,
         "missingAccommodationReferences": 0,
         "missingImages": 0,
+        "missingOverviewImages": 0,
+        "overviewImageCount": 1,
         "relatedTripCount": 4,
         "title": "6-Day Northern Serengeti River Crossing Safari"
       }

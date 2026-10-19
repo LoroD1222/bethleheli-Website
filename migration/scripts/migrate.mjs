@@ -235,7 +235,10 @@ if (errors.length) {
     heroImage: contentImage(trip.heroImage),
     heroSummary: trip.heroSummary,
     overviewParagraphs: trip.overviewParagraphs,
-    overviewImage: contentImage(trip.overviewImage),
+    overviewImages: trip.overviewImages.map((overviewImage, index) => ({
+      _key: `overview-image-${index + 1}`,
+      ...contentImage(overviewImage),
+    })),
     itineraryFor: trip.itineraryFor,
     travelDatesText: trip.travelDatesText,
     guestsText: trip.guestsText,

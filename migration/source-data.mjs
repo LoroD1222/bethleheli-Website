@@ -187,10 +187,12 @@ export const source = {
       'Experience Tanzania’s Great Migration on this 6-day safari through Tarangire, Central Serengeti, Northern Serengeti and Ngorongoro Crater. Designed around the river-crossing season, the journey includes a full day exploring Northern Serengeti and the Mara River, where wildebeest and zebra gather in dramatic numbers.',
       'From the elephant-filled plains of Tarangire to the dramatic Mara River and the endless Serengeti, this safari brings together Tanzania’s unforgettable landscapes, diverse wildlife and the extraordinary spectacle of the Great Migration.',
     ],
-    overviewImage: image(
-      'figma-safari-destinations-destination-photograph.png',
-      'Hot-air balloons over the Serengeti at sunset',
-    ),
+    overviewImages: [
+      image(
+        'figma-safari-destinations-destination-photograph.png',
+        'Hot-air balloons over the Serengeti at sunset',
+      ),
+    ],
     itineraryFor: 'Northern Serengeti Safari',
     travelDatesText: 'To be confirmed',
     guestsText: '2 Adults',

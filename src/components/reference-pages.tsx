@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { HomeFooter } from "@/components/home-footer";
 import { whatsappHref } from "@/lib/whatsapp";
-import type { CmsTripPageData } from "@/sanity/content-types";
+import type { CmsImage, CmsTripPageData } from "@/sanity/content-types";
 import {
   Accordion,
   ArrowIcon,
@@ -185,6 +185,37 @@ function StaySelector({ eyebrow, title, copy, items }: { eyebrow: string; title:
     <div className="ref-stay-options">{items.map((item, i) => <div className={selected === i ? "active" : ""} key={item.property}><button type="button" aria-expanded={selected === i} onClick={() => chooseStay(i)}><span className="ref-stay-icon"><Image src={image(icons[i])} alt="" width={20} height={20} /></span><span>{item.name}</span></button>{selected === i && <p>{item.text}</p>}</div>)}</div>
     <div className="ref-stay-gallery" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}><div className="ref-stay-photo" aria-live="polite"><Photo key={`${selected}-${slideIndex}-${slide.image}`} src={image(slide.image)} alt={slide.alt} /><div className="ref-stay-photo-meta"><span className={`accommodation-tier accommodation-tier-${slide.tier.toLowerCase().replace("-", "")}`}>{slide.tier}</span><strong>{slide.property}</strong></div><div className="ref-stay-arrows"><button type="button" aria-label={`Previous ${current.name} accommodation`} onClick={() => move(-1)}>‹</button><span>{slideIndex + 1} / {slides.length}</span><button type="button" aria-label={`Next ${current.name} accommodation`} onClick={() => move(1)}>›</button></div></div><div className="ref-thumbs">{items.map((item, i) => <button type="button" className={selected === i ? "active" : ""} aria-label={`Show ${item.name} accommodation collection`} aria-pressed={selected === i} onClick={() => chooseStay(i)} key={item.property}><Photo src={image(item.photo)} alt="" /></button>)}</div></div>
   </div></div></section>;
+}
+
+function TripOverviewSlider({ images }: { images: CmsImage[] }) {
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const current = images[index] || images[0];
+  const move = (direction: number) => setIndex(value => (value + direction + images.length) % images.length);
+
+  useEffect(() => {
+    if (paused || images.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => setIndex(value => (value + 1) % images.length), 4500);
+    return () => window.clearInterval(timer);
+  }, [images.length, paused]);
+
+  if (!current) return null;
+
+  return <figure
+    className="trip-ref-overview-slider"
+    aria-label={`Overview image ${index + 1} of ${images.length}`}
+    onMouseEnter={() => setPaused(true)}
+    onMouseLeave={() => setPaused(false)}
+    onFocusCapture={() => setPaused(true)}
+    onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}
+  >
+    <Photo key={`${index}-${current.src}`} src={current.src} alt={current.alt} sizes="(max-width: 650px) 100vw, 42vw" />
+    {images.length > 1 && <div className="trip-ref-overview-controls">
+      <button type="button" aria-label="Show previous overview image" onClick={() => move(-1)}>‹</button>
+      <span>{index + 1} / {images.length}</span>
+      <button type="button" aria-label="Show next overview image" onClick={() => move(1)}>›</button>
+    </div>}
+  </figure>;
 }
 
 function Seasons({ eyebrow, title, copy, items, imageSrc }: { eyebrow: string; title: string; copy?: string; items: [string,string,string][]; imageSrc?: string }) {
@@ -886,7 +917,7 @@ export function TripDetailReferencePage({ data }: { data?: CmsTripPageData | nul
   const mapAlt = data?.map.alt || "Map of Tanzania showing its national parks";
   return <><section className="trip-ref-hero" id="general"><Photo src={data?.heroImage.src ?? image("figma-trips-hero.png")} alt={data?.heroImage.alt || ""} priority sizes="100vw" /><div className="trip-ref-hero-shade" /><Header active="Home" variant="classic" /><div className="shell trip-ref-hero-copy"><p>From <b>{data?.startingPrice ?? "$1,732"}</b></p><h1>{data?.title ?? "6-Day Northern Serengeti River Crossing Safari"}</h1><p>{data?.heroSummary ?? "A migration-focused safari through Tarangire, Central Serengeti, Northern Serengeti and Ngorongoro, with a full day at the Mara River."}</p><div className="trip-ref-rating"><TripadvisorLogo light compact /><small>5.0 <RatingStars size={14} /></small></div></div></section>
     <TripSectionNav />
-    <main><section className="ref-section ref-dark trip-ref-overview" id="overview"><div className="shell"><div><h2>{data?.title ?? "6-Day Northern Serengeti River Crossing Safari"}</h2>{data?.overviewParagraphs?.length ? data.overviewParagraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>) : <><p>Experience Tanzania’s Great Migration on this 6-day safari through Tarangire, Central Serengeti, Northern Serengeti and Ngorongoro Crater. Designed around the river-crossing season, the journey includes a full day exploring Northern Serengeti and the Mara River, where wildebeest and zebra gather in dramatic numbers.</p><p>From the elephant-filled plains of Tarangire to the dramatic Mara River and the endless Serengeti, this safari brings together Tanzania’s unforgettable landscapes, diverse wildlife and the extraordinary spectacle of the Great Migration.</p></>}<TripFacts itineraryFor={data?.itineraryFor} travelDatesText={data?.travelDatesText} guestsText={data?.guestsText} /></div><Photo src={data?.overviewImage.src ?? image("figma-safari-destinations-destination-photograph.png")} alt={data?.overviewImage.alt || "Hot-air balloons over the Serengeti at sunset"} /></div></section>
+    <main><section className="ref-section ref-dark trip-ref-overview" id="overview"><div className="shell"><div><h2>{data?.title ?? "6-Day Northern Serengeti River Crossing Safari"}</h2>{data?.overviewParagraphs?.length ? data.overviewParagraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>) : <><p>Experience Tanzania’s Great Migration on this 6-day safari through Tarangire, Central Serengeti, Northern Serengeti and Ngorongoro Crater. Designed around the river-crossing season, the journey includes a full day exploring Northern Serengeti and the Mara River, where wildebeest and zebra gather in dramatic numbers.</p><p>From the elephant-filled plains of Tarangire to the dramatic Mara River and the endless Serengeti, this safari brings together Tanzania’s unforgettable landscapes, diverse wildlife and the extraordinary spectacle of the Great Migration.</p></>}<TripFacts itineraryFor={data?.itineraryFor} travelDatesText={data?.travelDatesText} guestsText={data?.guestsText} /></div><TripOverviewSlider images={data?.overviewImages?.length ? data.overviewImages : [{ src: image("figma-safari-destinations-destination-photograph.png"), alt: "Hot-air balloons over the Serengeti at sunset" }]} /></div></section>
 <section className="ref-section trip-ref-itinerary" id="itinerary"><div className="shell"><aside><div className="trip-ref-itinerary-sticky"><button type="button" className="trip-ref-map-button" onClick={() => setMapOpen(true)} aria-haspopup="dialog"><Photo src={mapImage} alt={mapAlt} /><span className="trip-ref-map-hint">Tap for a closer look <Image src={image("figma-trips-map-search.svg")} alt="" width={20} height={20} /></span></button><h3>Destinations Included</h3><ul>{(data?.destinations ?? ["Tarangire National Park", "Ngorongoro Crater", "Central Serengeti", "Northern Serengeti – Mara River"]).map(destination => <li key={destination}>{destination}</li>)}</ul><div className="trip-ref-quote"><div className="trip-ref-quote-heading"><Image src={image("figma-trips-quote-plan.svg")} alt="" width={20} height={18} /><span>Plan Trip</span></div><h3>{data?.planningTitle ?? "Experience the 6-Day Northern Serengeti Safari for yourself."}</h3><p>{data?.planningDescription ?? "Speak with a senior planner for a thoughtful first proposal built around your dates and priorities."}</p><div className="trip-ref-quote-actions"><Link href="/plan-your-trip" className="trip-ref-quote-button">Request a Quote<Image src={image("figma-trips-quote-arrow.svg")} alt="" width={34} height={34} /></Link><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="trip-ref-quote-whatsapp"><Image src={image("figma-trips-quote-whatsapp.svg")} alt="" width={31} height={31} />WhatsApp Us</a></div></div></div></aside><div><div className="trip-ref-itinerary-title"><h2>Itinerary</h2><button type="button" aria-expanded={allDaysOpen} onClick={()=>setOpenDays(allDaysOpen ? new Set() : new Set(days.map((_, index) => index)))}>{allDaysOpen ? "Collapse All Days" : "Show All Days"}</button></div>{days.map((day,i)=><details key={day.title} open={openDays.has(i)}><summary onClick={(event)=>{event.preventDefault();setOpenDays(current=>{const next=new Set(current);if(next.has(i))next.delete(i);else next.add(i);return next;});}}><span className="trip-ref-day-number">Day {i+1}</span><span className="trip-ref-day-dot" aria-hidden="true" /><span className="trip-ref-day-name">{day.title}</span><Image className="trip-ref-day-chevron" src={image("figma-trips-itinerary-chevron.svg")} alt="" width={50} height={50} /></summary><p>{day.copy}</p><div className="trip-ref-day-experience"><Photo src={contentImage(day.image)} alt={day.alt} /><p>{day.experience}</p></div><TripAccommodation day={i+1} mealPlan={day.mealPlan} options={day.stays} /></details>)}</div></div></section>
       {mapOpen && <div className="trip-ref-map-modal" role="dialog" aria-modal="true" aria-label={mapAlt}><button type="button" className="trip-ref-map-backdrop" aria-label="Close map" onClick={() => setMapOpen(false)} /><div className="trip-ref-map-modal-panel"><button type="button" className="trip-ref-map-close" aria-label="Close map" onClick={() => setMapOpen(false)}>×</button><Photo src={mapImage} alt={`Expanded ${mapAlt}`} /></div></div>}
       <TripEnvironments title={data?.landscapesTitle} environments={environments} />

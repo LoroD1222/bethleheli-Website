@@ -1026,6 +1026,28 @@
         },
         "optional": true
       },
+      "overviewImages": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "_key": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "rest": {
+              "type": "inline",
+              "name": "contentImage"
+            }
+          }
+        },
+        "optional": true
+      },
       "overviewImage": {
         "type": "objectAttribute",
         "value": {

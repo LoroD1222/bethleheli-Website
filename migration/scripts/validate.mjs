@@ -20,10 +20,12 @@ const data = await client.fetch(`{
     title,
     categories,
     durationDays,
+    "overviewImageCount": count(overviewImages),
+    "missingOverviewImages": count(overviewImages[!defined(asset->_id)]),
     "itineraryCount": count(itinerary),
     "relatedTripCount": count(relatedTrips),
     "missingAccommodationReferences": count(itinerary[].accommodations[!defined(@->_id)]),
-    "missingImages": count([cardImage, heroImage, overviewImage, seo.shareImage][!defined(asset->_id)])
+    "missingImages": count([cardImage, heroImage, seo.shareImage][!defined(asset->_id)])
   },
   "accommodations": *[_type == "accommodation" && slug.current in $accommodationSlugs]{
     _id,
@@ -61,6 +63,12 @@ if (data.departures.length !== source.groupDepartures.length) {
 for (const trip of data.trips) {
   if (!trip.categories?.length) {
     errors.push(`${trip.title} has no trip categories.`)
+  }
+  if (!trip.overviewImageCount) {
+    errors.push(`${trip.title} has no overview slider images.`)
+  }
+  if (trip.missingOverviewImages) {
+    errors.push(`${trip.title} has ${trip.missingOverviewImages} unresolved overview images.`)
   }
   if (trip.itineraryCount !== trip.durationDays) {
     errors.push(`${trip.title} itinerary count does not match its duration.`)

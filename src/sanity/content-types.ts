@@ -23,7 +23,7 @@ export type CmsTripPageData = {
   heroImage: CmsImage;
   heroSummary: string;
   overviewParagraphs: string[];
-  overviewImage: CmsImage;
+  overviewImages: CmsImage[];
   itineraryFor: string;
   travelDatesText: string;
   guestsText: string;

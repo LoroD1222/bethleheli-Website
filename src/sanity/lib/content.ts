@@ -91,9 +91,13 @@ export async function getTripPageContent(slug: string): Promise<CmsTripPageData 
   try {
     const raw = await fetchSanity(TRIP_PAGE_QUERY, { slug }, ["sanity", "trip", `trip:${slug}`, "accommodation", "tripSettings"]);
     const heroImage = presentImage(raw?.heroImage);
-    const overviewImage = presentImage(raw?.overviewImage);
+    const overviewImages = (raw?.overviewImages || [])
+      .map(image => presentImage(image, 1600))
+      .filter((image): image is CmsImage => Boolean(image));
+    const legacyOverviewImage = presentImage(raw?.overviewImage, 1600);
+    if (!overviewImages.length && legacyOverviewImage) overviewImages.push(legacyOverviewImage);
     const map = presentImage(raw?.sharedMap, 1200);
-    if (!raw || !heroImage || !overviewImage || !map) return null;
+    if (!raw || !heroImage || !overviewImages.length || !map) return null;
 
     const allAccommodations = (raw.itinerary || []).flatMap(day => day.accommodations || []);
     const slidesByTier = new Map<CmsTripStay["tier"], CmsTripStay["slides"]>();
@@ -138,7 +142,7 @@ export async function getTripPageContent(slug: string): Promise<CmsTripPageData 
       heroImage,
       heroSummary: raw.heroSummary || "",
       overviewParagraphs: raw.overviewParagraphs || [],
-      overviewImage,
+      overviewImages,
       itineraryFor: raw.itineraryFor || "",
       travelDatesText: raw.travelDatesText || "",
       guestsText: raw.guestsText || "",

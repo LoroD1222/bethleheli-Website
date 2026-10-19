@@ -350,6 +350,15 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .trip-ref-overview h2{max-width:570px;font-size:42px}
 .trip-ref-overview p{max-width:650px;margin-top:22px;color:rgba(255,255,255,.72);font-size:14px;line-height:1.8}
 .trip-ref-overview img{width:100%;height:465px;object-fit:cover;border-radius:10px}
+.trip-ref-overview-slider{position:relative;min-width:0;margin:0}
+.trip-ref-overview-slider img{display:block;animation:trip-overview-image-in .35s ease both}
+.trip-ref-overview-controls{position:absolute;right:18px;bottom:18px;display:flex;align-items:center;gap:10px;padding:6px;border:1px solid rgba(255,255,255,.38);border-radius:999px;background:rgba(36,49,56,.78);color:#fff;box-shadow:0 8px 30px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+.trip-ref-overview-controls button{display:grid;width:38px;height:38px;padding:0;border:0;border-radius:50%;place-items:center;background:#fff;color:#243138;font-size:27px;line-height:1;cursor:pointer;transition:transform .2s,background-color .2s}
+.trip-ref-overview-controls button:hover{background:#f0f2f2;transform:scale(1.05)}
+.trip-ref-overview-controls button:focus-visible{outline:2px solid #ea4729;outline-offset:3px}
+.trip-ref-overview-controls span{min-width:43px;text-align:center;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+@keyframes trip-overview-image-in{from{opacity:.35}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.trip-ref-overview-slider img{animation:none}.trip-ref-overview-controls button{transition:none}}
 .trip-ref-facts{display:flex;gap:25px;margin-top:45px}
 .trip-ref-facts span{font-size:11px;color:rgba(255,255,255,.7)}
 .trip-ref-facts b{color:#fff;font-size:13px}
@@ -431,6 +440,7 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 @media(max-width:650px){
   .trip-ref-hero{height:650px}.trip-ref-hero-copy{padding-top:190px}.trip-ref-hero-copy h1{font-size:42px}.trip-ref-hero-copy>p:nth-of-type(2){font-size:14px}.trip-ref-nav>.shell{white-space:nowrap}
   .trip-ref-overview>.shell,.trip-ref-itinerary>.shell{grid-template-columns:1fr}.trip-ref-overview h2{font-size:30px}.trip-ref-overview img{height:260px}.trip-ref-facts{flex-wrap:wrap}.trip-ref-itinerary aside>img{height:400px}.trip-ref-lodge{grid-template-columns:1fr;gap:12px}.trip-ref-lodge figure img{height:220px}.trip-ref-itinerary .trip-ref-lion{height:270px}
+  .trip-ref-overview-controls{right:12px;bottom:12px}.trip-ref-overview-controls button{width:34px;height:34px}
   .trip-ref-itinerary summary{min-height:72px;padding:14px 8px;font-size:16px;line-height:1.35;gap:8px}
   .trip-ref-itinerary details>p{font-size:16px;line-height:1.55}
   .trip-ref-accommodation-label{font-size:16px;line-height:1.4}.trip-ref-meal{font-size:16px;line-height:1.4;white-space:normal}

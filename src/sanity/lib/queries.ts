@@ -18,6 +18,7 @@ export const TRIP_PAGE_QUERY = defineQuery(/* groq */ `
     heroImage { ${imageFields} },
     heroSummary,
     overviewParagraphs,
+    overviewImages[] { _key, ${imageFields} },
     overviewImage { ${imageFields} },
     itineraryFor,
     travelDatesText,
