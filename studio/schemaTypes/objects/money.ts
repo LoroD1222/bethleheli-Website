@@ -9,7 +9,7 @@ export const money = defineType({
       name: 'amount',
       title: 'Amount',
       type: 'number',
-      validation: (rule) => rule.required().min(0).precision(2),
+      validation: (rule) => rule.min(0).precision(2),
     }),
     defineField({
       name: 'currency',
@@ -20,7 +20,6 @@ export const money = defineType({
         list: [{title: 'US Dollar', value: 'USD'}],
         layout: 'radio',
       },
-      validation: (rule) => rule.required(),
     }),
   ],
   preview: {

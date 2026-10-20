@@ -11,25 +11,21 @@ export const relatedTripCard = defineType({
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'summary',
       title: 'Route and Difficulty',
       type: 'string',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'durationLabel',
       title: 'Duration Label',
       type: 'string',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'image',
       title: 'Image',
       type: 'contentImage',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'href',
@@ -37,8 +33,8 @@ export const relatedTripCard = defineType({
       type: 'string',
       description: 'An existing website path beginning with a slash.',
       validation: (rule) =>
-        rule.required().custom((value) =>
-          value?.startsWith('/') ? true : 'Destination path must begin with /',
+        rule.custom((value) =>
+          !value || value.startsWith('/') ? true : 'Destination path must begin with /',
         ),
     }),
   ],

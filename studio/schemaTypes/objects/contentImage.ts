@@ -15,7 +15,7 @@ export const contentImage = defineType({
       title: 'Alternative Text',
       type: 'string',
       description: 'Describe the image for visitors who cannot see it.',
-      validation: (rule) => rule.required().min(5).max(180),
+      validation: (rule) => rule.min(5).max(180),
     }),
   ],
 })

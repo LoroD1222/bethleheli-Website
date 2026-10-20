@@ -597,14 +597,14 @@ type TripCategory = "Zanzibar" | "Safari" | "Kilimanjaro";
 type TripCard = CmsTripCard;
 
 const tripCards: TripCard[] = [
-  { title: "Northern Serengeti River Crossing", src: "figma-trips-hero.png", href: "/trips/northern-serengeti", location: "Safari", categories: ["Safari"], days: 6, price: "$1,732" },
-  { title: "Family Safari & Beach Escape", src: "figma-zanzibar-hero.png", href: "/trips/northern-serengeti", location: "Zanzibar", categories: ["Zanzibar"], days: 8, price: "$2,286" },
-  { title: "Kilimanjaro Summit Journey", src: "figma-home-hero.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", categories: ["Kilimanjaro"], days: 8, price: "$2,286" },
-  { title: "Serengeti Family Adventure", src: "home-15.jpg", href: "/trips/northern-serengeti", location: "Safari", categories: ["Safari"], days: 8, price: "$2,286" },
-  { title: "Summit, Safari & Coast", src: "figma-kili-group-trip-landscape3.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", categories: ["Kilimanjaro"], days: 10, price: "$2,940" },
-  { title: "Zanzibar Culture & Coast", src: "figma-home-story-zanzibar.png", href: "/trips/northern-serengeti", location: "Zanzibar", categories: ["Zanzibar"], days: 6, price: "$1,732" },
-  { title: "Tarangire & Ngorongoro Safari", src: "figma-safari-destinations-destination-photograph2.png", href: "/trips/northern-serengeti", location: "Safari", categories: ["Safari"], days: 6, price: "$1,732" },
-  { title: "Lemosho Route & Zanzibar", src: "figma-kili-routes-route-landscape1.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", categories: ["Kilimanjaro"], days: 10, price: "$2,940" },
+  { title: "Northern Serengeti River Crossing", src: "figma-trips-hero.png", href: "/trips/northern-serengeti", categories: ["Safari"], days: 6, price: "$1,732" },
+  { title: "Family Safari & Beach Escape", src: "figma-zanzibar-hero.png", href: "/trips/northern-serengeti", categories: ["Zanzibar"], days: 8, price: "$2,286" },
+  { title: "Kilimanjaro Summit Journey", src: "figma-home-hero.png", href: "/trips/northern-serengeti", categories: ["Kilimanjaro"], days: 8, price: "$2,286" },
+  { title: "Serengeti Family Adventure", src: "home-15.jpg", href: "/trips/northern-serengeti", categories: ["Safari"], days: 8, price: "$2,286" },
+  { title: "Summit, Safari & Coast", src: "figma-kili-group-trip-landscape3.png", href: "/trips/northern-serengeti", categories: ["Kilimanjaro"], days: 10, price: "$2,940" },
+  { title: "Zanzibar Culture & Coast", src: "figma-home-story-zanzibar.png", href: "/trips/northern-serengeti", categories: ["Zanzibar"], days: 6, price: "$1,732" },
+  { title: "Tarangire & Ngorongoro Safari", src: "figma-safari-destinations-destination-photograph2.png", href: "/trips/northern-serengeti", categories: ["Safari"], days: 6, price: "$1,732" },
+  { title: "Lemosho Route & Zanzibar", src: "figma-kili-routes-route-landscape1.png", href: "/trips/northern-serengeti", categories: ["Kilimanjaro"], days: 10, price: "$2,940" },
 ];
 
 function TripCardList({ trips, grid = false }: { trips: TripCard[]; grid?: boolean }) {

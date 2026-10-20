@@ -11,33 +11,28 @@ export const landscape = defineType({
       name: 'name',
       title: 'Name',
       type: 'string',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'descriptor',
       title: 'Short Descriptor',
       type: 'string',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'iconKey',
       title: 'Icon Key',
       type: 'string',
       description: 'The matching icon identifier used by the website.',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'image',
       title: 'Image',
       type: 'contentImage',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       rows: 4,
-      validation: (rule) => rule.required(),
     }),
   ],
   preview: {

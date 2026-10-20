@@ -10,20 +10,17 @@ export const inclusionItem = defineType({
       title: 'Icon Key',
       type: 'string',
       description: 'The matching icon identifier used by the website.',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       rows: 3,
-      validation: (rule) => rule.required(),
     }),
   ],
   preview: {

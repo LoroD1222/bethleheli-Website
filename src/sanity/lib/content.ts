@@ -257,17 +257,17 @@ export async function getTripCards(): Promise<CmsTripCard[]> {
   try {
     const raw: TRIP_CARDS_QUERY_RESULT = await fetchSanity(TRIP_CARDS_QUERY, {}, ["sanity", "trip"]);
     return (raw || []).flatMap((trip) => {
-      const cardImage = presentImage(trip.cardImage, 1200);
+      const cardImage = presentImage(trip.heroImage, 1200)
+        || presentImage(trip.overviewImage, 1200)
+        || presentImage(trip.legacyCardImage, 1200);
       const categories = (trip.categories || [])
         .map((category) => categoryLabels[category])
         .filter((category): category is CmsTripCard["categories"][number] => Boolean(category));
-      if (!trip.slug || !trip.cardTitle || !trip.durationDays || !cardImage || !categories.length) return [];
-      const location = categoryLabels[(trip.categories || [])[0] || ""] || "Safari";
+      if (!trip.slug || !trip.title || !trip.durationDays || !cardImage || !categories.length) return [];
       return [{
-        title: trip.cardTitle,
+        title: trip.title,
         src: cardImage.src,
         href: `/trips/${trip.slug}`,
-        location,
         categories,
         days: trip.durationDays,
         price: formatMoney(trip.startingPrice),

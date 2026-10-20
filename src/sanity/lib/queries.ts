@@ -105,15 +105,16 @@ export const TRIP_SEO_QUERY = defineQuery(/* groq */ `
 `);
 
 export const TRIP_CARDS_QUERY = defineQuery(/* groq */ `
-  *[_type == "trip" && defined(slug.current)] | order(durationDays asc, cardTitle asc) {
+  *[_type == "trip" && defined(slug.current)] | order(durationDays asc, title asc) {
     _id,
-    cardTitle,
+    title,
     "slug": slug.current,
     categories,
-    locationLabel,
     durationDays,
     startingPrice { amount, currency },
-    cardImage { ${imageFields} }
+    heroImage { ${imageFields} },
+    "overviewImage": overviewImages[0] { ${imageFields} },
+    "legacyCardImage": cardImage { ${imageFields} }
   }
 `);
 

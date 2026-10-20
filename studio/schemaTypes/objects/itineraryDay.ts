@@ -11,27 +11,23 @@ export const itineraryDay = defineType({
       name: 'title',
       title: 'Day Title',
       type: 'string',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'summary',
       title: 'Summary',
       type: 'text',
       rows: 4,
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'image',
       title: 'Experience Image',
       type: 'contentImage',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'experience',
       title: 'Experience Description',
       type: 'text',
       rows: 5,
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'mealPlan',
@@ -48,7 +44,6 @@ export const itineraryDay = defineType({
         ],
         layout: 'radio',
       },
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'accommodations',
@@ -60,7 +55,7 @@ export const itineraryDay = defineType({
           to: [{type: 'accommodation'}],
         }),
       ],
-      validation: (rule) => rule.required().min(1).unique(),
+      validation: (rule) => rule.unique(),
     }),
   ],
   preview: {
