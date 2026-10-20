@@ -791,8 +791,8 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .review-copy footer a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .cta-banner{height:456px;min-height:456px;border-radius:28px}
 .cta-banner>div{background:linear-gradient(90deg,rgba(27,45,52,.88),rgba(27,45,52,.08) 57%,rgba(27,45,52,.74))}
-.cta-banner section{position:absolute;z-index:2;left:41px;top:106px;padding:0;width:340px;max-width:340px}
-.cta-banner h2{font-size:40px;line-height:1.12;margin:0 0 20px;font-weight:500}
+.cta-banner section{position:absolute;z-index:2;left:41px;top:50%;padding:0;width:340px;max-width:340px;transform:translateY(-50%)}
+.cta-banner h2{font-size:clamp(32px,2.7vw,40px);line-height:1.12;margin:0 0 20px;font-weight:500;text-wrap:balance}
 .cta-banner section>p:not(.eyebrow){font-size:13px;line-height:1.7}
 .cta-banner aside{left:38%;right:auto;top:60px;bottom:auto;width:325px;height:338px;border-radius:20px;overflow:hidden;background:#fff;color:#111;z-index:2}
 .cta-banner aside img{width:100%;height:283px;border:5px solid #fff;border-radius:20px 20px 0 0;object-fit:cover}
@@ -1938,7 +1938,7 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 /* Keep the CTA copy and image caption in the normal flow on narrow screens. */
 @media(max-width:850px){
   .cta-banner{display:flex;flex-direction:column;gap:26px;height:auto;min-height:0;padding:38px 30px 30px}
-  .cta-banner section{position:relative;left:auto;top:auto;width:100%;max-width:520px;padding:0}
+  .cta-banner section{position:relative;left:auto;top:auto;width:100%;max-width:520px;padding:0;transform:none}
   .cta-banner aside{position:relative;left:auto;right:auto;top:auto;bottom:auto;align-self:center;width:min(100%,420px);height:auto}
   .cta-banner aside img{display:block;width:100%;height:220px;object-fit:cover}
   .cta-banner aside span{display:block;width:100%;height:auto;padding:13px 18px;font-size:13px;line-height:1.4;white-space:normal}

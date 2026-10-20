@@ -956,7 +956,7 @@ export function TripDetailReferencePage({ data }: { data?: CmsTripPageData | nul
       <TripEnvironments title={data?.landscapesTitle} environments={environments} />
       <section className="ref-section trip-ref-inclusions" id="inclusions"><div className="shell"><Intro eyebrow={data?.inclusionsEyebrow ?? "YOUR SAFARI, TAKEN CARE OF"} title={data?.inclusionsTitle ?? "What’s included in your safari"} copy={data?.inclusionsDescription ?? "Use this checklist when planning your enquiry. All package details are subject to confirmation in your quote."} /><div className="trip-ref-chapters">{inclusionChapters.map(chapter=><article className="trip-ref-chapter" key={chapter.title}><div className="trip-ref-chapter-heading"><span>{chapter.marker}</span><h3>{chapter.title}</h3><p>{chapter.description}</p></div><div className="trip-ref-chapter-items">{chapter.items.map(item=><div className="trip-ref-chapter-item" key={item.title}><Image src={image(`figma-trips-inclusion-${item.icon}.svg`)} alt="" width={24} height={24} /><h4>{item.title}</h4><p>{item.description}</p></div>)}</div></article>)}</div></div></section>
       <CtaBanner
-        title={data?.title ? `Ready to experience ${data.title}?` : "Ready to plan your Tanzania journey?"}
+        title={data?.title ? `Plan your ${data.title}` : "Plan your Tanzania journey"}
         text="Share your preferred dates, travel style and priorities. Our local team will shape the route, pace and details around your journey."
         image={data?.heroImage.src ?? image("figma-safari-why-image2.png")}
         centerImage={data?.overviewImages[0]?.src ?? data?.heroImage.src ?? image("figma-safari-why-image2.png")}
