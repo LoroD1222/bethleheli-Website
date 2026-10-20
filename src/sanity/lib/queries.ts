@@ -105,7 +105,7 @@ export const TRIP_SEO_QUERY = defineQuery(/* groq */ `
 `);
 
 export const TRIP_CARDS_QUERY = defineQuery(/* groq */ `
-  *[_type == "trip" && defined(slug.current)] | order(durationDays asc, title asc) {
+  *[_type == "trip" && defined(slug.current) && slug.current != "northern-serengeti"] | order(durationDays asc, title asc) {
     _id,
     title,
     "slug": slug.current,
@@ -119,7 +119,7 @@ export const TRIP_CARDS_QUERY = defineQuery(/* groq */ `
 `);
 
 export const TRIP_SLUGS_QUERY = defineQuery(/* groq */ `
-  *[_type == "trip" && defined(slug.current)] | order(slug.current asc) {
+  *[_type == "trip" && defined(slug.current) && slug.current != "northern-serengeti"] | order(slug.current asc) {
     "slug": slug.current,
     _updatedAt
   }

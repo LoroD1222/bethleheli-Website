@@ -190,6 +190,7 @@ function StaySelector({ eyebrow, title, copy, items }: { eyebrow: string; title:
 function TripOverviewSlider({ images }: { images: CmsImage[] }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const current = images[index] || images[0];
   const move = (direction: number) => setIndex(value => (value + direction + images.length) % images.length);
 
@@ -198,6 +199,22 @@ function TripOverviewSlider({ images }: { images: CmsImage[] }) {
     const timer = window.setInterval(() => setIndex(value => (value + 1) % images.length), 4500);
     return () => window.clearInterval(timer);
   }, [images.length, paused]);
+
+  useEffect(() => {
+    if (!expanded) return;
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setExpanded(false);
+      if (event.key === "ArrowLeft" && images.length > 1) setIndex(value => (value - 1 + images.length) % images.length);
+      if (event.key === "ArrowRight" && images.length > 1) setIndex(value => (value + 1) % images.length);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [expanded, images.length]);
 
   if (!current) return null;
 
@@ -209,11 +226,26 @@ function TripOverviewSlider({ images }: { images: CmsImage[] }) {
     onFocusCapture={() => setPaused(true)}
     onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}
   >
-    <Photo key={`${index}-${current.src}`} src={current.src} alt={current.alt} sizes="(max-width: 650px) 100vw, 42vw" />
+    <button type="button" className="trip-ref-overview-open" aria-label={`Open ${current.alt || "trip overview image"} in a larger viewer`} onClick={() => setExpanded(true)}>
+      <Photo key={`${index}-${current.src}`} src={current.src} alt={current.alt} sizes="(max-width: 650px) 100vw, 58vw" />
+      <span className="trip-ref-overview-expand" aria-hidden="true">&#x26F6;</span>
+    </button>
     {images.length > 1 && <div className="trip-ref-overview-controls">
       <button type="button" aria-label="Show previous overview image" onClick={() => move(-1)}>‹</button>
       <span>{index + 1} / {images.length}</span>
       <button type="button" aria-label="Show next overview image" onClick={() => move(1)}>›</button>
+    </div>}
+    {expanded && <div className="trip-ref-overview-lightbox" role="dialog" aria-modal="true" aria-label="Trip overview image viewer">
+      <button type="button" className="trip-ref-overview-backdrop" aria-label="Close image viewer" onClick={() => setExpanded(false)} />
+      <div className="trip-ref-overview-lightbox-panel">
+        <button type="button" className="trip-ref-overview-close" aria-label="Close image viewer" onClick={() => setExpanded(false)}>×</button>
+        <Photo key={`expanded-${index}-${current.src}`} src={current.src} alt={current.alt} sizes="95vw" />
+        {images.length > 1 && <div className="trip-ref-overview-lightbox-controls">
+          <button type="button" aria-label="Show previous overview image" onClick={() => move(-1)}>‹</button>
+          <span>{index + 1} / {images.length}</span>
+          <button type="button" aria-label="Show next overview image" onClick={() => move(1)}>›</button>
+        </div>}
+      </div>
     </div>}
   </figure>;
 }
@@ -597,7 +629,6 @@ type TripCategory = "Zanzibar" | "Safari" | "Kilimanjaro";
 type TripCard = CmsTripCard;
 
 const tripCards: TripCard[] = [
-  { title: "Northern Serengeti River Crossing", src: "figma-trips-hero.png", href: "/trips/northern-serengeti", categories: ["Safari"], days: 6, price: "$1,732" },
   { title: "Family Safari & Beach Escape", src: "figma-zanzibar-hero.png", href: "/trips/northern-serengeti", categories: ["Zanzibar"], days: 8, price: "$2,286" },
   { title: "Kilimanjaro Summit Journey", src: "figma-home-hero.png", href: "/trips/northern-serengeti", categories: ["Kilimanjaro"], days: 8, price: "$2,286" },
   { title: "Serengeti Family Adventure", src: "home-15.jpg", href: "/trips/northern-serengeti", categories: ["Safari"], days: 8, price: "$2,286" },

@@ -183,7 +183,7 @@ export async function getTripPageContent(slug: string): Promise<CmsTripPageData 
           description: item.description || "",
         })),
       })),
-      relatedTrips: (raw.relatedTrips || []).map(trip => {
+      relatedTrips: (raw.relatedTrips || []).filter(trip => trip.href !== "/trips/northern-serengeti").map(trip => {
         const image = presentImage(trip.image, 1200);
         return {
           title: trip.title || "Related trip",
