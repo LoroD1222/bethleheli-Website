@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-10-20T08:53:15.172Z",
+  "mode": "dry-run",
+  "projectId": "ife51h63",
+  "dataset": "production",
+  "source": {
+    "source": "Six supplied Microsoft Word itinerary documents",
+    "sourceDocuments": [
+      "4 Days Mount Meru.docx",
+      "4-Day Oldonyo lengai & Lake natron.docx",
+      "6-day marangu +2 day at the hotel (1).docx",
+      "6-Day umbwe route + 2-Day at the Hotel.docx",
+      "9- Days Northen Circuit Route.docx",
+      "Day Trip -  Kilimanjaro hike Shira Plateau.docx"
+    ],
+    "locales": [
+      "en"
+    ],
+    "publishingScope": "Published trip content only",
+    "priceDecision": "The Shira Plateau source supplies USD 255. The other five sources omit a price, so the current website minimum of USD 1,450 is used as an editable starting price.",
+    "assetDecision": "The source documents contain no embedded trip photography. Existing approved website images are reused and uploaded to Sanity."
+  },
+  "counts": {
+    "sourceDocuments": 6,
+    "trips": 6,
+    "newAccommodations": 4,
+    "itineraryDays": 34,
+    "uniqueImages": 24
+  },
+  "warnings": [
+    "The Shira Plateau source supplies USD 255. The other five sources omit a price, so the current website minimum of USD 1,450 is used as an editable starting price.",
+    "The source documents contain no embedded trip photography. Existing approved website images are reused and uploaded to Sanity."
+  ],
+  "qualityIssues": [],
+  "status": "ready-for-review"
+}

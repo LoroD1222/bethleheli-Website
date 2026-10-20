@@ -56,7 +56,13 @@ export type ItineraryDay = {
   summary?: string;
   image?: ContentImage;
   experience?: string;
-  mealPlan?: "breakfast" | "halfBoard" | "fullBoard";
+  mealPlan?:
+    | "breakfast"
+    | "lunch"
+    | "breakfastLunch"
+    | "lunchDinner"
+    | "halfBoard"
+    | "fullBoard";
   accommodations?: Array<
     {
       _key: string;
@@ -149,8 +155,10 @@ export type Accommodation = {
     | "hotel"
     | "resort"
     | "villa"
-    | "privateSuite";
-  destinationGroup?: "safariMainland" | "zanzibar";
+    | "privateSuite"
+    | "mountainHut"
+    | "mountainCamp";
+  destinationGroup?: "safariMainland" | "zanzibar" | "mountain";
   location?: string;
   description?: string;
   coverImage?: ContentImage;
@@ -421,7 +429,14 @@ export type TRIP_PAGE_QUERY_RESULT = {
       dimensions: SanityImageDimensions | null;
     } | null;
     experience: string | null;
-    mealPlan: "breakfast" | "fullBoard" | "halfBoard" | null;
+    mealPlan:
+      | "breakfast"
+      | "breakfastLunch"
+      | "fullBoard"
+      | "halfBoard"
+      | "lunch"
+      | "lunchDinner"
+      | null;
     accommodations: Array<{
       _id: string;
       propertyName: string | null;
@@ -557,12 +572,46 @@ export type TRIP_SEO_QUERY_RESULT = {
   } | null;
 } | null;
 
+// Source: ../src/sanity/lib/queries.ts
+// Variable: TRIP_CARDS_QUERY
+// Query: *[_type == "trip" && defined(slug.current)] | order(durationDays asc, cardTitle asc) {    _id,    cardTitle,    "slug": slug.current,    categories,    locationLabel,    durationDays,    startingPrice { amount, currency },    cardImage {   asset,  alt,  crop,  hotspot,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions }  }
+export type TRIP_CARDS_QUERY_RESULT = Array<{
+  _id: string;
+  cardTitle: string | null;
+  slug: string | null;
+  categories: Array<string> | null;
+  locationLabel: string | null;
+  durationDays: number | null;
+  startingPrice: {
+    amount: number | null;
+    currency: "USD" | null;
+  } | null;
+  cardImage: {
+    asset: SanityImageAssetReference | null;
+    alt: string | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+    lqip: string | null;
+    dimensions: SanityImageDimensions | null;
+  } | null;
+}>;
+
+// Source: ../src/sanity/lib/queries.ts
+// Variable: TRIP_SLUGS_QUERY
+// Query: *[_type == "trip" && defined(slug.current)] | order(slug.current asc) {    "slug": slug.current,    _updatedAt  }
+export type TRIP_SLUGS_QUERY_RESULT = Array<{
+  slug: string | null;
+  _updatedAt: string;
+}>;
+
 // Query TypeMap
 declare global {
   interface SanityQueries {
     '\n  *[_type == "trip" && slug.current == $slug][0] {\n    _id,\n    title,\n    durationDays,\n    startingPrice { amount, currency },\n    heroImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n    heroSummary,\n    overviewParagraphs,\n    overviewImages[] { _key, \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n    overviewImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n    itineraryFor,\n    travelDatesText,\n    guestsText,\n    destinations,\n    planningTitle,\n    planningDescription,\n    itinerary[] {\n      _key,\n      title,\n      summary,\n      image { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n      experience,\n      mealPlan,\n      accommodations[]-> {\n        _id,\n        propertyName,\n        tier,\n        coverImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n        gallery[] { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n      }\n    },\n    landscapesTitle,\n    landscapes[] {\n      _key,\n      name,\n      descriptor,\n      iconKey,\n      image { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n      description\n    },\n    inclusionsEyebrow,\n    inclusionsTitle,\n    inclusionsDescription,\n    inclusionGroups[] {\n      _key,\n      marker,\n      title,\n      description,\n      items[] { _key, iconKey, title, description }\n    },\n    relatedTrips[] {\n      _key,\n      title,\n      summary,\n      durationLabel,\n      image { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n },\n      href\n    },\n    seo {\n      title,\n      description,\n      canonicalPath,\n      shareImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n    },\n    "sharedMap": *[_id == "tripSettings"][0].map { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n  }\n': TRIP_PAGE_QUERY_RESULT;
     '\n  *[_type == "groupDeparture" && bookingStatus == "scheduled"] | order(startDate asc) {\n    _id,\n    routeName,\n    durationDays,\n    startDate,\n    endDate,\n    highlights,\n    price { amount, currency },\n    deposit { amount, currency },\n    promotionStatus,\n    originalPrice { amount, currency },\n    seasonStatus,\n    seasonLabel\n  }\n': GROUP_DEPARTURES_QUERY_RESULT;
     '\n  *[_type == "trip" && slug.current == $slug][0].seo {\n    title,\n    description,\n    canonicalPath,\n    shareImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n  }\n': TRIP_SEO_QUERY_RESULT;
+    '\n  *[_type == "trip" && defined(slug.current)] | order(durationDays asc, cardTitle asc) {\n    _id,\n    cardTitle,\n    "slug": slug.current,\n    categories,\n    locationLabel,\n    durationDays,\n    startingPrice { amount, currency },\n    cardImage { \n  asset,\n  alt,\n  crop,\n  hotspot,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n }\n  }\n': TRIP_CARDS_QUERY_RESULT;
+    '\n  *[_type == "trip" && defined(slug.current)] | order(slug.current asc) {\n    "slug": slug.current,\n    _updatedAt\n  }\n': TRIP_SLUGS_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

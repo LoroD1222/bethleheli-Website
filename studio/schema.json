@@ -230,6 +230,18 @@
               },
               {
                 "type": "string",
+                "value": "lunch"
+              },
+              {
+                "type": "string",
+                "value": "breakfastLunch"
+              },
+              {
+                "type": "string",
+                "value": "lunchDinner"
+              },
+              {
+                "type": "string",
                 "value": "halfBoard"
               },
               {
@@ -799,6 +811,14 @@
             {
               "type": "string",
               "value": "privateSuite"
+            },
+            {
+              "type": "string",
+              "value": "mountainHut"
+            },
+            {
+              "type": "string",
+              "value": "mountainCamp"
             }
           ]
         },
@@ -816,6 +836,10 @@
             {
               "type": "string",
               "value": "zanzibar"
+            },
+            {
+              "type": "string",
+              "value": "mountain"
             }
           ]
         },

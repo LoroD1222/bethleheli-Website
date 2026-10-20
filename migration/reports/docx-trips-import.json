@@ -1,0 +1,54 @@
+{
+  "generatedAt": "2026-10-20T08:56:16.407Z",
+  "mode": "production-write",
+  "projectId": "ife51h63",
+  "dataset": "production",
+  "source": {
+    "source": "Six supplied Microsoft Word itinerary documents",
+    "sourceDocuments": [
+      "4 Days Mount Meru.docx",
+      "4-Day Oldonyo lengai & Lake natron.docx",
+      "6-day marangu +2 day at the hotel (1).docx",
+      "6-Day umbwe route + 2-Day at the Hotel.docx",
+      "9- Days Northen Circuit Route.docx",
+      "Day Trip -  Kilimanjaro hike Shira Plateau.docx"
+    ],
+    "locales": [
+      "en"
+    ],
+    "publishingScope": "Published trip content only",
+    "priceDecision": "The Shira Plateau source supplies USD 255. The other five sources omit a price, so the current website minimum of USD 1,450 is used as an editable starting price.",
+    "assetDecision": "The source documents contain no embedded trip photography. Existing approved website images are reused and uploaded to Sanity."
+  },
+  "counts": {
+    "sourceDocuments": 6,
+    "trips": 6,
+    "newAccommodations": 4,
+    "itineraryDays": 34,
+    "uniqueImages": 24
+  },
+  "warnings": [
+    "The Shira Plateau source supplies USD 255. The other five sources omit a price, so the current website minimum of USD 1,450 is used as an editable starting price.",
+    "The source documents contain no embedded trip photography. Existing approved website images are reused and uploaded to Sanity."
+  ],
+  "qualityIssues": [],
+  "status": "import-complete-pending-validation",
+  "documentIds": {
+    "accommodations": {
+      "mount-meru-hotel": "NJnMV77vCyO9g8HOX8MTUf",
+      "arusha-coffee-lodge": "uvXbntIeGC8OhCODUVMQKo",
+      "mount-meru-mountain-huts": "YkPlCo51dgmxCpSBSoMq2d",
+      "lake-natron-area-stay": "OJlbDBzLZ7NM7c3sgK2eBB",
+      "marangu-route-mountain-huts": "OJlbDBzLZ7NM7c3sgK2efN",
+      "kilimanjaro-mountain-camps": "OJlbDBzLZ7NM7c3sgK2f9Z"
+    },
+    "trips": {
+      "mount-meru-trek": "OJlbDBzLZ7NM7c3sgK2fYj",
+      "lake-natron-oldoinyo-lengai": "YkPlCo51dgmxCpSBSoMrZP",
+      "marangu-route-hotel-stay": "PT0Z0fhD72TdeKdiN0ptDB",
+      "umbwe-route-hotel-stay": "PT0Z0fhD72TdeKdiN0ptSi",
+      "northern-circuit-route": "OJlbDBzLZ7NM7c3sgK2hkb",
+      "shira-plateau-day-hike": "OJlbDBzLZ7NM7c3sgK2iTt"
+    }
+  }
+}

@@ -40,6 +40,9 @@ export const itineraryDay = defineType({
       options: {
         list: [
           {title: 'Breakfast', value: 'breakfast'},
+          {title: 'Lunch', value: 'lunch'},
+          {title: 'Breakfast and lunch', value: 'breakfastLunch'},
+          {title: 'Lunch and dinner', value: 'lunchDinner'},
           {title: 'Half Board', value: 'halfBoard'},
           {title: 'Full Board', value: 'fullBoard'},
         ],

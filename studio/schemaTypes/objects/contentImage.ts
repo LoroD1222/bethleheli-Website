@@ -18,5 +18,4 @@ export const contentImage = defineType({
       validation: (rule) => rule.required().min(5).max(180),
     }),
   ],
-  validation: (rule) => rule.required(),
 })

@@ -3,16 +3,16 @@ import { notFound } from "next/navigation";
 import { GroupsPage, SitePage } from "@/components/site";
 import { HomeReferencePage, KilimanjaroReferencePage, KilimanjaroRouteDetailPage, SafariReferencePage, TripDetailReferencePage, TripsReferencePage, ZanzibarReferencePage } from "@/components/reference-pages";
 import { pageMeta, routeKeyFromSlug } from "@/lib/routes";
-import { getGroupDepartures, getTripPageContent, getTripSeo } from "@/sanity/lib/content";
+import { getGroupDepartures, getTripCards, getTripPageContent, getTripSeo } from "@/sanity/lib/content";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug?: string[] }> }): Promise<Metadata> {
   const { slug } = await params;
   const key = routeKeyFromSlug(slug);
-  if (!key) notFound();
-  const meta = pageMeta[key];
-  const cmsSeo = key === "northernSerengeti"
-    ? await getTripSeo("northern-serengeti")
-    : null;
+  const dynamicTripSlug = slug?.length === 2 && slug[0] === "trips" ? slug[1] : null;
+  if (!key && !dynamicTripSlug) notFound();
+  const meta = key ? pageMeta[key] : pageMeta.trips;
+  const cmsSeo = dynamicTripSlug ? await getTripSeo(dynamicTripSlug) : null;
+  if (dynamicTripSlug && !cmsSeo) notFound();
   const title = cmsSeo?.title ?? meta.title;
   const description = cmsSeo?.description ?? meta.description;
   const canonical = cmsSeo?.canonicalPath ?? meta.path;
@@ -29,6 +29,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug?: st
 export default async function Page({ params }: { params: Promise<{ slug?: string[] }> }) {
   const { slug } = await params;
   const key = routeKeyFromSlug(slug);
+  const dynamicTripSlug = slug?.length === 2 && slug[0] === "trips" ? slug[1] : null;
+  if (!key && dynamicTripSlug) {
+    const trip = await getTripPageContent(dynamicTripSlug);
+    if (!trip) notFound();
+    return <TripDetailReferencePage data={trip} />;
+  }
   if (!key) notFound();
   switch (key) {
     case "home": return <HomeReferencePage />;
@@ -41,7 +47,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
     case "umbwe": return <KilimanjaroRouteDetailPage route="umbwe" />;
     case "safari": return <SafariReferencePage />;
     case "zanzibar": return <ZanzibarReferencePage />;
-    case "trips": return <TripsReferencePage />;
+    case "trips": return <TripsReferencePage trips={await getTripCards()} />;
     case "northernSerengeti": return <TripDetailReferencePage data={await getTripPageContent("northern-serengeti")} />;
     case "groups": return <GroupsPage departures={await getGroupDepartures()} />;
     default: return <SitePage page={key} />;

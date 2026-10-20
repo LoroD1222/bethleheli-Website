@@ -7,10 +7,10 @@ const repositoryRoot = resolve(scriptDirectory, '../..')
 const studioRequire = createRequire(resolve(repositoryRoot, 'studio/package.json'))
 const studioSanityCli = studioRequire.resolve('sanity/cli')
 const {getCliClient} = await import(pathToFileURL(studioSanityCli).href)
-const client = getCliClient({apiVersion: '2026-10-19'})
+const client = getCliClient({apiVersion: '2026-10-19'}).withConfig({perspective: 'raw'})
 
 const trips = await client.fetch(
-  '*[_type == "trip" && defined(overviewImage) && !defined(overviewImages)]{_id, overviewImage}',
+  '*[_type == "trip" && !defined(overviewImages)]{_id, overviewImage}',
 )
 
 if (!trips.length) {
@@ -18,9 +18,21 @@ if (!trips.length) {
 } else {
   let transaction = client.transaction()
   for (const trip of trips) {
+    let overviewImages = trip.overviewImage ? [{...trip.overviewImage, _key: 'overview-image-1'}] : null
+    if (!overviewImages && trip._id.startsWith('drafts.')) {
+      const publishedId = trip._id.replace(/^drafts\./, '')
+      overviewImages = await client.fetch(
+        '*[_id == $publishedId][0].overviewImages',
+        {publishedId},
+      )
+    }
+    if (!overviewImages?.length) {
+      console.warn(`Skipped ${trip._id}: no legacy or published overview image was available.`)
+      continue
+    }
     transaction = transaction.patch(trip._id, {
       set: {
-        overviewImages: [{...trip.overviewImage, _key: 'overview-image-1'}],
+        overviewImages,
       },
     })
   }

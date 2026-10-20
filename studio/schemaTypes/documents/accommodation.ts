@@ -48,6 +48,8 @@ export const accommodation = defineType({
           {title: 'Resort', value: 'resort'},
           {title: 'Villa', value: 'villa'},
           {title: 'Private Suite', value: 'privateSuite'},
+          {title: 'Mountain Hut', value: 'mountainHut'},
+          {title: 'Mountain Camp', value: 'mountainCamp'},
         ],
       },
       validation: (rule) => rule.required(),
@@ -60,6 +62,7 @@ export const accommodation = defineType({
         list: [
           {title: 'Safari / Mainland', value: 'safariMainland'},
           {title: 'Zanzibar', value: 'zanzibar'},
+          {title: 'Mountain', value: 'mountain'},
         ],
         layout: 'radio',
       },

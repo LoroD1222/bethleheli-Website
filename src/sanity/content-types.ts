@@ -73,6 +73,16 @@ export type CmsTripPageData = {
   }>;
 };
 
+export type CmsTripCard = {
+  title: string;
+  src: string;
+  href: string;
+  location: "Kilimanjaro" | "Safari" | "Zanzibar";
+  categories: Array<"Kilimanjaro" | "Safari" | "Zanzibar">;
+  days: number;
+  price: string;
+};
+
 export type CmsGroupDeparture = {
   id: string;
   day: string;

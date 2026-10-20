@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { HomeFooter } from "@/components/home-footer";
 import { whatsappHref } from "@/lib/whatsapp";
-import type { CmsImage, CmsTripPageData } from "@/sanity/content-types";
+import type { CmsImage, CmsTripCard, CmsTripPageData } from "@/sanity/content-types";
 import {
   Accordion,
   ArrowIcon,
@@ -594,28 +594,28 @@ function HomeFaq() {
 }
 
 type TripCategory = "Zanzibar" | "Safari" | "Kilimanjaro";
-type TripCard = { title: string; src: string; href: string; location: "Kilimanjaro" | "Safari" | "Zanzibar"; category: TripCategory; days: number; price: string };
+type TripCard = CmsTripCard;
 
 const tripCards: TripCard[] = [
-  { title: "Northern Serengeti River Crossing", src: "figma-trips-hero.png", href: "/trips/northern-serengeti", location: "Safari", category: "Safari", days: 6, price: "$1,732" },
-  { title: "Family Safari & Beach Escape", src: "figma-zanzibar-hero.png", href: "/trips/northern-serengeti", location: "Zanzibar", category: "Zanzibar", days: 8, price: "$2,286" },
-  { title: "Kilimanjaro Summit Journey", src: "figma-home-hero.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", category: "Kilimanjaro", days: 8, price: "$2,286" },
-  { title: "Serengeti Family Adventure", src: "home-15.jpg", href: "/trips/northern-serengeti", location: "Safari", category: "Safari", days: 8, price: "$2,286" },
-  { title: "Summit, Safari & Coast", src: "figma-kili-group-trip-landscape3.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", category: "Kilimanjaro", days: 10, price: "$2,940" },
-  { title: "Zanzibar Culture & Coast", src: "figma-home-story-zanzibar.png", href: "/trips/northern-serengeti", location: "Zanzibar", category: "Zanzibar", days: 6, price: "$1,732" },
-  { title: "Tarangire & Ngorongoro Safari", src: "figma-safari-destinations-destination-photograph2.png", href: "/trips/northern-serengeti", location: "Safari", category: "Safari", days: 6, price: "$1,732" },
-  { title: "Lemosho Route & Zanzibar", src: "figma-kili-routes-route-landscape1.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", category: "Kilimanjaro", days: 10, price: "$2,940" },
+  { title: "Northern Serengeti River Crossing", src: "figma-trips-hero.png", href: "/trips/northern-serengeti", location: "Safari", categories: ["Safari"], days: 6, price: "$1,732" },
+  { title: "Family Safari & Beach Escape", src: "figma-zanzibar-hero.png", href: "/trips/northern-serengeti", location: "Zanzibar", categories: ["Zanzibar"], days: 8, price: "$2,286" },
+  { title: "Kilimanjaro Summit Journey", src: "figma-home-hero.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", categories: ["Kilimanjaro"], days: 8, price: "$2,286" },
+  { title: "Serengeti Family Adventure", src: "home-15.jpg", href: "/trips/northern-serengeti", location: "Safari", categories: ["Safari"], days: 8, price: "$2,286" },
+  { title: "Summit, Safari & Coast", src: "figma-kili-group-trip-landscape3.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", categories: ["Kilimanjaro"], days: 10, price: "$2,940" },
+  { title: "Zanzibar Culture & Coast", src: "figma-home-story-zanzibar.png", href: "/trips/northern-serengeti", location: "Zanzibar", categories: ["Zanzibar"], days: 6, price: "$1,732" },
+  { title: "Tarangire & Ngorongoro Safari", src: "figma-safari-destinations-destination-photograph2.png", href: "/trips/northern-serengeti", location: "Safari", categories: ["Safari"], days: 6, price: "$1,732" },
+  { title: "Lemosho Route & Zanzibar", src: "figma-kili-routes-route-landscape1.png", href: "/trips/northern-serengeti", location: "Kilimanjaro", categories: ["Kilimanjaro"], days: 10, price: "$2,940" },
 ];
 
 function TripCardList({ trips, grid = false }: { trips: TripCard[]; grid?: boolean }) {
-  return <div className={`home-ref-adventure-cards${grid ? " trips-ref-card-grid" : ""}`}>{trips.map((trip) => <Link href={trip.href} key={trip.title}><Photo src={image(trip.src)} alt={trip.title} /><h3>{trip.title}</h3><small>{trip.days} DAYS</small><div className="home-ref-trip-bottom"><span className="home-ref-trip-price">starts from<br /><b>{trip.price}</b><br />per person</span><span className="home-ref-trip-link">View Trip</span></div></Link>)}</div>;
+  return <div className={`home-ref-adventure-cards${grid ? " trips-ref-card-grid" : ""}`}>{trips.map((trip) => <Link href={trip.href} key={trip.href}><Photo src={contentImage(trip.src)} alt={trip.title} /><h3>{trip.title}</h3><small>{trip.days} DAYS</small><div className="home-ref-trip-bottom"><span className="home-ref-trip-price">starts from<br /><b>{trip.price}</b><br />per person</span><span className="home-ref-trip-link">View Trip</span></div></Link>)}</div>;
 }
 
 function HomeAdventures() {
   const [location, setLocation] = useState("All locations");
   const [price, setPrice] = useState("All prices");
   const [duration, setDuration] = useState("Any duration");
-  const visible = tripCards.filter((trip) => (location === "All locations" || trip.location === location) && (price === "All prices" || trip.price === price) && (duration === "Any duration" || `${trip.days} days` === duration)).slice(0, 5);
+  const visible = tripCards.filter((trip) => (location === "All locations" || trip.categories.includes(location as TripCategory)) && (price === "All prices" || trip.price === price) && (duration === "Any duration" || `${trip.days} days` === duration)).slice(0, 5);
   return <div className="shell home-ref-adventures"><div><div><h2>Kilimanjaro, Safari and Zanzibar.</h2></div><div className="home-ref-adventure-filters"><select aria-label="Filter by location" value={location} onChange={e => setLocation(e.target.value)}>{["All locations","Kilimanjaro","Safari","Zanzibar"].map(x=><option key={x}>{x}</option>)}</select><select aria-label="Filter by price" value={price} onChange={e => setPrice(e.target.value)}><option>All prices</option><option>$1,732</option><option>$2,286</option><option>$2,940</option></select><select aria-label="Filter by duration" value={duration} onChange={e => setDuration(e.target.value)}><option>Any duration</option><option>6 days</option><option>8 days</option><option>10 days</option></select></div></div><TripCardList trips={visible} /><Link className="home-ref-view-trips" href="/trips">View all trips <ArrowIcon /></Link></div>;
 }
 
@@ -852,14 +852,16 @@ function TripFaq() {
   return <section className="ref-section trip-ref-faq" id="questions"><div className="shell"><h2>Frequently Asked Questions</h2><p>Useful answers for the first conversation and the planning that follows.</p><div className="trip-ref-faq-toolbar"><div className="trip-ref-faq-tabs" role="group" aria-label="Filter frequently asked questions">{categories.map(item => <button type="button" key={item} aria-pressed={category === item} onClick={() => setCategory(item)}>{item}</button>)}</div><PrimaryLink>Start planning</PrimaryLink></div><Accordion key={category} items={items} openCount={0} /></div></section>;
 }
 
-export function TripsReferencePage() {
+export function TripsReferencePage({ trips }: { trips?: CmsTripCard[] } = {}) {
   const [duration, setDuration] = useState("Any duration");
   const [category, setCategory] = useState<"All" | TripCategory>("All");
   const categories: ("All" | TripCategory)[] = ["All", "Zanzibar", "Safari", "Kilimanjaro"];
-  const visibleTrips = tripCards.filter((trip) => (category === "All" || trip.category === category) && (duration === "Any duration" || `${trip.days} days` === duration));
+  const availableTrips = trips?.length ? trips : tripCards;
+  const durationOptions = Array.from(new Set(availableTrips.map((trip) => trip.days))).sort((a, b) => a - b);
+  const visibleTrips = availableTrips.filter((trip) => (category === "All" || trip.categories.includes(category)) && (duration === "Any duration" || `${trip.days} days` === duration));
 
   return <><ReferenceHero imageSrc={image("figma-trips-hero.png")} eyebrow="TAILORED TANZANIA JOURNEYS" title="Trips across Tanzania" lead="Climb, safari and coast — shaped into one thoughtful journey." copy="Browse a selection of trip ideas, then talk with our local team to adapt the route, pace and stays around you." action="Start planning" secondAction="Explore trips" secondActionHref="#all-trips" active="Trips" navVariant="classic" />
-    <main className="trips-index-page"><section className="ref-section trips-ref-listing" id="all-trips"><div className="shell"><div className="trips-ref-listing-head"><div><p className="eyebrow">FIND YOUR TANZANIA JOURNEY</p><h2>Kilimanjaro, Safari and Zanzibar.</h2><p>Choose a starting point. Every itinerary can be refined around your dates, interests and travel style.</p></div><div className="home-ref-adventure-filters"><select aria-label="Filter trips by duration" value={duration} onChange={event => setDuration(event.target.value)}><option>Any duration</option><option>6 days</option><option>8 days</option><option>10 days</option></select></div></div><div className="trips-ref-filter-summary" aria-live="polite"><span>Showing <strong>{visibleTrips.length}</strong> {visibleTrips.length === 1 ? "trip" : "trips"}{category === "All" ? " across all categories" : ` in ${category}`}{duration === "Any duration" ? "" : ` for ${duration}`}</span>{duration !== "Any duration" && <button type="button" onClick={() => setDuration("Any duration")}>Clear duration</button>}</div><div className="trips-ref-category-nav" role="group" aria-label="Filter trips by category">{categories.map(item => <button type="button" key={item} aria-pressed={category === item} className={category === item ? "active" : ""} onClick={() => setCategory(item)}>{item}</button>)}</div>{visibleTrips.length ? <TripCardList trips={visibleTrips} grid /> : <p className="trips-ref-empty">No trips match these filters. Try another category or duration.</p>}</div></section>
+    <main className="trips-index-page"><section className="ref-section trips-ref-listing" id="all-trips"><div className="shell"><div className="trips-ref-listing-head"><div><p className="eyebrow">FIND YOUR TANZANIA JOURNEY</p><h2>Kilimanjaro, Safari and Zanzibar.</h2><p>Choose a starting point. Every itinerary can be refined around your dates, interests and travel style.</p></div><div className="home-ref-adventure-filters"><select aria-label="Filter trips by duration" value={duration} onChange={event => setDuration(event.target.value)}><option>Any duration</option>{durationOptions.map(days => <option key={days}>{days} days</option>)}</select></div></div><div className="trips-ref-filter-summary" aria-live="polite"><span>Showing <strong>{visibleTrips.length}</strong> {visibleTrips.length === 1 ? "trip" : "trips"}{category === "All" ? " across all categories" : ` in ${category}`}{duration === "Any duration" ? "" : ` for ${duration}`}</span>{duration !== "Any duration" && <button type="button" onClick={() => setDuration("Any duration")}>Clear duration</button>}</div><div className="trips-ref-category-nav" role="group" aria-label="Filter trips by category">{categories.map(item => <button type="button" key={item} aria-pressed={category === item} className={category === item ? "active" : ""} onClick={() => setCategory(item)}>{item}</button>)}</div>{visibleTrips.length ? <TripCardList trips={visibleTrips} grid /> : <p className="trips-ref-empty">No trips match these filters. Try another category or duration.</p>}</div></section>
       <CtaBanner title="Not sure which trip fits?" text="Tell us the places you are drawn to, your available time and who you are travelling with. We’ll help shape the route." image={image("figma-safari-why-image2.png")} />
     </main><Footer /></>;
 }

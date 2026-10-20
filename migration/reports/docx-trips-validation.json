@@ -1,0 +1,185 @@
+{
+  "generatedAt": "2026-10-20T09:07:14.294Z",
+  "projectId": "ife51h63",
+  "dataset": "production",
+  "status": "passed",
+  "counts": {
+    "trips": 6,
+    "accommodations": 4
+  },
+  "errors": [],
+  "sample": {
+    "accommodations": [
+      {
+        "_id": "OJlbDBzLZ7NM7c3sgK2f9Z",
+        "destinationGroup": "mountain",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "missingGalleryImages": 0,
+        "slug": "kilimanjaro-mountain-camps",
+        "style": "mountainCamp"
+      },
+      {
+        "_id": "OJlbDBzLZ7NM7c3sgK2eBB",
+        "destinationGroup": "safariMainland",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "missingGalleryImages": 0,
+        "slug": "lake-natron-area-stay",
+        "style": "safariCamp"
+      },
+      {
+        "_id": "OJlbDBzLZ7NM7c3sgK2efN",
+        "destinationGroup": "mountain",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "missingGalleryImages": 0,
+        "slug": "marangu-route-mountain-huts",
+        "style": "mountainHut"
+      },
+      {
+        "_id": "YkPlCo51dgmxCpSBSoMq2d",
+        "destinationGroup": "mountain",
+        "galleryCount": 2,
+        "hasCoverImage": true,
+        "missingGalleryImages": 0,
+        "slug": "mount-meru-mountain-huts",
+        "style": "mountainHut"
+      }
+    ],
+    "trips": [
+      {
+        "_id": "YkPlCo51dgmxCpSBSoMrZP",
+        "canonicalPath": "/trips/lake-natron-oldoinyo-lengai",
+        "categories": [
+          "safari"
+        ],
+        "durationDays": 4,
+        "inclusionGroupCount": 3,
+        "itineraryCount": 4,
+        "landscapeCount": 3,
+        "missingAccommodationReferences": 0,
+        "missingDayImages": 0,
+        "missingLandscapeImages": 0,
+        "missingOverviewImages": 0,
+        "missingPrimaryImages": 0,
+        "overviewImageCount": 2,
+        "relatedTripCount": 4,
+        "seoDescriptionLength": 133,
+        "seoTitleLength": 46,
+        "slug": "lake-natron-oldoinyo-lengai",
+        "title": "4-Day Lake Natron and Oldoinyo Lengai Adventure"
+      },
+      {
+        "_id": "PT0Z0fhD72TdeKdiN0ptDB",
+        "canonicalPath": "/trips/marangu-route-hotel-stay",
+        "categories": [
+          "kilimanjaro"
+        ],
+        "durationDays": 8,
+        "inclusionGroupCount": 3,
+        "itineraryCount": 8,
+        "landscapeCount": 4,
+        "missingAccommodationReferences": 0,
+        "missingDayImages": 0,
+        "missingLandscapeImages": 0,
+        "missingOverviewImages": 0,
+        "missingPrimaryImages": 0,
+        "overviewImageCount": 2,
+        "relatedTripCount": 4,
+        "seoDescriptionLength": 135,
+        "seoTitleLength": 44,
+        "slug": "marangu-route-hotel-stay",
+        "title": "8-Day Kilimanjaro Marangu Route and Hotel Stay"
+      },
+      {
+        "_id": "OJlbDBzLZ7NM7c3sgK2fYj",
+        "canonicalPath": "/trips/mount-meru-trek",
+        "categories": [
+          "kilimanjaro"
+        ],
+        "durationDays": 4,
+        "inclusionGroupCount": 3,
+        "itineraryCount": 4,
+        "landscapeCount": 3,
+        "missingAccommodationReferences": 0,
+        "missingDayImages": 0,
+        "missingLandscapeImages": 0,
+        "missingOverviewImages": 0,
+        "missingPrimaryImages": 0,
+        "overviewImageCount": 2,
+        "relatedTripCount": 4,
+        "seoDescriptionLength": 137,
+        "seoTitleLength": 43,
+        "slug": "mount-meru-trek",
+        "title": "4-Day Mount Meru Trek"
+      },
+      {
+        "_id": "OJlbDBzLZ7NM7c3sgK2hkb",
+        "canonicalPath": "/trips/northern-circuit-route",
+        "categories": [
+          "kilimanjaro"
+        ],
+        "durationDays": 9,
+        "inclusionGroupCount": 3,
+        "itineraryCount": 9,
+        "landscapeCount": 4,
+        "missingAccommodationReferences": 0,
+        "missingDayImages": 0,
+        "missingLandscapeImages": 0,
+        "missingOverviewImages": 0,
+        "missingPrimaryImages": 0,
+        "overviewImageCount": 2,
+        "relatedTripCount": 4,
+        "seoDescriptionLength": 142,
+        "seoTitleLength": 50,
+        "slug": "northern-circuit-route",
+        "title": "9-Day Kilimanjaro Northern Circuit Route"
+      },
+      {
+        "_id": "OJlbDBzLZ7NM7c3sgK2iTt",
+        "canonicalPath": "/trips/shira-plateau-day-hike",
+        "categories": [
+          "kilimanjaro"
+        ],
+        "durationDays": 1,
+        "inclusionGroupCount": 2,
+        "itineraryCount": 1,
+        "landscapeCount": 3,
+        "missingAccommodationReferences": 0,
+        "missingDayImages": 0,
+        "missingLandscapeImages": 0,
+        "missingOverviewImages": 0,
+        "missingPrimaryImages": 0,
+        "overviewImageCount": 2,
+        "relatedTripCount": 4,
+        "seoDescriptionLength": 135,
+        "seoTitleLength": 44,
+        "slug": "shira-plateau-day-hike",
+        "title": "Kilimanjaro Shira Plateau Day Hike"
+      },
+      {
+        "_id": "PT0Z0fhD72TdeKdiN0ptSi",
+        "canonicalPath": "/trips/umbwe-route-hotel-stay",
+        "categories": [
+          "kilimanjaro"
+        ],
+        "durationDays": 8,
+        "inclusionGroupCount": 3,
+        "itineraryCount": 8,
+        "landscapeCount": 4,
+        "missingAccommodationReferences": 0,
+        "missingDayImages": 0,
+        "missingLandscapeImages": 0,
+        "missingOverviewImages": 0,
+        "missingPrimaryImages": 0,
+        "overviewImageCount": 2,
+        "relatedTripCount": 4,
+        "seoDescriptionLength": 132,
+        "seoTitleLength": 42,
+        "slug": "umbwe-route-hotel-stay",
+        "title": "8-Day Kilimanjaro Umbwe Route and Hotel Stay"
+      }
+    ]
+  }
+}

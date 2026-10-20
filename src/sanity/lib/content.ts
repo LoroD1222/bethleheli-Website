@@ -4,13 +4,16 @@ import type { ClientReturn } from "@sanity/client";
 import type { SanityImageSource } from "@sanity/image-url";
 import type {
   GROUP_DEPARTURES_QUERY_RESULT,
+  TRIP_CARDS_QUERY_RESULT,
   TRIP_PAGE_QUERY_RESULT,
   TRIP_SEO_QUERY_RESULT,
+  TRIP_SLUGS_QUERY_RESULT,
 } from "../../../sanity.types";
 import type {
   CmsGroupDeparture,
   CmsImage,
   CmsSeo,
+  CmsTripCard,
   CmsTripPageData,
   CmsTripStay,
 } from "@/sanity/content-types";
@@ -18,8 +21,10 @@ import { sanityClient } from "./client";
 import { urlForImage } from "./image";
 import {
   GROUP_DEPARTURES_QUERY,
+  TRIP_CARDS_QUERY,
   TRIP_PAGE_QUERY,
   TRIP_SEO_QUERY,
+  TRIP_SLUGS_QUERY,
 } from "./queries";
 
 type RawTrip = NonNullable<TRIP_PAGE_QUERY_RESULT>;
@@ -29,6 +34,9 @@ type RawSeo = TRIP_SEO_QUERY_RESULT;
 
 const mealPlanLabels: Record<string, string> = {
   breakfast: "Breakfast",
+  lunch: "Lunch",
+  breakfastLunch: "Breakfast and lunch",
+  lunchDinner: "Lunch and dinner",
   halfBoard: "Half Board",
   fullBoard: "Full Board",
 };
@@ -236,5 +244,46 @@ export async function getTripSeo(slug: string): Promise<CmsSeo | null> {
   } catch (error) {
     console.error(`Unable to load Sanity SEO for ${slug}.`, error);
     return null;
+  }
+}
+
+const categoryLabels: Record<string, CmsTripCard["categories"][number]> = {
+  kilimanjaro: "Kilimanjaro",
+  safari: "Safari",
+  zanzibar: "Zanzibar",
+};
+
+export async function getTripCards(): Promise<CmsTripCard[]> {
+  try {
+    const raw: TRIP_CARDS_QUERY_RESULT = await fetchSanity(TRIP_CARDS_QUERY, {}, ["sanity", "trip"]);
+    return (raw || []).flatMap((trip) => {
+      const cardImage = presentImage(trip.cardImage, 1200);
+      const categories = (trip.categories || [])
+        .map((category) => categoryLabels[category])
+        .filter((category): category is CmsTripCard["categories"][number] => Boolean(category));
+      if (!trip.slug || !trip.cardTitle || !trip.durationDays || !cardImage || !categories.length) return [];
+      const location = categoryLabels[(trip.categories || [])[0] || ""] || "Safari";
+      return [{
+        title: trip.cardTitle,
+        src: cardImage.src,
+        href: `/trips/${trip.slug}`,
+        location,
+        categories,
+        days: trip.durationDays,
+        price: formatMoney(trip.startingPrice),
+      } satisfies CmsTripCard];
+    });
+  } catch (error) {
+    console.error("Unable to load Sanity trip cards.", error);
+    return [];
+  }
+}
+
+export async function getTripSlugs(): Promise<TRIP_SLUGS_QUERY_RESULT> {
+  try {
+    return await fetchSanity(TRIP_SLUGS_QUERY, {}, ["sanity", "trip"]);
+  } catch (error) {
+    console.error("Unable to load Sanity trip slugs.", error);
+    return [];
   }
 }
