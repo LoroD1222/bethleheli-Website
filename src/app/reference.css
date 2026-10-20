@@ -1479,14 +1479,14 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .review-count{font-size:14px}
 
 /* Trips overview icons and type match the compact Figma fact row. */
-.trip-ref-facts{display:flex;align-items:center;gap:35px;margin-top:42px}
-.trip-ref-fact{display:flex;align-items:center;gap:7px;min-width:0}
+.trip-ref-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:20px 24px;margin-top:42px}
+.trip-ref-fact{display:flex;align-items:flex-start;gap:8px;min-width:0}
 .trip-ref-fact-icon{position:relative;display:block;flex:none;width:40px;height:40px}
 .trip-ref-fact-icon img:first-child{display:block;width:40px;height:40px}
 .trip-ref-fact-icon img:last-child{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:24px;max-height:20px}
-.trip-ref-fact>span:last-child{display:flex;flex-direction:column;gap:1px;min-width:0;white-space:nowrap}
+.trip-ref-fact>span:last-child{display:flex;flex-direction:column;gap:2px;min-width:0;white-space:normal}
 .trip-ref-fact small{color:rgba(255,255,255,.7);font-family:Inter,Arial,sans-serif;font-size:15px;font-weight:500;line-height:1.2}
-.trip-ref-fact strong{color:#fff;font-family:Inter,Arial,sans-serif;font-size:17px;font-weight:500;line-height:1.2}
+.trip-ref-fact strong{color:#fff;font-family:Inter,Arial,sans-serif;font-size:17px;font-weight:500;line-height:1.3;overflow-wrap:anywhere}
 
 /* The Trips environment panel places imagery beside an interactive zone list. */
 .trip-ref-environments{padding:100px 0}
@@ -1811,7 +1811,7 @@ main>.ref-zanzibar-combinations,main>.ref-zanzibar-faq{background:#fafafa!import
 .ref-zanzibar-faq .accordion details p{max-width:840px;padding:0 0 28px;font-size:15px;line-height:1.75}
 
 /* Keep the three trip icons at their exact Figma scale with clear separation. */
-.trip-ref-facts{gap:35px}
+.trip-ref-facts{gap:20px 24px}
 .trip-ref-fact{gap:8px}
 .trip-ref-fact-icon{display:grid;place-items:center;flex:none;width:40px;height:40px}
 .trip-ref-fact-icon img:first-child{grid-area:1 / 1;opacity:1}
@@ -2004,7 +2004,7 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 /* Clear, consistent route/calendar/guest iconography in the trip summary. */
 .trip-ref-facts .trip-ref-fact-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.07);color:#ea4729}
 .trip-ref-fact-icon svg{display:block;width:23px;height:23px}
-@media(max-width:700px){.trip-ref-fact-icon{width:44px;height:44px}}
+@media(max-width:700px){.trip-ref-facts{grid-template-columns:1fr}.trip-ref-fact-icon{width:44px;height:44px}}
 
 /* Final shared interaction pass: one calm carousel language, full-bleed home
    hero media, and motion that remains optional for reduced-motion visitors. */
