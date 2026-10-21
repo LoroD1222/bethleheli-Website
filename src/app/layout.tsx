@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./reference.css";
 import { ScrollMotion } from "@/components/site";
+import { AdTrackingCapture } from "@/components/ad-tracking-capture";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://betheliexpeditions.com";
 
@@ -34,7 +35,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   };
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} /><ScrollMotion />{children}</body>
+      <body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} /><AdTrackingCapture /><ScrollMotion />{children}</body>
     </html>
   );
 }

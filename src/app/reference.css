@@ -2642,3 +2642,79 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   scroll-snap-type:x proximity;
   touch-action:pan-x pan-y;
 }
+
+/* Thank-you page */
+.thank-you-page{background:#f7f4ee;color:#243138}
+.thank-you-hero{position:relative;min-height:700px;display:flex;align-items:center;overflow:hidden;color:#fff}
+.thank-you-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thank-you-hero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(24,39,46,.96) 0%,rgba(24,39,46,.79) 47%,rgba(24,39,46,.28) 100%)}
+.thank-you-hero-content{position:relative;z-index:2;padding-top:150px;padding-bottom:90px}
+.thank-you-tick{position:relative;width:94px;height:94px;margin-bottom:26px;display:grid;place-items:center;border-radius:50%;background:#ea4729;box-shadow:0 0 0 14px rgba(234,71,41,.16);animation:thank-you-tick-in .7s cubic-bezier(.2,.9,.25,1.35) both}
+.thank-you-tick::after{content:"";position:absolute;inset:-16px;border:2px solid rgba(255,255,255,.45);border-radius:50%;animation:thank-you-tick-ring 1.2s .35s ease-out both}
+.thank-you-tick img{width:58px;height:58px;filter:brightness(0) invert(1);animation:thank-you-check-in .45s .32s ease-out both}
+.thank-you-hero-content h1{max-width:760px;margin:13px 0 20px;font-size:clamp(50px,5.2vw,78px);font-weight:500;line-height:1.02;letter-spacing:-.04em}
+.thank-you-hero-content>p:not(.eyebrow){max-width:630px;margin:0;color:rgba(255,255,255,.82);font-size:17px;line-height:1.75}
+.thank-you-actions{display:flex;flex-wrap:wrap;gap:13px;margin-top:32px}
+.thank-you-actions .ghost-button{color:#fff;border-color:rgba(255,255,255,.55)}
+.thank-you-next{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:90px;padding-top:105px;padding-bottom:110px}
+.thank-you-next-intro>img{width:52px;height:52px;margin-bottom:25px;opacity:.82}
+.thank-you-next-intro h2{max-width:520px;margin:13px 0 0;font-size:clamp(34px,3.5vw,53px);font-weight:500;line-height:1.08;letter-spacing:-.035em}
+.thank-you-next ol{list-style:none;margin:0;padding:0;border-top:1px solid rgba(36,49,56,.2)}
+.thank-you-next li{display:grid;grid-template-columns:54px 1fr;gap:20px;padding:26px 0;border-bottom:1px solid rgba(36,49,56,.2)}
+.thank-you-next li>b{width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(36,49,56,.24);border-radius:50%;color:#ea4729;font-size:13px}
+.thank-you-next li span{display:grid;gap:6px;color:#68747b;font-size:14px;line-height:1.6}
+.thank-you-next li strong{color:#243138;font-size:19px;font-weight:600}
+.thank-you-suggestions{padding:100px 0 112px;background:#24343b;color:#fff}
+.thank-you-suggestions .section-intro{max-width:720px;margin:0}
+.thank-you-suggestions .section-intro .eyebrow{color:#ff684b}
+.thank-you-suggestions .section-intro h2{color:#fff;font-size:clamp(38px,4vw,58px)}
+.thank-you-suggestions .section-intro>p:last-child{color:rgba(255,255,255,.68)}
+.thank-you-trip-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:48px}
+.thank-you-trip-card{position:relative;min-height:460px;overflow:hidden;border-radius:18px;color:#fff;text-decoration:none;background:#17272e;isolation:isolate}
+.thank-you-trip-card::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(18,28,32,.05) 22%,rgba(18,28,32,.96) 100%)}
+.thank-you-trip-card>img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;transition:transform .55s ease}
+.thank-you-trip-card>span{position:absolute;top:24px;left:24px;padding:8px 11px;border:1px solid rgba(255,255,255,.5);border-radius:999px;background:rgba(24,39,46,.32);font-size:10px;font-weight:700;letter-spacing:.12em;backdrop-filter:blur(7px)}
+.thank-you-trip-card>div{position:absolute;right:0;bottom:0;left:0;padding:28px}
+.thank-you-trip-card h3{margin:0;font-size:26px;line-height:1.16}
+.thank-you-trip-card p{margin:11px 0 19px;color:rgba(255,255,255,.72);font-size:13px;line-height:1.6}
+.thank-you-trip-card b{display:flex;align-items:center;gap:10px;color:#fff;font-size:13px}
+.thank-you-trip-card .arrow{display:grid;width:29px;height:29px;place-items:center;border-radius:50%;background:#ea4729;color:#fff}
+.thank-you-trip-card:hover>img,.thank-you-trip-card:focus-visible>img{transform:scale(1.045)}
+.thank-you-trip-card:focus-visible{outline:3px solid #ff684b;outline-offset:4px}
+.thank-you-more{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:38px}
+.thank-you-more>a:last-child{color:rgba(255,255,255,.78);font-size:13px;text-underline-offset:4px}
+
+@keyframes thank-you-tick-in{0%{opacity:0;transform:scale(.25) rotate(-14deg)}70%{opacity:1;transform:scale(1.08) rotate(2deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes thank-you-tick-ring{0%{opacity:.8;transform:scale(.7)}100%{opacity:0;transform:scale(1.3)}}
+@keyframes thank-you-check-in{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+
+@media(max-width:900px){
+  .thank-you-next{grid-template-columns:1fr;gap:50px}
+  .thank-you-trip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .thank-you-trip-card:last-child{grid-column:1/-1;min-height:400px}
+}
+
+@media(max-width:620px){
+  .thank-you-hero{min-height:760px}
+  .thank-you-hero-scrim{background:linear-gradient(180deg,rgba(24,39,46,.84),rgba(24,39,46,.96))}
+  .thank-you-hero-content{padding-top:135px;padding-bottom:70px}
+  .thank-you-tick{width:78px;height:78px}
+  .thank-you-tick img{width:48px;height:48px}
+  .thank-you-hero-content h1{font-size:45px}
+  .thank-you-hero-content>p:not(.eyebrow){font-size:15px}
+  .thank-you-actions{display:grid}
+  .thank-you-actions>a{width:100%;justify-content:space-between}
+  .thank-you-next{padding-top:72px;padding-bottom:76px}
+  .thank-you-next li{grid-template-columns:44px 1fr;gap:14px}
+  .thank-you-next li>b{width:36px;height:36px}
+  .thank-you-suggestions{padding:75px 0 82px}
+  .thank-you-trip-grid{grid-template-columns:1fr}
+  .thank-you-trip-card,.thank-you-trip-card:last-child{grid-column:auto;min-height:430px}
+  .thank-you-more{align-items:stretch;flex-direction:column}
+  .thank-you-more .button{justify-content:space-between}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .thank-you-tick,.thank-you-tick::after,.thank-you-tick img{animation:none}
+  .thank-you-trip-card>img{transition:none}
+}

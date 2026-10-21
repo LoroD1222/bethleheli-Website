@@ -639,7 +639,7 @@ const tripCards: TripCard[] = [
 ];
 
 function TripCardList({ trips, grid = false }: { trips: TripCard[]; grid?: boolean }) {
-  return <div className={`home-ref-adventure-cards${grid ? " trips-ref-card-grid" : ""}`}>{trips.map((trip) => <Link href={trip.href} key={trip.href}><Photo src={contentImage(trip.src)} alt={trip.title} /><h3>{trip.title}</h3><small>{trip.days} DAYS</small><div className="home-ref-trip-bottom"><span className="home-ref-trip-price">starts from<br /><b>{trip.price}</b><br />per person</span><span className="home-ref-trip-link">View Trip</span></div></Link>)}</div>;
+  return <div className={`home-ref-adventure-cards${grid ? " trips-ref-card-grid" : ""}`}>{trips.map((trip) => <Link href={trip.href} key={`${trip.href}-${trip.title}`}><Photo src={contentImage(trip.src)} alt={trip.title} /><h3>{trip.title}</h3><small>{trip.days} DAYS</small><div className="home-ref-trip-bottom"><span className="home-ref-trip-price">starts from<br /><b>{trip.price}</b><br />per person</span><span className="home-ref-trip-link">View Trip</span></div></Link>)}</div>;
 }
 
 function HomeAdventures() {

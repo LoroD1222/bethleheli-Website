@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug?: st
     alternates: { canonical },
     openGraph: { title, description, url: canonical, images: [{ url: image, alt: cmsSeo?.shareImage.alt || title }] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
+    robots: key === "thankYou" ? { index: false, follow: false } : undefined,
   };
 }
 

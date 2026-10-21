@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { PageKey } from "@/lib/routes";
@@ -375,11 +375,16 @@ function ChipSet({ options, selected, onSelect, figmaCheck = false, label }: { o
 
 function FormNotice({ text }: { text: string }) { return <p className="form-notice" aria-live="polite">{text}</p>; }
 
+function HoneypotField() {
+  return <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ display: "none" }} />;
+}
+
 function PlanStepActions({ step, total, onBack, onNext }: { step: number; total: number; onBack: () => void; onNext: () => void }) {
   return <div className="plan-step-actions">{step > 0 && <button type="button" className="plan-step-back" onClick={onBack}>← Back</button>}<span>Step {step + 1} of {total}</span>{step < total - 1 && <button type="button" className="plan-step-next" onClick={onNext}>Continue <Arrow /></button>}</div>;
 }
 
 function PlanPage() {
+  const router = useRouter();
   const [interest, setInterest] = useState("Combination");
   const [dateStyle, setDateStyle] = useState("My dates are flexible");
   const [travelStyle, setTravelStyle] = useState("Flexible");
@@ -413,6 +418,10 @@ function PlanPage() {
     setSending(true);
     setNotice("Sending your trip request…");
     const result = await sendEnquiry("trip", e.currentTarget, { interest, dateStyle, travelStyle });
+    if (result.ok) {
+      router.push("/thank-you");
+      return;
+    }
     setNotice(result.message);
     setSending(false);
   }
@@ -427,7 +436,7 @@ function PlanPage() {
 
   return <><Hero eyebrow="A PERSONAL JOURNEY BEGINS HERE" title="Let’s Plan Your Tanzania Adventure" text="Tell us what you want to experience and our team will help you build the right trip." image={photos.plan} short><></></Hero><main className="plan-main"><div className="shell">
     <SectionIntro eyebrow="YOUR TRIP REQUEST" title="A Few Details. A World of Possibilities." text="You don’t need every answer yet. Share what you know, and leave the rest for a conversation." align="left" />
-    <div className="plan-layout"><form className="enquiry-form" onSubmit={submit} noValidate>
+    <div className="plan-layout"><form className="enquiry-form" onSubmit={submit} noValidate><HoneypotField />
       <nav className="progress" aria-label="Trip request steps">{labels.map((label, index) => <button type="button" className={`${activeStep === index ? "active" : ""}${index < activeStep ? " complete" : ""}`} aria-current={activeStep === index ? "step" : undefined} aria-controls={`plan-step-${index + 1}`} onClick={() => jumpTo(index)} key={label}><b>{index < activeStep ? "✓" : index + 1}</b><span>{label}</span></button>)}<p aria-live="polite">Step {activeStep + 1} of 6 · {labels[activeStep]}</p></nav>
       <fieldset {...stage(0)}><legend><small>STEP 1 OF 6</small>What Would You Love to Experience?</legend><ChipSet options={["Kilimanjaro", "Safari", "Zanzibar", "Combination"]} selected={interest} onSelect={setInterest} figmaCheck label="What would you love to experience?" /><PlanStepActions step={0} total={labels.length} onBack={() => jumpTo(0)} onNext={() => jumpTo(1)} /></fieldset>
       <fieldset {...stage(1)}><legend><small>STEP 2 OF 6</small>When Are You Thinking of Traveling?</legend><ChipSet options={["I have dates", "My dates are flexible"]} selected={dateStyle} onSelect={setDateStyle} figmaCheck label="Travel date flexibility" /><div className={`input-row plan-date-row ${dateStyle === "I have dates" ? "is-current" : ""}`}><label>Preferred arrival<input type="date" name="arrival" onInput={event => setArrival(event.currentTarget.value)} onChange={event => setArrival(event.currentTarget.value)} aria-label="Preferred arrival date" /></label><label>Preferred departure<input type="date" name="departure" min={arrival || undefined} aria-label="Preferred departure date" /></label></div><label className={`plan-flexible-field ${dateStyle === "My dates are flexible" ? "is-current" : ""}`}>Flexible timing<input type="text" name="timing" placeholder="A month, season or possible travel window" /></label><PlanStepActions step={1} total={labels.length} onBack={() => jumpTo(0)} onNext={() => jumpTo(2)} /></fieldset>
@@ -439,8 +448,8 @@ function PlanPage() {
   </div></main><Footer /></>;
 }
 
-function ContactPage() { const [topic, setTopic] = useState("Custom trip"); const [notice, setNotice] = useState(""); const [sending, setSending] = useState(false); async function submit(e: FormEvent<HTMLFormElement>) { e.preventDefault(); if (!e.currentTarget.reportValidity()) return setNotice("Please complete the required fields with a valid email address."); setSending(true); setNotice("Sending your message…"); const result = await sendEnquiry("contact", e.currentTarget, { topic }); setNotice(result.message); setSending(false); }
-  return <><Hero eyebrow="CONTACT BATHIEL EXPEDITIONS" title="Let’s Start Planning" text="A question, a rough idea or a whole adventure in mind? Start a conversation with the Bathiel team." image={photos.summit} short><></></Hero><main className="contact-main shell"><div className="contact-layout"><form onSubmit={submit} noValidate><p className="eyebrow">Let’s talk about your trip.</p><div className="input-row"><label>Name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label><label>Email *<input type="email" name="email" required autoComplete="email" placeholder="Your email address" /></label></div><label>What can we help you with?</label><ChipSet options={["Kilimanjaro", "Safari", "Zanzibar", "Custom trip", "Other"]} selected={topic} onSelect={setTopic} figmaCheck label="What can we help you with?" /><label>Your message *<textarea name="message" required placeholder="Tell us a little about your plans, or ask your question..." /></label><p className="privacy">We’ll use these details to respond to your enquiry. Please don’t include passport numbers or sensitive personal information.</p><button className="submit-button small-submit" disabled={sending}>{sending ? "Sending…" : "Send My Message"} <Arrow /></button><FormNotice text={notice} /></form><aside className="contact-aside"><section><h2>Prefer a Conversation?</h2><p>WhatsApp is another way to share your ideas and questions with our team.</p><a className="whatsapp" href={whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp Us <Arrow /></a><small>WhatsApp: +{whatsappNumber}</small></section>{[["Email", "info@betheliexpeditions.com", "Send your questions or trip ideas in your own time."], ["Phone", "+255 754 411 965", "Call our Tanzanian team to discuss your plans."], ["Office location", "Saba Saba, Arusha, Tanzania", "Please contact us before visiting the office."]].map(([t, a, c]) => <div key={t}><h3>{t}</h3><b>{a}</b><p>{c}</p></div>)}<p>Have a fuller trip brief? Use Plan Your Trip to share dates, interests and traveller numbers.</p></aside></div></main><Footer /></>; }
+function ContactPage() { const router = useRouter(); const [topic, setTopic] = useState("Custom trip"); const [notice, setNotice] = useState(""); const [sending, setSending] = useState(false); async function submit(e: FormEvent<HTMLFormElement>) { e.preventDefault(); if (!e.currentTarget.reportValidity()) return setNotice("Please complete the required fields with a valid email address."); setSending(true); setNotice("Sending your message…"); const result = await sendEnquiry("contact", e.currentTarget, { topic }); if (result.ok) { router.push("/thank-you"); return; } setNotice(result.message); setSending(false); }
+  return <><Hero eyebrow="CONTACT BATHIEL EXPEDITIONS" title="Let’s Start Planning" text="A question, a rough idea or a whole adventure in mind? Start a conversation with the Bathiel team." image={photos.summit} short><></></Hero><main className="contact-main shell"><div className="contact-layout"><form onSubmit={submit} noValidate><HoneypotField /><p className="eyebrow">Let’s talk about your trip.</p><div className="input-row"><label>Name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label><label>Email *<input type="email" name="email" required autoComplete="email" placeholder="Your email address" /></label></div><label>What can we help you with?</label><ChipSet options={["Kilimanjaro", "Safari", "Zanzibar", "Custom trip", "Other"]} selected={topic} onSelect={setTopic} figmaCheck label="What can we help you with?" /><label>Your message *<textarea name="message" required placeholder="Tell us a little about your plans, or ask your question..." /></label><p className="privacy">We’ll use these details to respond to your enquiry. Please don’t include passport numbers or sensitive personal information.</p><button className="submit-button small-submit" disabled={sending}>{sending ? "Sending…" : "Send My Message"} <Arrow /></button><FormNotice text={notice} /></form><aside className="contact-aside"><section><h2>Prefer a Conversation?</h2><p>WhatsApp is another way to share your ideas and questions with our team.</p><a className="whatsapp" href={whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp Us <Arrow /></a><small>WhatsApp: +{whatsappNumber}</small></section>{[["Email", "info@betheliexpeditions.com", "Send your questions or trip ideas in your own time."], ["Phone", "+255 754 411 965", "Call our Tanzanian team to discuss your plans."], ["Office location", "Saba Saba, Arusha, Tanzania", "Please contact us before visiting the office."]].map(([t, a, c]) => <div key={t}><h3>{t}</h3><b>{a}</b><p>{c}</p></div>)}<p>Have a fuller trip brief? Use Plan Your Trip to share dates, interests and traveller numbers.</p></aside></div></main><Footer /></>; }
 
 export const faqCategories = [
   ["KILIMANJARO", "Climbing the mountain", ["How difficult is Kilimanjaro?", "Which route should I choose?", "What equipment do I need?", "What altitude support is provided?", "When is the best time to climb?"]],
@@ -540,6 +549,7 @@ export function GroupsPage({ departures }: { departures?: CmsGroupDeparture[] } 
 
 function GroupJoinForm({ departure, onClose }: { departure: CmsGroupDeparture; onClose: () => void }) {
   const { title, range, price, deposit } = departure;
+  const router = useRouter();
   const [notice, setNotice] = useState("");
   const [sending, setSending] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -563,14 +573,56 @@ function GroupJoinForm({ departure, onClose }: { departure: CmsGroupDeparture; o
     setSending(true);
     setNotice("Sending your request…");
     const result = await sendEnquiry("trip", form, { interest: "Kilimanjaro group climb", dateStyle: "Fixed group departure", departure: range, timing: `${title} — ${range}`, days: title.match(/\d+ days/)?.[0] || "" });
+    if (result.ok) {
+      router.push("/thank-you");
+      return;
+    }
     setNotice(result.message);
     setSending(false);
-    if (result.ok) form.reset();
   }
-  return createPortal(<div className="group-join-modal" role="dialog" aria-modal="true" aria-labelledby="group-join-title"><button type="button" className="group-join-backdrop" aria-label="Close join group form" onClick={onClose} /><section className="group-join-panel"><button ref={closeRef} type="button" className="group-join-close" aria-label="Close join group form" onClick={onClose}>×</button><p className="eyebrow">JOIN A DEPARTURE</p><h2 id="group-join-title">Join this Kilimanjaro group</h2><div className="group-join-selection"><strong>{title}</strong><span>{range}</span><b>{price} per person · Deposit {deposit}</b></div><form onSubmit={submit} noValidate><div className="input-row"><label>Full name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label><label>Email *<input type="email" name="email" required autoComplete="email" placeholder="you@example.com" /></label></div><div className="input-row"><label>WhatsApp number<input name="whatsapp" autoComplete="tel" placeholder="+255…" /></label><label>Number of travellers *<input type="number" name="adults" required min="1" max="20" defaultValue="1" /></label></div><div className="input-row group-date-preference"><label>Preferred travel date<input type="date" name="arrival" /></label><label className="group-flexible-date"><input type="checkbox" name="dateFlexibility" value="My dates are flexible" /><span><b>My dates are flexible</b><small>The team can suggest a nearby departure.</small></span></label></div><label>Country<input name="country" autoComplete="country-name" placeholder="Where are you travelling from?" /></label><label>Anything we should know?<textarea name="notes" placeholder="Experience, questions, dietary needs or other details…" /></label><p className="privacy">Submitting this form sends an enquiry only. Your place is confirmed after the team contacts you and completes the booking process.</p><button className="submit-button" disabled={sending}>{sending ? "Sending…" : "Request to join"}<Arrow /></button><FormNotice text={notice} /></form></section></div>, document.body);
+  return createPortal(<div className="group-join-modal" role="dialog" aria-modal="true" aria-labelledby="group-join-title"><button type="button" className="group-join-backdrop" aria-label="Close join group form" onClick={onClose} /><section className="group-join-panel"><button ref={closeRef} type="button" className="group-join-close" aria-label="Close join group form" onClick={onClose}>×</button><p className="eyebrow">JOIN A DEPARTURE</p><h2 id="group-join-title">Join this Kilimanjaro group</h2><div className="group-join-selection"><strong>{title}</strong><span>{range}</span><b>{price} per person · Deposit {deposit}</b></div><form onSubmit={submit} noValidate><HoneypotField /><div className="input-row"><label>Full name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label><label>Email *<input type="email" name="email" required autoComplete="email" placeholder="you@example.com" /></label></div><div className="input-row"><label>WhatsApp number<input name="whatsapp" autoComplete="tel" placeholder="+255…" /></label><label>Number of travellers *<input type="number" name="adults" required min="1" max="20" defaultValue="1" /></label></div><div className="input-row group-date-preference"><label>Preferred travel date<input type="date" name="arrival" /></label><label className="group-flexible-date"><input type="checkbox" name="dateFlexibility" value="My dates are flexible" /><span><b>My dates are flexible</b><small>The team can suggest a nearby departure.</small></span></label></div><label>Country<input name="country" autoComplete="country-name" placeholder="Where are you travelling from?" /></label><label>Anything we should know?<textarea name="notes" placeholder="Experience, questions, dietary needs or other details…" /></label><p className="privacy">Submitting this form sends an enquiry only. Your place is confirmed after the team contacts you and completes the booking process.</p><button className="submit-button" disabled={sending}>{sending ? "Sending…" : "Request to join"}<Arrow /></button><FormNotice text={notice} /></form></section></div>, document.body);
 }
 
 function AdvisorCard() { return <section className="advisor-card"><div className="advisor-card-photo"><Photo src={photos.guide} alt="Victoria, local trip advisor" /><span><i aria-hidden="true" />Online now</span></div><div className="advisor-card-content"><header><div><p className="eyebrow">YOUR LOCAL TRIP ADVISOR</p><h2>Victoria</h2></div><span className="advisor-location"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12A7 7 0 1 0 5 9c0 5.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>Based in Tanzania</span></header><h3>Want to plan a memorable Tanzanian adventure?</h3><p>Share your dates and ideas with a local planner. Victoria will help you shape the right climb, safari, island stay or combination.</p><div className="advisor-actions"><a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="button"><Image src="/images/figma-trips-quote-whatsapp.svg" alt="" width={22} height={22} />WhatsApp</a><Link href="/contact" className="button advisor-enquiry"><Image src="/images/figma-home-footer-mail.svg" alt="" width={20} height={20} />Send an enquiry</Link></div></div></section>; }
+
+const thankYouTrips = [
+  { title: "6-Day Northern Serengeti Safari", label: "SAFARI", copy: "Follow the landscapes and wildlife of northern Tanzania.", image: "/images/figma-trips-hero.png", href: "/trips/northern-serengeti" },
+  { title: "4-Day Mount Meru Trek", label: "MOUNTAIN", copy: "A rewarding highland trek through Arusha National Park.", image: "/images/figma-safari-destinations-destination-photograph4.png", href: "/trips/mount-meru-trek" },
+  { title: "9-Day Northern Circuit Route", label: "KILIMANJARO", copy: "A quieter, gradual route around Kilimanjaro's northern slopes.", image: "/images/figma-kili-routes-route-landscape4.png", href: "/trips/northern-circuit-route" },
+];
+
+function ThankYouPage() {
+  return <><main className="thank-you-page">
+    <section className="thank-you-hero">
+      <Photo className="thank-you-hero-image" src="/images/figma-plan-hero.png" alt="Tanzania landscape at sunset" priority sizes="100vw" />
+      <div className="thank-you-hero-scrim" />
+      <Header overlay variant="classic" />
+      <div className="shell thank-you-hero-content">
+        <div className="thank-you-tick" aria-hidden="true"><Image src="/images/svgrepo-check-circle.svg" alt="" width={96} height={96} priority /></div>
+        <p className="eyebrow light">ENQUIRY RECEIVED</p>
+        <h1>Thank you.<br />We&apos;re excited to welcome you.</h1>
+        <p>Your message is safely with the Betheli Expeditions team. A local trip planner will review what you shared and contact you using the details in your enquiry.</p>
+        <div className="thank-you-actions"><Link className="button" href="/trips">Explore more trips <Arrow /></Link><Link className="ghost-button" href="/">Return home <Arrow /></Link></div>
+      </div>
+    </section>
+
+    <section className="thank-you-next shell" aria-labelledby="thank-you-next-title">
+      <div className="thank-you-next-intro"><Image src="/images/svgrepo-compass.svg" alt="" width={56} height={56} /><p className="eyebrow">WHAT HAPPENS NEXT</p><h2 id="thank-you-next-title">Your Tanzania journey starts with a conversation.</h2></div>
+      <ol>
+        <li><b>1</b><span><strong>We review your ideas</strong>Your dates, interests and questions help us understand the journey you have in mind.</span></li>
+        <li><b>2</b><span><strong>A local planner gets in touch</strong>We&apos;ll continue the conversation using the contact details you provided.</span></li>
+        <li><b>3</b><span><strong>We shape the trip together</strong>Routes, pace and stays can be refined around you before anything is confirmed.</span></li>
+      </ol>
+    </section>
+
+    <section className="thank-you-suggestions">
+      <div className="shell"><SectionIntro eyebrow="KEEP DREAMING" title="More journeys you might like" text="While we review your enquiry, explore a few different ways to experience Tanzania." align="left" />
+        <div className="thank-you-trip-grid">{thankYouTrips.map(trip => <Link href={trip.href} key={trip.href} className="thank-you-trip-card"><Photo src={trip.image} alt={trip.title} /><span>{trip.label}</span><div><h3>{trip.title}</h3><p>{trip.copy}</p><b>View trip <Arrow /></b></div></Link>)}</div>
+        <div className="thank-you-more"><Link href="/trips" className="button button-dark">See all trips <Arrow /></Link><a href={whatsappHref} target="_blank" rel="noopener noreferrer">Prefer WhatsApp? Talk with our local team.</a></div>
+      </div>
+    </section>
+  </main><Footer /></>;
+}
 
 export function SitePage({ page }: { page: PageKey }) {
   switch (page) {
@@ -584,5 +636,6 @@ export function SitePage({ page }: { page: PageKey }) {
     case "faq": return <FaqPage />;
     case "trips": return <TripPage />;
     case "groups": return <GroupsPage />;
+    case "thankYou": return <ThankYouPage />;
   }
 }
