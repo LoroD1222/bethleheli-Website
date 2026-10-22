@@ -7,9 +7,23 @@ export const inclusionItem = defineType({
   fields: [
     defineField({
       name: 'iconKey',
-      title: 'Icon Key',
+      title: 'Icon',
       type: 'string',
-      description: 'The matching icon identifier used by the website.',
+      description: 'Choose the icon that best represents this included service.',
+      options: {
+        list: [
+          {title: 'Route / Transfers', value: 'route'},
+          {title: 'Checklist / Briefing', value: 'clipboard'},
+          {title: 'Ticket / Park Fees', value: 'ticket'},
+          {title: 'Mountain / Professional Guide', value: 'mountain'},
+          {title: 'Backpack / Equipment', value: 'backpack'},
+          {title: 'Tent / Accommodation', value: 'tent'},
+          {title: 'Cutlery / Meals', value: 'utensils'},
+          {title: 'Water Droplets / Drinking Water', value: 'droplets'},
+          {title: 'Heart / Care and Support', value: 'heart'},
+          {title: 'Message / Coordination', value: 'message'},
+        ],
+      },
     }),
     defineField({
       name: 'title',

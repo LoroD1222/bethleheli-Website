@@ -157,12 +157,14 @@ export const trip = defineType({
       title: 'Landscapes Section Title',
       type: 'string',
       group: 'landscapes',
+      description: 'Heading shown above the landscape cards, for example “From savannah to the Indian Ocean”.',
     }),
     defineField({
       name: 'landscapes',
-      title: 'Landscapes',
+      title: 'Landscape Cards',
       type: 'array',
       group: 'landscapes',
+      description: 'Add one card for each environment visited. This entire website section stays hidden when no cards are added.',
       of: [defineArrayMember({type: 'landscape'})],
     }),
     defineField({
@@ -189,6 +191,7 @@ export const trip = defineType({
       title: 'Inclusion Groups',
       type: 'array',
       group: 'inclusions',
+      description: 'Create a group, then add its included services and choose an icon from the list for each service.',
       of: [defineArrayMember({type: 'inclusionGroup'})],
     }),
     defineField({

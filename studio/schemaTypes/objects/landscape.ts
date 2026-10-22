@@ -19,9 +19,19 @@ export const landscape = defineType({
     }),
     defineField({
       name: 'iconKey',
-      title: 'Icon Key',
+      title: 'Landscape Icon',
       type: 'string',
-      description: 'The matching icon identifier used by the website.',
+      description: 'Choose the symbol shown beside this landscape on the website.',
+      options: {
+        list: [
+          {title: '🌳 Forest / Trees', value: 'tree'},
+          {title: '⛰️ Mountain / Highlands', value: 'mountain'},
+          {title: '🦓 Wildlife / Safari', value: 'zebra'},
+          {title: '🌾 Grassland / Plains', value: 'grass'},
+          {title: '🌊 Water / Coast', value: 'water'},
+        ],
+        layout: 'radio',
+      },
     }),
     defineField({
       name: 'image',
