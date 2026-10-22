@@ -212,17 +212,26 @@ export async function getGroupDepartures(): Promise<CmsGroupDeparture[]> {
       const longEndMonth = new Intl.DateTimeFormat("en-US", { month: "long", timeZone: "UTC" }).format(end);
       const startDay = String(start.getUTCDate()).padStart(2, "0");
       const endDay = String(end.getUTCDate()).padStart(2, "0");
+      const startYear = start.getUTCFullYear();
+      const endYear = end.getUTCFullYear();
       const price = departure.price?.amount || 0;
       const originalPrice = departure.originalPrice?.amount || 0;
+      const routeAlreadyIncludesDuration = /\b\d+\s*(?:-|–|—)?\s*days?\b/i.test(departure.routeName);
+      const duration = departure.durationDays && !routeAlreadyIncludesDuration
+        ? `${departure.durationDays} ${departure.durationDays === 1 ? "day" : "days"}`
+        : "";
+      const range = startYear === endYear
+        ? `From ${startDay} ${longStartMonth} – ${endDay} ${longEndMonth}`
+        : `From ${startDay} ${longStartMonth} ${startYear} – ${endDay} ${longEndMonth} ${endYear}`;
       return {
         id: departure._id,
         day: startDay,
         month,
         monthIndex: start.getUTCMonth(),
-        year: String(start.getUTCFullYear()),
+        year: String(startYear),
         dateTime: departure.startDate,
-        title: departure.routeName,
-        range: `From ${startDay} ${longStartMonth} - ${endDay} ${longEndMonth}`,
+        title: [departure.routeName, duration].filter(Boolean).join(" — "),
+        range,
         highlights: departure.highlights || [],
         price: formatMoney(departure.price, false),
         deposit: formatMoney(departure.deposit, false),
