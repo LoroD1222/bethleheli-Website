@@ -208,7 +208,7 @@ export const trip = defineType({
       description: 'Existing manually entered inclusions. New trips should use the checklist above.',
       of: [defineArrayMember({type: 'inclusionGroup'})],
       readOnly: true,
-      hidden: ({value}) => !Array.isArray(value) || value.length === 0,
+      hidden: true,
       deprecated: {reason: 'Replaced by the What Is Included checklist.'},
     }),
     defineField({
