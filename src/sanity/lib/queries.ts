@@ -53,6 +53,7 @@ export const TRIP_PAGE_QUERY = defineQuery(/* groq */ `
     inclusionsEyebrow,
     inclusionsTitle,
     inclusionsDescription,
+    includedServiceKeys,
     inclusionGroups[] {
       _key,
       marker,

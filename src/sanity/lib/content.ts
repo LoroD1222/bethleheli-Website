@@ -17,6 +17,7 @@ import type {
   CmsTripPageData,
   CmsTripStay,
 } from "@/sanity/content-types";
+import { buildInclusionGroups } from "../../../shared/inclusion-catalog";
 import { sanityClient } from "./client";
 import { urlForImage } from "./image";
 import {
@@ -143,6 +144,20 @@ export async function getTripPageContent(slug: string): Promise<CmsTripPageData 
       }).filter((stay: CmsTripStay) => Boolean(stay.image)),
     })).filter((day): day is typeof day & { image: CmsImage } => Boolean(day.image));
 
+    const presetInclusionGroups = buildInclusionGroups(raw.includedServiceKeys);
+    const legacyInclusionGroups = (raw.inclusionGroups || []).map((group, groupIndex) => ({
+      key: group._key || `group-${groupIndex + 1}`,
+      marker: group.marker || "",
+      title: group.title || "Included services",
+      description: group.description || "",
+      items: (group.items || []).map((item, itemIndex) => ({
+        key: item._key || `item-${itemIndex + 1}`,
+        icon: item.iconKey || "route",
+        title: item.title || "Included service",
+        description: item.description || "",
+      })),
+    }));
+
     return {
       title: raw.title || "Trip",
       durationDays: raw.durationDays || itinerary.length,
@@ -171,18 +186,7 @@ export async function getTripPageContent(slug: string): Promise<CmsTripPageData 
       inclusionsEyebrow: raw.inclusionsEyebrow || "",
       inclusionsTitle: raw.inclusionsTitle || "",
       inclusionsDescription: raw.inclusionsDescription || "",
-      inclusionGroups: (raw.inclusionGroups || []).map((group, groupIndex) => ({
-        key: group._key || `group-${groupIndex + 1}`,
-        marker: group.marker || "",
-        title: group.title || "Included services",
-        description: group.description || "",
-        items: (group.items || []).map((item, itemIndex) => ({
-          key: item._key || `item-${itemIndex + 1}`,
-          icon: item.iconKey || "route",
-          title: item.title || "Included service",
-          description: item.description || "",
-        })),
-      })),
+      inclusionGroups: presetInclusionGroups.length ? presetInclusionGroups : legacyInclusionGroups,
       relatedTrips: (raw.relatedTrips || []).filter(trip => trip.href !== "/trips/northern-serengeti").map(trip => {
         const image = presentImage(trip.image, 1200);
         return {

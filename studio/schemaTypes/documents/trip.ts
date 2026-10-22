@@ -1,5 +1,6 @@
 import {EarthGlobeIcon} from '@sanity/icons/EarthGlobe'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {inclusionServiceOptions} from '../../../shared/inclusion-catalog'
 
 export const trip = defineType({
   name: 'trip',
@@ -187,12 +188,28 @@ export const trip = defineType({
       group: 'inclusions',
     }),
     defineField({
-      name: 'inclusionGroups',
-      title: 'Inclusion Groups',
+      name: 'includedServiceKeys',
+      title: 'What Is Included',
       type: 'array',
       group: 'inclusions',
-      description: 'Create a group, then add its included services and choose an icon from the list for each service.',
+      description: 'Select every service included in this trip. The website adds the correct groups, icons and descriptions automatically.',
+      of: [defineArrayMember({type: 'string'})],
+      options: {
+        list: inclusionServiceOptions,
+        layout: 'grid',
+      },
+      validation: (rule) => rule.unique(),
+    }),
+    defineField({
+      name: 'inclusionGroups',
+      title: 'Legacy Inclusion Groups',
+      type: 'array',
+      group: 'inclusions',
+      description: 'Existing manually entered inclusions. New trips should use the checklist above.',
       of: [defineArrayMember({type: 'inclusionGroup'})],
+      readOnly: true,
+      hidden: ({value}) => !Array.isArray(value) || value.length === 0,
+      deprecated: {reason: 'Replaced by the What Is Included checklist.'},
     }),
     defineField({
       name: 'relatedTrips',

@@ -15,7 +15,49 @@
         "iconKey": {
           "type": "objectAttribute",
           "value": {
-            "type": "string"
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "route"
+              },
+              {
+                "type": "string",
+                "value": "clipboard"
+              },
+              {
+                "type": "string",
+                "value": "ticket"
+              },
+              {
+                "type": "string",
+                "value": "mountain"
+              },
+              {
+                "type": "string",
+                "value": "backpack"
+              },
+              {
+                "type": "string",
+                "value": "tent"
+              },
+              {
+                "type": "string",
+                "value": "utensils"
+              },
+              {
+                "type": "string",
+                "value": "droplets"
+              },
+              {
+                "type": "string",
+                "value": "heart"
+              },
+              {
+                "type": "string",
+                "value": "message"
+              }
+            ]
           },
           "optional": true
         },
@@ -125,7 +167,29 @@
         "iconKey": {
           "type": "objectAttribute",
           "value": {
-            "type": "string"
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "tree"
+              },
+              {
+                "type": "string",
+                "value": "mountain"
+              },
+              {
+                "type": "string",
+                "value": "zebra"
+              },
+              {
+                "type": "string",
+                "value": "grass"
+              },
+              {
+                "type": "string",
+                "value": "water"
+              }
+            ]
           },
           "optional": true
         },
@@ -1172,6 +1236,16 @@
         "type": "objectAttribute",
         "value": {
           "type": "string"
+        },
+        "optional": true
+      },
+      "includedServiceKeys": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
         },
         "optional": true
       },
