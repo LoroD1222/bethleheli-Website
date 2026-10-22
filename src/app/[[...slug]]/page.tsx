@@ -12,10 +12,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug?: st
   if (!key && !dynamicTripSlug) notFound();
   const meta = key ? pageMeta[key] : pageMeta.trips;
   const cmsSeo = dynamicTripSlug ? await getTripSeo(dynamicTripSlug) : null;
-  if (dynamicTripSlug && !cmsSeo) notFound();
   const title = cmsSeo?.title ?? meta.title;
   const description = cmsSeo?.description ?? meta.description;
-  const canonical = cmsSeo?.canonicalPath ?? meta.path;
+  const canonical = cmsSeo?.canonicalPath ?? (dynamicTripSlug ? `/trips/${dynamicTripSlug}` : meta.path);
   const image = cmsSeo?.shareImage.src ?? meta.image;
   return {
     title: cmsSeo ? { absolute: title } : title,

@@ -773,9 +773,11 @@ function TripAccommodation({ day, mealPlan, options }: { day: number; mealPlan: 
   const [slideIndex, setSlideIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [mealInfoOpen, setMealInfoOpen] = useState(false);
-  const selected = options[selectedIndex];
-  const tierSlides = safariStayChoices.flatMap(choice => choice.slides).filter((stay, index, all) => stay.tier === selected.tier && stay.property !== selected.property && all.findIndex(candidate => candidate.image === stay.image) === index);
-  const slides = selected.slides?.length ? selected.slides : [selected, ...tierSlides];
+  const selected = options[selectedIndex] ?? options[0];
+  const tierSlides = selected
+    ? safariStayChoices.flatMap(choice => choice.slides).filter((stay, index, all) => stay.tier === selected.tier && stay.property !== selected.property && all.findIndex(candidate => candidate.image === stay.image) === index)
+    : [];
+  const slides = selected ? (selected.slides?.length ? selected.slides : [selected, ...tierSlides]) : [];
   const slide = slides[slideIndex] || slides[0];
   const chooseOption = (index: number) => { setSelectedIndex(index); setSlideIndex(0); };
   const move = (direction: number) => setSlideIndex(index => (index + direction + slides.length) % slides.length);
@@ -790,7 +792,7 @@ function TripAccommodation({ day, mealPlan, options }: { day: number; mealPlan: 
       <button className="trip-ref-meal" type="button" aria-expanded={mealInfoOpen} aria-controls={`meal-note-${day}`} onClick={() => setMealInfoOpen(open => !open)}><Image src={image("figma-trips-meal.png")} alt="" width={20} height={20} />Meal Plan: {mealPlan}<Image src={image("figma-trips-meal-info.svg")} alt="More information" width={20} height={20} /></button>
     </div>
     {mealInfoOpen && <p className="trip-ref-meal-note" id={`meal-note-${day}`}>The daily meal plan and any dietary arrangements are confirmed in your final trip proposal.</p>}
-    <div className="trip-ref-lodge">
+    {selected && slide && <div className="trip-ref-lodge">
       <div className="trip-ref-lodge-options" role="group" aria-label={`Day ${day} accommodation options`}>
         <p>Options based on your packages:</p>
         {options.map((option, index) => {
@@ -801,7 +803,7 @@ function TripAccommodation({ day, mealPlan, options }: { day: number; mealPlan: 
         <small>Property availability and the final room category are confirmed in your trip proposal.</small>
       </div>
       <figure aria-live="polite" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}><Photo key={`${selectedIndex}-${slideIndex}-${slide.image}`} src={contentImage(slide.image)} alt={slide.alt} /><span className={`accommodation-tier accommodation-tier-${slide.tier.toLowerCase().replace("-", "")}`}>{slide.tier}</span><div className="trip-ref-lodge-arrows"><button type="button" aria-label={`Previous ${selected.tier.toLowerCase()} accommodation`} onClick={() => move(-1)}>‹</button><span>{slideIndex + 1} / {slides.length}</span><button type="button" aria-label={`Next ${selected.tier.toLowerCase()} accommodation`} onClick={() => move(1)}>›</button></div><figcaption>{slide.property}</figcaption></figure>
-    </div>
+    </div>}
   </>;
 }
 
@@ -860,6 +862,7 @@ const tripEnvironments = [
 
 function TripEnvironments({ title = "Landscapes of Northern Tanzania", environments = tripEnvironments }: { title?: string; environments?: typeof tripEnvironments }) {
   const [selected, setSelected] = useState(1);
+  if (!environments.length) return null;
   const current = environments[selected] || environments[0];
   return <section className="ref-section ref-dark trip-ref-environments" aria-labelledby="trip-environments-title"><div className="shell trip-ref-environments-grid">
     <div className="trip-ref-environment-photo" aria-live="polite"><Photo src={contentImage(current.photo)} alt={`${current.title} on safari`} /></div>
