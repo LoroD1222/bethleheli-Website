@@ -3,6 +3,7 @@ type PortalResult = { ok: boolean; skipped?: boolean; error?: string };
 
 const fallbackError = "Your enquiry could not be sent. Please try again later.";
 const successMessage = "Your enquiry was sent. The team will be in touch.";
+const web3FormsEndpoint = "https://api.web3forms.com/submit";
 
 function stringFields(form: HTMLFormElement) {
   return Object.fromEntries(
@@ -74,24 +75,51 @@ async function sendToPortal(fields: Record<string, string>, extras: Record<strin
   }
 }
 
-async function sendExistingEnquiry(kind: "contact" | "trip", fields: Record<string, string>, extras: Record<string, string>): Promise<SubmissionResult> {
+function web3FormsPayload(kind: "contact" | "trip", fields: Record<string, string>, extras: Record<string, string>, accessKey: string) {
+  const submission: Record<string, string> = {
+    access_key: accessKey,
+    subject: kind === "contact" ? "New contact enquiry | Betheli Expeditions" : "New trip request | Betheli Expeditions",
+    from_name: "Betheli Expeditions Website",
+    name: fields.name,
+    email: fields.email,
+    message: kind === "contact" ? fields.message : fields.notes || "Please contact me about a Tanzania trip.",
+    botcheck: fields._gotcha || "",
+  };
+
+  if (kind === "contact") {
+    submission.topic = extras.topic || fields.topic || "";
+  } else {
+    for (const key of ["interest", "dateStyle", "dateFlexibility", "arrival", "departure", "timing", "adults", "children", "days", "travelStyle", "whatsapp", "country"] as const) {
+      submission[key] = extras[key] || fields[key] || "";
+    }
+  }
+
+  return submission;
+}
+
+async function sendToWeb3Forms(kind: "contact" | "trip", fields: Record<string, string>, extras: Record<string, string>, accessKey: string): Promise<SubmissionResult> {
+  if (!accessKey) return { ok: false, message: "Enquiries cannot be sent yet. Please connect Web3Forms before publishing." };
+
   try {
-    const response = await fetch("/api/enquiry", {
+    const response = await fetch(web3FormsEndpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...fields, ...extras, kind }),
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(web3FormsPayload(kind, fields, extras, accessKey)),
+      signal: AbortSignal.timeout(15000),
     });
-    const result: { message?: string } = await response.json();
-    return { ok: response.ok, message: result.message || fallbackError };
+    const result: unknown = await response.json().catch(() => null);
+    const success = Boolean(result && typeof result === "object" && "success" in result && result.success === true);
+    const message = result && typeof result === "object" && "message" in result && typeof result.message === "string" ? result.message : fallbackError;
+    return { ok: response.ok && success, message: response.status === 429 ? "Too many requests. Please try again shortly." : message };
   } catch {
     return { ok: false, message: fallbackError };
   }
 }
 
-export async function sendEnquiry(kind: "contact" | "trip", form: HTMLFormElement, extras: Record<string, string> = {}) {
+export async function sendEnquiry(kind: "contact" | "trip", form: HTMLFormElement, extras: Record<string, string> = {}, web3FormsAccessKey = "") {
   const fields = stringFields(form);
   const [existing, portal] = await Promise.all([
-    sendExistingEnquiry(kind, fields, extras),
+    sendToWeb3Forms(kind, fields, extras, web3FormsAccessKey),
     sendToPortal(fields, extras),
   ]);
 

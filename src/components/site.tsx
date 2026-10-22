@@ -383,7 +383,7 @@ function PlanStepActions({ step, total, onBack, onNext }: { step: number; total:
   return <div className="plan-step-actions">{step > 0 && <button type="button" className="plan-step-back" onClick={onBack}>← Back</button>}<span>Step {step + 1} of {total}</span>{step < total - 1 && <button type="button" className="plan-step-next" onClick={onNext}>Continue <Arrow /></button>}</div>;
 }
 
-function PlanPage() {
+function PlanPage({ web3FormsAccessKey }: { web3FormsAccessKey: string }) {
   const router = useRouter();
   const [interest, setInterest] = useState("Combination");
   const [dateStyle, setDateStyle] = useState("My dates are flexible");
@@ -417,7 +417,7 @@ function PlanPage() {
     }
     setSending(true);
     setNotice("Sending your trip request…");
-    const result = await sendEnquiry("trip", e.currentTarget, { interest, dateStyle, travelStyle });
+    const result = await sendEnquiry("trip", e.currentTarget, { interest, dateStyle, travelStyle }, web3FormsAccessKey);
     if (result.ok) {
       router.push("/thank-you");
       return;
@@ -448,7 +448,7 @@ function PlanPage() {
   </div></main><Footer /></>;
 }
 
-function ContactPage() { const router = useRouter(); const [topic, setTopic] = useState("Custom trip"); const [notice, setNotice] = useState(""); const [sending, setSending] = useState(false); async function submit(e: FormEvent<HTMLFormElement>) { e.preventDefault(); if (!e.currentTarget.reportValidity()) return setNotice("Please complete the required fields with a valid email address."); setSending(true); setNotice("Sending your message…"); const result = await sendEnquiry("contact", e.currentTarget, { topic }); if (result.ok) { router.push("/thank-you"); return; } setNotice(result.message); setSending(false); }
+function ContactPage({ web3FormsAccessKey }: { web3FormsAccessKey: string }) { const router = useRouter(); const [topic, setTopic] = useState("Custom trip"); const [notice, setNotice] = useState(""); const [sending, setSending] = useState(false); async function submit(e: FormEvent<HTMLFormElement>) { e.preventDefault(); if (!e.currentTarget.reportValidity()) return setNotice("Please complete the required fields with a valid email address."); setSending(true); setNotice("Sending your message…"); const result = await sendEnquiry("contact", e.currentTarget, { topic }, web3FormsAccessKey); if (result.ok) { router.push("/thank-you"); return; } setNotice(result.message); setSending(false); }
   return <><Hero eyebrow="CONTACT BATHIEL EXPEDITIONS" title="Let’s Start Planning" text="A question, a rough idea or a whole adventure in mind? Start a conversation with the Bathiel team." image={photos.summit} short><></></Hero><main className="contact-main shell"><div className="contact-layout"><form onSubmit={submit} noValidate><HoneypotField /><p className="eyebrow">Let’s talk about your trip.</p><div className="input-row"><label>Name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label><label>Email *<input type="email" name="email" required autoComplete="email" placeholder="Your email address" /></label></div><label>What can we help you with?</label><ChipSet options={["Kilimanjaro", "Safari", "Zanzibar", "Custom trip", "Other"]} selected={topic} onSelect={setTopic} figmaCheck label="What can we help you with?" /><label>Your message *<textarea name="message" required placeholder="Tell us a little about your plans, or ask your question..." /></label><p className="privacy">We’ll use these details to respond to your enquiry. Please don’t include passport numbers or sensitive personal information.</p><button className="submit-button small-submit" disabled={sending}>{sending ? "Sending…" : "Send My Message"} <Arrow /></button><FormNotice text={notice} /></form><aside className="contact-aside"><section><h2>Prefer a Conversation?</h2><p>WhatsApp is another way to share your ideas and questions with our team.</p><a className="whatsapp" href={whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp Us <Arrow /></a><small>WhatsApp: +{whatsappNumber}</small></section>{[["Email", "info@betheliexpeditions.com", "Send your questions or trip ideas in your own time."], ["Phone", "+255 754 411 965", "Call our Tanzanian team to discuss your plans."], ["Office location", "Saba Saba, Arusha, Tanzania", "Please contact us before visiting the office."]].map(([t, a, c]) => <div key={t}><h3>{t}</h3><b>{a}</b><p>{c}</p></div>)}<p>Have a fuller trip brief? Use Plan Your Trip to share dates, interests and traveller numbers.</p></aside></div></main><Footer /></>; }
 
 export const faqCategories = [
@@ -521,7 +521,7 @@ const groupBenefitIcons: Record<string, string> = {
   calendar: "/images/figma-trips-fact-dates.svg",
 };
 
-export function GroupsPage({ departures }: { departures?: CmsGroupDeparture[] } = {}) {
+export function GroupsPage({ departures, web3FormsAccessKey = "" }: { departures?: CmsGroupDeparture[]; web3FormsAccessKey?: string } = {}) {
   const trips = departures ?? fallbackGroupDepartures;
   const [year, setYear] = useState(() => trips[0]?.year || "2026");
   const [month, setMonth] = useState(() => trips[0]?.month || "Oct");
@@ -544,10 +544,10 @@ export function GroupsPage({ departures }: { departures?: CmsGroupDeparture[] } 
   <section className="group-list" aria-live="polite" aria-label={`Departures for ${month} ${year}`}>
     {visibleTrips.length ? visibleTrips.map(trip => <article key={trip.id}><time dateTime={trip.dateTime}><b>{trip.day}</b><span>{trip.month}</span></time><div className="group-title"><h2>{trip.title}</h2><p>{trip.range}</p>{trip.seasonLabel && <small>☔ {trip.seasonLabel}</small>}</div><ul>{trip.highlights.map(x => <li key={x}>{x}</li>)}</ul><strong>{trip.originalPrice && <del>{trip.originalPrice}</del>}{trip.price}{trip.discountPercent && <em>{trip.discountPercent}%</em>}</strong><div><button type="button" className={trip.originalPrice ? "join secondary" : "join"} onClick={() => setSelectedDeparture(trip.id)}>JOIN GROUP</button><span>Deposit {trip.deposit}</span></div></article>) :
       <div className="group-empty"><h2>{`No published departures for ${month} ${year} yet.`}</h2><p>Ask our team about group dates or a private Kilimanjaro climb that fits your calendar.</p><Link className="join" href="/plan-your-trip">Ask about dates <Arrow /></Link></div>}
-  </section></section><div className="group-advisor-wrap shell"><AdvisorCard /></div><Testimonials groupClimbsOnly title="Stories from the mountain" text="Hear from travellers who shared the trail, supported one another and climbed with the Betheli mountain team." /></main><Footer />{selectedTrip && <GroupJoinForm departure={selectedTrip} onClose={() => setSelectedDeparture(null)} />}</>;
+  </section></section><div className="group-advisor-wrap shell"><AdvisorCard /></div><Testimonials groupClimbsOnly title="Stories from the mountain" text="Hear from travellers who shared the trail, supported one another and climbed with the Betheli mountain team." /></main><Footer />{selectedTrip && <GroupJoinForm departure={selectedTrip} web3FormsAccessKey={web3FormsAccessKey} onClose={() => setSelectedDeparture(null)} />}</>;
 }
 
-function GroupJoinForm({ departure, onClose }: { departure: CmsGroupDeparture; onClose: () => void }) {
+function GroupJoinForm({ departure, web3FormsAccessKey, onClose }: { departure: CmsGroupDeparture; web3FormsAccessKey: string; onClose: () => void }) {
   const { title, range, price, deposit } = departure;
   const router = useRouter();
   const [notice, setNotice] = useState("");
@@ -572,7 +572,7 @@ function GroupJoinForm({ departure, onClose }: { departure: CmsGroupDeparture; o
     if (!form.reportValidity()) return;
     setSending(true);
     setNotice("Sending your request…");
-    const result = await sendEnquiry("trip", form, { interest: "Kilimanjaro group climb", dateStyle: "Fixed group departure", departure: range, timing: `${title} — ${range}`, days: title.match(/\d+ days/)?.[0] || "" });
+    const result = await sendEnquiry("trip", form, { interest: "Kilimanjaro group climb", dateStyle: "Fixed group departure", departure: range, timing: `${title} — ${range}`, days: title.match(/\d+ days/)?.[0] || "" }, web3FormsAccessKey);
     if (result.ok) {
       router.push("/thank-you");
       return;
@@ -624,18 +624,18 @@ function ThankYouPage() {
   </main><Footer /></>;
 }
 
-export function SitePage({ page }: { page: PageKey }) {
+export function SitePage({ page, web3FormsAccessKey = "" }: { page: PageKey; web3FormsAccessKey?: string }) {
   switch (page) {
     case "home": return <HomePage />;
     case "kilimanjaro": return <DestinationPage content={destinationContent.kilimanjaro} />;
     case "machame": return <MachamePage />;
     case "safari": return <DestinationPage content={destinationContent.safari} />;
     case "zanzibar": return <DestinationPage content={destinationContent.zanzibar} />;
-    case "plan": return <PlanPage />;
-    case "contact": return <ContactPage />;
+    case "plan": return <PlanPage web3FormsAccessKey={web3FormsAccessKey} />;
+    case "contact": return <ContactPage web3FormsAccessKey={web3FormsAccessKey} />;
     case "faq": return <FaqPage />;
     case "trips": return <TripPage />;
-    case "groups": return <GroupsPage />;
+    case "groups": return <GroupsPage web3FormsAccessKey={web3FormsAccessKey} />;
     case "thankYou": return <ThankYouPage />;
   }
 }

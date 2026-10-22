@@ -36,6 +36,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
     return <TripDetailReferencePage data={trip} />;
   }
   if (!key) notFound();
+  const web3FormsAccessKey = process.env.WEB3FORMS_ACCESS_KEY || "";
   switch (key) {
     case "home": return <HomeReferencePage />;
     case "kilimanjaro": return <KilimanjaroReferencePage />;
@@ -49,7 +50,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
     case "zanzibar": return <ZanzibarReferencePage />;
     case "trips": return <TripsReferencePage trips={await getTripCards()} />;
     case "northernSerengeti": return <TripDetailReferencePage data={await getTripPageContent("northern-serengeti")} />;
-    case "groups": return <GroupsPage departures={await getGroupDepartures()} />;
-    default: return <SitePage page={key} />;
+    case "groups": return <GroupsPage departures={await getGroupDepartures()} web3FormsAccessKey={web3FormsAccessKey} />;
+    default: return <SitePage page={key} web3FormsAccessKey={web3FormsAccessKey} />;
   }
 }
