@@ -72,27 +72,36 @@ const inclusionIcons = new Set<InclusionIcon>([
   "shield",
 ]);
 
-function inclusionIconFor(title: string, savedIcon?: string | null): InclusionIcon {
-  const service = title.toLowerCase();
+function inferInclusionIcon(value: string): InclusionIcon | null {
+  const service = value.toLowerCase();
 
-  // Older trips allowed an editor to choose any icon. Match the service name
-  // first so those documents also render with a meaningful icon.
-  if (/accommodation|hotel|lodge|camp|hut|stay/.test(service)) return "tent";
-  if (/meal|food|breakfast|lunch|dinner|cook|dietary/.test(service)) return "utensils";
+  if (/dietary|allerg/.test(service)) return "heart";
+  if (/accommodation|hotel|lodge|camp|hut|stay|sleeping mat|toilet tent/.test(service)) return "tent";
+  if (/meal|food|breakfast|lunch|dinner|cook|refreshment/.test(service)) return "utensils";
   if (/water|drink|snorkel/.test(service)) return "droplets";
-  if (/fee|permit|tax|ticket/.test(service)) return "ticket";
+  if (/fee|permit|tax|ticket|domestic flight|ferry/.test(service)) return "ticket";
   if (/safety|first[ -]?aid|medical|oxygen|rescue|emergency|evacuation/.test(service)) return "shield";
   if (/guide|crew|porter|mountain team/.test(service)) return "users";
-  if (/transfer|transport|vehicle|flight|ferry|game drive/.test(service)) return "route";
+  if (/transfer|transport|vehicle|pickup|drop[ -]?off|game drive/.test(service)) return "route";
+  if (/briefing|checklist|packing list|equipment check/.test(service)) return "clipboard";
   if (/equipment|duffel|backpack/.test(service)) return "backpack";
-  if (/briefing|checklist|packing list/.test(service)) return "clipboard";
   if (/planning|coordination|contact|support/.test(service)) return "message";
   if (/care/.test(service)) return "heart";
   if (/mountain|climb|trail/.test(service)) return "mountain";
 
-  return savedIcon && inclusionIcons.has(savedIcon as InclusionIcon)
-    ? (savedIcon as InclusionIcon)
-    : "clipboard";
+  return null;
+}
+
+function inclusionIconFor(title: string, description: string, savedIcon?: string | null): InclusionIcon {
+  // The service title is authoritative. Descriptions often mention related
+  // services (for example, a transfer description can mention a hotel), so
+  // they must never override a clear title match.
+  const titleIcon = inferInclusionIcon(title);
+  if (titleIcon) return titleIcon;
+
+  if (savedIcon && inclusionIcons.has(savedIcon as InclusionIcon)) return savedIcon as InclusionIcon;
+
+  return inferInclusionIcon(description) ?? "clipboard";
 }
 
 function presentImage(value: RawImage | null | undefined, width = 1600): CmsImage | null {
@@ -191,7 +200,7 @@ export async function getTripPageContent(slug: string): Promise<CmsTripPageData 
       description: group.description || "",
       items: (group.items || []).map((item, itemIndex) => ({
         key: item._key || `item-${itemIndex + 1}`,
-        icon: inclusionIconFor(item.title || "", item.iconKey),
+        icon: inclusionIconFor(item.title || "", item.description || "", item.iconKey),
         title: item.title || "Included service",
         description: item.description || "",
       })),
