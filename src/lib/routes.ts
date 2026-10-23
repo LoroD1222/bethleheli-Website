@@ -1,4 +1,4 @@
-export type PageKey = "home" | "kilimanjaro" | "machame" | "lemosho" | "marangu" | "rongai" | "northernCircuit" | "umbwe" | "safari" | "zanzibar" | "plan" | "contact" | "faq" | "trips" | "northernSerengeti" | "groups" | "thankYou";
+export type PageKey = "home" | "kilimanjaro" | "machame" | "lemosho" | "marangu" | "rongai" | "northernCircuit" | "umbwe" | "safari" | "zanzibar" | "plan" | "contact" | "faq" | "trips" | "northernSerengeti" | "groups" | "thankYou" | "terms";
 
 type Meta = { title: string; description: string; path: string; image: string };
 
@@ -20,12 +20,13 @@ export const pageMeta: Record<PageKey, Meta> = {
   northernSerengeti: { title: "Northern Serengeti River Crossing Safari", description: "View a six-day Northern Serengeti River Crossing Safari itinerary.", path: "/trips/northern-serengeti", image: "/images/figma-trips-hero.png" },
   groups: { title: "Kilimanjaro Climbing Groups", description: "View upcoming Kilimanjaro climbing group departures.", path: "/groups", image: "/images/home-10.jpg" },
   thankYou: { title: "Thank You", description: "Your enquiry has been received by the Betheli Expeditions team.", path: "/thank-you", image: "/images/figma-plan-hero.png" },
+  terms: { title: "Booking Terms & Conditions", description: "Read Betheli Expeditions booking, payment, cancellation and travel terms.", path: "/terms-and-conditions", image: "/images/figma-home-hero.png" },
 };
 
 export function routeKeyFromSlug(slug?: string[]): PageKey | null {
   const path = `/${(slug || []).join("/")}`.replace(/\/$/, "") || "/";
   const routes: Record<string, PageKey> = {
-    "/": "home", "/kilimanjaro": "kilimanjaro", "/kilimanjaro/machame-route": "machame", "/kilimanjaro/lemosho-route": "lemosho", "/kilimanjaro/marangu-route": "marangu", "/kilimanjaro/rongai-route": "rongai", "/kilimanjaro/northern-circuit": "northernCircuit", "/kilimanjaro/umbwe-route": "umbwe", "/safari": "safari", "/zanzibar": "zanzibar", "/plan-your-trip": "plan", "/contact": "contact", "/faq": "faq", "/trips": "trips", "/trips/northern-serengeti": "northernSerengeti", "/groups": "groups", "/thank-you": "thankYou",
+    "/": "home", "/kilimanjaro": "kilimanjaro", "/kilimanjaro/machame-route": "machame", "/kilimanjaro/lemosho-route": "lemosho", "/kilimanjaro/marangu-route": "marangu", "/kilimanjaro/rongai-route": "rongai", "/kilimanjaro/northern-circuit": "northernCircuit", "/kilimanjaro/umbwe-route": "umbwe", "/safari": "safari", "/zanzibar": "zanzibar", "/plan-your-trip": "plan", "/contact": "contact", "/faq": "faq", "/trips": "trips", "/trips/northern-serengeti": "northernSerengeti", "/groups": "groups", "/thank-you": "thankYou", "/terms-and-conditions": "terms",
   };
   return routes[path] || null;
 }

@@ -3,6 +3,7 @@ import "./globals.css";
 import "./reference.css";
 import { ScrollMotion } from "@/components/site";
 import { AdTrackingCapture } from "@/components/ad-tracking-capture";
+import { WhatsAppWidget } from "@/components/whatsapp-widget";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://betheliexpeditions.com";
 
@@ -28,14 +29,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     "@type": "TourOperator",
     name: "Betheli Expeditions",
     email: "info@betheliexpeditions.com",
-    telephone: "+255 754 411 965",
-    address: { "@type": "PostalAddress", addressLocality: "Arusha", addressCountry: "TZ" },
+    telephone: "+255 692 796 412",
+    address: { "@type": "PostalAddress", postOfficeBoxNumber: "15444", addressLocality: "Usa River, Arusha", addressCountry: "TZ" },
     areaServed: ["Tanzania", "Zanzibar"],
     url: siteUrl,
   };
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} /><AdTrackingCapture /><ScrollMotion />{children}</body>
+      <body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} /><AdTrackingCapture /><ScrollMotion />{children}<WhatsAppWidget /></body>
     </html>
   );
 }

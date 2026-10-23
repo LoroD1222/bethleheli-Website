@@ -1150,8 +1150,11 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .route-inclusion-stack header small{color:#ef6a50;font-size:11px;font-weight:700;letter-spacing:.1em}
 .route-inclusion-stack header h3{margin-top:14px;color:#fff;font-size:23px}.route-inclusion-stack header p{margin-top:8px;color:rgba(255,255,255,.58);font-size:13px}
 .route-inclusion-stack>article>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:center;align-items:start;column-gap:34px;padding:22px 34px}
-.route-inclusion-stack section{display:grid;grid-template-columns:28px minmax(0,1fr);align-items:start;gap:14px;padding:16px 0}
-.route-inclusion-stack section img{width:28px;height:28px}.route-inclusion-stack section h4{font-size:16px;line-height:1.35}.route-inclusion-stack section p{max-width:330px;margin-top:7px;font-size:12px;line-height:1.65}
+.route-inclusion-stack section{display:grid;grid-template-areas:"icon title" ". description";grid-template-columns:28px minmax(0,1fr);align-items:start;column-gap:14px;row-gap:7px;padding:16px 0}
+.route-inclusion-stack section>img{grid-area:icon;width:28px;height:28px;object-fit:contain}
+.route-inclusion-stack section>div{display:contents}
+.route-inclusion-stack section h4{grid-area:title;display:flex;align-items:center;min-height:28px;margin:0;font-size:16px;line-height:1.35}
+.route-inclusion-stack section p{grid-area:description;max-width:330px;margin:0;font-size:12px;line-height:1.65}
 .route-summit{position:relative;min-height:760px!important;display:flex;align-items:center;padding:130px 0 96px;background:linear-gradient(90deg,rgba(17,27,32,.86) 0%,rgba(17,27,32,.62) 35%,rgba(17,27,32,.24) 68%,rgba(17,27,32,.05) 100%),url('/images/figma-machame-summit-summit-day.png') center/cover no-repeat}
 .route-summit .shell>div{max-width:570px}.route-summit .ref-intro h2{color:#fff}.route-summit h3{margin:26px 0 24px;color:#fff;font-size:25px;font-weight:500;line-height:1.45}
 .route-summit p{color:rgba(255,255,255,.72);font-size:16px}.route-summit p+p{margin-top:18px}.route-summit .button{margin-top:30px}
@@ -2713,3 +2716,28 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
   .thank-you-tick,.thank-you-tick::after,.thank-you-tick img{animation:none}
   .thank-you-trip-card>img{transition:none}
 }
+
+/* Footer contact, legal page and persistent WhatsApp contact */
+.home-footer .home-footer-links{grid-template-columns:minmax(180px,240px) minmax(320px,420px);justify-content:space-between;column-gap:60px}
+.home-footer .home-footer-links aside{grid-column:auto;justify-self:end}
+.home-footer-bottom a{color:rgba(255,255,255,.72);text-decoration:underline;text-underline-offset:3px}
+.home-footer-bottom a:hover,.home-footer-bottom a:focus-visible{color:#fff}
+.legal-page{background:#faf8f4;color:#243138}
+.legal-hero{padding:84px 0 74px;background:#243138;color:#fff}
+.legal-hero .eyebrow{color:#ef6a50}.legal-hero h1{max-width:780px;margin-top:14px;font-size:clamp(42px,6vw,72px);line-height:1.03}
+.legal-hero p:last-child{max-width:720px;margin-top:22px;color:rgba(255,255,255,.7);font-size:17px;line-height:1.7}
+.legal-layout{display:grid;grid-template-columns:260px minmax(0,760px);justify-content:space-between;gap:70px;padding-top:80px;padding-bottom:110px}
+.legal-layout>aside{position:sticky;top:28px;align-self:start;display:grid;gap:7px;padding:24px;border:1px solid rgba(36,49,56,.14);border-radius:16px;background:#fff;font-size:13px;line-height:1.55}
+.legal-layout>aside strong{margin-bottom:6px;font-size:16px}.legal-layout>aside a{color:#e94a30;overflow-wrap:anywhere}
+.legal-layout>article{display:grid;gap:38px}.legal-layout article section{padding-bottom:38px;border-bottom:1px solid rgba(36,49,56,.14)}
+.legal-layout article h2{font-size:25px;line-height:1.3}.legal-layout article p{margin-top:14px;color:#5e696f;font-size:15px;line-height:1.8}
+.whatsapp-widget{position:fixed;right:24px;bottom:24px;z-index:80;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.whatsapp-widget a{text-decoration:none}
+.whatsapp-widget-prompt{visibility:hidden;padding:11px 17px;border-radius:999px;background:#101312;color:#fff;font-size:14px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.2);transform:translateX(20px);opacity:0;animation:whatsapp-prompt-cycle 7.8s ease both}
+.whatsapp-widget-button{display:grid;place-items:center;width:62px;height:62px;border-radius:50%;background:#25d366;color:#fff;box-shadow:0 10px 28px rgba(17,92,49,.34);animation:whatsapp-pulse 2.2s ease-out infinite}
+.whatsapp-widget-button svg{width:34px;height:34px}
+.whatsapp-widget-button:hover,.whatsapp-widget-button:focus-visible{transform:translateY(-2px);background:#20bd5a}
+@keyframes whatsapp-prompt-cycle{0%,10%{visibility:hidden;opacity:0;transform:translateX(20px)}14%,86%{visibility:visible;opacity:1;transform:translateX(0)}100%{visibility:hidden;opacity:0;transform:translateX(12px)}}
+@keyframes whatsapp-pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.45),0 10px 28px rgba(17,92,49,.34)}70%{box-shadow:0 0 0 16px rgba(37,211,102,0),0 10px 28px rgba(17,92,49,.34)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0),0 10px 28px rgba(17,92,49,.34)}}
+@media(max-width:760px){.home-footer .home-footer-links{grid-template-columns:1fr}.home-footer .home-footer-links aside{justify-self:start;width:100%}.legal-hero{padding:62px 0}.legal-layout{grid-template-columns:1fr;gap:38px;padding-top:48px;padding-bottom:76px}.legal-layout>aside{position:static}.whatsapp-widget{right:16px;bottom:16px;gap:9px}.whatsapp-widget-button{width:54px;height:54px}.whatsapp-widget-button svg{width:29px;height:29px}.whatsapp-widget-prompt{padding:9px 14px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){.whatsapp-widget-button{animation:none}.whatsapp-widget-prompt{visibility:visible;opacity:1;transform:none;animation:none}}

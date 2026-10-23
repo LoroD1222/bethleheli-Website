@@ -4,6 +4,7 @@ import { GroupsPage, SitePage } from "@/components/site";
 import { HomeReferencePage, KilimanjaroReferencePage, KilimanjaroRouteDetailPage, SafariReferencePage, TripDetailReferencePage, TripsReferencePage, ZanzibarReferencePage } from "@/components/reference-pages";
 import { pageMeta, routeKeyFromSlug } from "@/lib/routes";
 import { getGroupDepartures, getTripCards, getTripPageContent, getTripSeo } from "@/sanity/lib/content";
+import { TermsPage } from "@/components/terms-page";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug?: string[] }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -51,6 +52,7 @@ export default async function Page({ params }: { params: Promise<{ slug?: string
     case "trips": return <TripsReferencePage trips={await getTripCards()} />;
     case "northernSerengeti": return <TripDetailReferencePage data={await getTripPageContent("northern-serengeti")} />;
     case "groups": return <GroupsPage departures={await getGroupDepartures()} web3FormsAccessKey={web3FormsAccessKey} />;
+    case "terms": return <TermsPage />;
     default: return <SitePage page={key} web3FormsAccessKey={web3FormsAccessKey} />;
   }
 }
