@@ -498,6 +498,7 @@ type KilimanjaroRouteDetail = {
   days: number;
   difficulty: string;
   scenery: string;
+  startingPrice?: string;
   lead: string;
   heroCopy: string;
   overview: [string, string];
@@ -550,7 +551,7 @@ const routeDetailData: Record<Exclude<KilimanjaroRouteSlug, "machame">, Kilimanj
     itinerary: [["Begin on the northern slopes","Rongai Gate → Simba Camp","Start near the Kenyan border and follow a gentle trail through forest and open country."],["Toward Second Cave","Simba Camp → Second Cave","Continue through heath with views across the northern plains and toward the mountain."],["Across the remote north","Second Cave → Kikelewa Camp","Traverse quieter terrain as the landscape becomes more rugged and the air thinner."],["Beneath Mawenzi","Kikelewa → Mawenzi Tarn","Climb toward the dramatic eastern peak and settle near Mawenzi Tarn."],["To the summit base","Mawenzi Tarn → Kibo Hut","Cross the alpine saddle toward Kibo and prepare for the summit attempt."],["Summit attempt and descent","Kibo → Uhuru Peak → Horombo","Climb slowly in darkness toward the crater rim and summit, then descend to Horombo."],["Return through the forest","Horombo → Marangu Gate","Finish on the south-eastern side, descending through moorland and forest to the gate."]],
   },
   "northern-circuit": {
-    name: "Northern Circuit Route", shortName: "Northern Circuit", heroImage: "figma-kili-routes-route-landscape4.png", mapImage: "route-map-northern-circuit.png", duration: "8–9 Days", days: 9, difficulty: "Challenging", scenery: "Panoramic", lead: "Kilimanjaro’s longest, most expansive route.",
+    name: "Northern Circuit Route", shortName: "Northern Circuit", heroImage: "figma-kili-routes-route-landscape4.png", mapImage: "route-map-northern-circuit.png", duration: "8–9 Days", days: 9, difficulty: "Challenging", scenery: "Panoramic", startingPrice: "$1,450", lead: "Kilimanjaro’s longest, most expansive route.",
     heroCopy: "Begin in the west, circle the mountain’s remote northern slopes and take time to experience Kilimanjaro from every angle.",
     overview: ["The Northern Circuit begins from the western side and then curves around Kilimanjaro’s quiet northern flank. It is the longest commonly offered route and reveals an unusually broad range of scenery.", "More days can create a measured rhythm and additional acclimatization opportunities, but altitude risk remains. The distance and repeated trekking days require endurance and careful preparation."],
     bestFor: "A long, remote and panoramic journey", startingPoint: "Lemosho trailhead", accommodation: "Camping route",
@@ -600,7 +601,7 @@ export function KilimanjaroRouteDetailPage({ route }: { route: KilimanjaroRouteS
     ["What should I pack?", "Prepare layered clothing, suitable footwear, cold-weather essentials, personal items and travel documents. Confirm the final list with the team."],
   ];
   const otherRoutes = kilimanjaroRoutes.filter(card => card.title !== detail.name).slice(0, 4);
-  return <><ReferenceHero imageSrc={image(detail.heroImage)} eyebrow="KILIMANJARO ROUTE" title={detail.name} lead={detail.lead} copy={detail.heroCopy} action="Plan This Climb" secondAction="Get a Quote" secondActionHref="/plan-your-trip" active="Kilimanjaro" navVariant="classic" routeFacts={[detail.duration, `Difficulty: ${detail.difficulty}`, `Scenery: ${detail.scenery}`, "Starting From: $XXX"]} />
+  return <><ReferenceHero imageSrc={image(detail.heroImage)} eyebrow="KILIMANJARO ROUTE" title={detail.name} lead={detail.lead} copy={detail.heroCopy} action="Plan This Climb" secondAction="Get a Quote" secondActionHref="/plan-your-trip" active="Kilimanjaro" navVariant="classic" routeFacts={[detail.duration, `Difficulty: ${detail.difficulty}`, `Scenery: ${detail.scenery}`, detail.startingPrice ? `Starting From: ${detail.startingPrice}` : "Price: Request a quote"]} />
     <main className="route-detail-page">
       <section className="route-overview"><div className="shell route-overview-grid"><Photo src={image(detail.heroImage)} alt={`Climbers on the ${detail.name}`} /><div><Intro eyebrow="THE CLIMB AT A GLANCE" title={`${detail.name} Overview`} /><p>{detail.overview[0]}</p><p>{detail.overview[1]}</p><dl className="route-facts">{[["Duration",detail.duration],["Difficulty",detail.difficulty],["Starting point",detail.startingPoint],["Highest point","5,895 m"],["Best for",detail.bestFor],["Accommodation style",detail.accommodation]].map(([term,value])=><div key={term}><dt>{term}</dt><dd>{value}</dd></div>)}</dl></div></div></section>
       <section className="route-benefits"><div className="shell"><Intro eyebrow="MORE THAN A WAY TO THE TOP" title={`Why Choose the ${detail.name}?`} /><div className="route-benefit-grid">{detail.benefits.map(([title,copy],i)=><article key={title}><small>{String(i+1).padStart(2,"0")}</small><h3>{title}</h3><p>{copy}</p></article>)}</div></div></section>
