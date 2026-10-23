@@ -9,6 +9,8 @@ export type InclusionIcon =
   | 'droplets'
   | 'heart'
   | 'message'
+  | 'users'
+  | 'shield'
 
 export type InclusionCatalogItem = {
   key: string
@@ -73,12 +75,12 @@ export const inclusionCatalog: readonly InclusionCatalogGroup[] = [
     title: 'Your professional team',
     description: 'Local professionals supporting the journey.',
     items: [
-      {key: 'mountain-guide', icon: 'mountain', title: 'Professional mountain guide', description: 'An experienced mountain guide for the confirmed climbing route.'},
-      {key: 'assistant-guides', icon: 'mountain', title: 'Assistant mountain guides', description: 'Assistant guides provided according to the group size and route requirements.'},
-      {key: 'porters', icon: 'backpack', title: 'Mountain porters', description: 'A porter team supporting the climb and carrying expedition equipment.'},
+      {key: 'mountain-guide', icon: 'users', title: 'Professional mountain guide', description: 'An experienced mountain guide for the confirmed climbing route.'},
+      {key: 'assistant-guides', icon: 'users', title: 'Assistant mountain guides', description: 'Assistant guides provided according to the group size and route requirements.'},
+      {key: 'porters', icon: 'users', title: 'Mountain porters', description: 'A porter team supporting the climb and carrying expedition equipment.'},
       {key: 'mountain-cook', icon: 'utensils', title: 'Mountain cook', description: 'A cook preparing the included meals during the climb.'},
-      {key: 'safari-guide', icon: 'mountain', title: 'Professional safari guide', description: 'A professional driver-guide throughout the confirmed safari route.'},
-      {key: 'zanzibar-guide', icon: 'message', title: 'Local Zanzibar guide', description: 'A local guide for the Zanzibar activities listed in the itinerary.'},
+      {key: 'safari-guide', icon: 'users', title: 'Professional safari guide', description: 'A professional driver-guide throughout the confirmed safari route.'},
+      {key: 'zanzibar-guide', icon: 'users', title: 'Local Zanzibar guide', description: 'A local guide for the Zanzibar activities listed in the itinerary.'},
     ],
   },
   {
@@ -120,8 +122,8 @@ export const inclusionCatalog: readonly InclusionCatalogGroup[] = [
       {key: 'mess-dining-tent', icon: 'tent', title: 'Mess and dining tent', description: 'A shared dining tent supplied on supported camping routes.'},
       {key: 'private-toilet-tent', icon: 'tent', title: 'Private toilet tent', description: 'A private portable toilet tent for the climbing group.'},
       {key: 'duffel-bag', icon: 'backpack', title: 'Expedition duffel bag', description: 'A duffel bag supplied for porter-carried mountain equipment.'},
-      {key: 'safety-equipment', icon: 'heart', title: 'Mountain safety equipment', description: 'First-aid and communication equipment carried by the mountain team.'},
-      {key: 'emergency-oxygen', icon: 'heart', title: 'Emergency oxygen', description: 'Emergency oxygen carried by the mountain team.'},
+      {key: 'safety-equipment', icon: 'shield', title: 'Mountain safety equipment', description: 'First-aid and communication equipment carried by the mountain team.'},
+      {key: 'emergency-oxygen', icon: 'shield', title: 'Emergency oxygen', description: 'Emergency oxygen carried by the mountain team.'},
     ],
   },
   {
@@ -130,10 +132,10 @@ export const inclusionCatalog: readonly InclusionCatalogGroup[] = [
     title: 'Support throughout',
     description: 'Practical care and local coordination during the journey.',
     items: [
-      {key: 'first-aid-kit', icon: 'heart', title: 'First-aid kit', description: 'A first-aid kit carried by the guiding team.'},
-      {key: 'amref-evacuation-cover', icon: 'heart', title: 'AMREF evacuation cover', description: 'AMREF evacuation cover when specifically included in the package.'},
+      {key: 'first-aid-kit', icon: 'shield', title: 'First-aid kit', description: 'A first-aid kit carried by the guiding team.'},
+      {key: 'amref-evacuation-cover', icon: 'shield', title: 'AMREF evacuation cover', description: 'AMREF evacuation cover when specifically included in the package.'},
       {key: 'local-trip-coordination', icon: 'message', title: 'Local trip coordination', description: 'Day-to-day coordination by the Betheli Expeditions team.'},
-      {key: 'emergency-contact-support', icon: 'message', title: 'Emergency contact support', description: 'Access to the local operations contact during the journey.'},
+      {key: 'emergency-contact-support', icon: 'shield', title: 'Emergency contact support', description: 'Access to the local operations contact during the journey.'},
       {key: 'government-taxes', icon: 'ticket', title: 'Government taxes', description: 'Applicable government taxes included in the confirmed package price.'},
     ],
   },

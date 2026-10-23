@@ -18,6 +18,7 @@ import type {
   CmsTripStay,
 } from "@/sanity/content-types";
 import { buildInclusionGroups } from "../../../shared/inclusion-catalog";
+import type { InclusionIcon } from "../../../shared/inclusion-catalog";
 import { sanityClient } from "./client";
 import { urlForImage } from "./image";
 import {
@@ -55,6 +56,44 @@ const landscapeIcons: Record<string, string> = {
   grass: "🌾",
   water: "🌊",
 };
+
+const inclusionIcons = new Set<InclusionIcon>([
+  "route",
+  "clipboard",
+  "ticket",
+  "mountain",
+  "backpack",
+  "tent",
+  "utensils",
+  "droplets",
+  "heart",
+  "message",
+  "users",
+  "shield",
+]);
+
+function inclusionIconFor(title: string, savedIcon?: string | null): InclusionIcon {
+  const service = title.toLowerCase();
+
+  // Older trips allowed an editor to choose any icon. Match the service name
+  // first so those documents also render with a meaningful icon.
+  if (/accommodation|hotel|lodge|camp|hut|stay/.test(service)) return "tent";
+  if (/meal|food|breakfast|lunch|dinner|cook|dietary/.test(service)) return "utensils";
+  if (/water|drink|snorkel/.test(service)) return "droplets";
+  if (/fee|permit|tax|ticket/.test(service)) return "ticket";
+  if (/safety|first[ -]?aid|medical|oxygen|rescue|emergency|evacuation/.test(service)) return "shield";
+  if (/guide|crew|porter|mountain team/.test(service)) return "users";
+  if (/transfer|transport|vehicle|flight|ferry|game drive/.test(service)) return "route";
+  if (/equipment|duffel|backpack/.test(service)) return "backpack";
+  if (/briefing|checklist|packing list/.test(service)) return "clipboard";
+  if (/planning|coordination|contact|support/.test(service)) return "message";
+  if (/care/.test(service)) return "heart";
+  if (/mountain|climb|trail/.test(service)) return "mountain";
+
+  return savedIcon && inclusionIcons.has(savedIcon as InclusionIcon)
+    ? (savedIcon as InclusionIcon)
+    : "clipboard";
+}
 
 function presentImage(value: RawImage | null | undefined, width = 1600): CmsImage | null {
   if (!value) return null;
@@ -152,7 +191,7 @@ export async function getTripPageContent(slug: string): Promise<CmsTripPageData 
       description: group.description || "",
       items: (group.items || []).map((item, itemIndex) => ({
         key: item._key || `item-${itemIndex + 1}`,
-        icon: item.iconKey || "route",
+        icon: inclusionIconFor(item.title || "", item.iconKey),
         title: item.title || "Included service",
         description: item.description || "",
       })),
