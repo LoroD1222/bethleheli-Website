@@ -410,6 +410,16 @@ const sourcedTripCardImages: Record<string, string> = {
   "east-african-safari-and-beach-bliss": "/images/trips/east-african-safari-beach-bliss.webp",
 };
 
+// Client-approved day-trip prices. These remain stable on the website while
+// the corresponding Sanity documents are updated or republished.
+const sourcedTripCardPrices: Record<string, string> = {
+  "chemka-hot-springs-day-trip": "$159",
+  "kilimanjaro-day-trip-via-marangu-route": "$269",
+  "materuni-waterfall-and-coffee-day-trip": "$149",
+  "serval-wildlife-day-trip": "$249",
+  "shira-plateau-day-hike": "$279",
+};
+
 // These packages were imported from the client-approved Day Trips source.
 // Keep their website classification stable even if a later Sanity migration
 // replaces the editable categories array with a broader destination category.
@@ -431,6 +441,7 @@ export async function getTripCards(): Promise<CmsTripCard[]> {
         .map((category) => categoryLabels[category])
         .filter((category): category is CmsTripCard["categories"][number] => Boolean(category));
       const sourcedCardImage = trip.slug ? sourcedTripCardImages[trip.slug] : undefined;
+      const sourcedCardPrice = trip.slug ? sourcedTripCardPrices[trip.slug] : undefined;
       const days = categories.includes("Kilimanjaro")
         ? trip.trekkingDays || trip.durationDays
         : trip.durationDays;
@@ -445,7 +456,7 @@ export async function getTripCards(): Promise<CmsTripCard[]> {
         href: `/trips/${trip.slug}`,
         categories: normalizedCategories,
         days,
-        price: formatMoney(trip.startingPrice),
+        price: sourcedCardPrice || formatMoney(trip.startingPrice),
       } satisfies CmsTripCard];
     });
   } catch (error) {
