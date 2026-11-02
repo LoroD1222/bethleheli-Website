@@ -91,6 +91,9 @@ export type CmsKilimanjaroRouteTrip = {
     key: string;
     title: string;
     summary: string;
+    hikingTime: string;
+    distanceKm: number | null;
+    habitat: string;
     experience: string;
     mealPlan: string;
     dayType: "trekking" | "arrival" | "departure" | "other";

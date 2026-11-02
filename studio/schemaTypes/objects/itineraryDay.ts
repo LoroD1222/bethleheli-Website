@@ -30,9 +30,28 @@ export const itineraryDay = defineType({
     }),
     defineField({
       name: 'summary',
-      title: 'Summary',
+      title: 'Route / Summary',
       type: 'text',
       rows: 4,
+    }),
+    defineField({
+      name: 'hikingTime',
+      title: 'Hiking Time',
+      type: 'string',
+      description: 'Approximate walking time for this day, for example “Approximately 7 hours”.',
+    }),
+    defineField({
+      name: 'distanceKm',
+      title: 'Distance (km)',
+      type: 'number',
+      description: 'Approximate trail distance for this day in kilometres.',
+      validation: (rule) => rule.min(0).max(50),
+    }),
+    defineField({
+      name: 'habitat',
+      title: 'Habitat',
+      type: 'string',
+      description: 'Primary ecological zone or terrain for this day.',
     }),
     defineField({
       name: 'image',

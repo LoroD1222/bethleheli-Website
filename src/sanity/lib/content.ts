@@ -275,6 +275,9 @@ type RawKilimanjaroRouteTrip = {
     _key?: string | null;
     title?: string | null;
     summary?: string | null;
+    hikingTime?: string | null;
+    distanceKm?: number | null;
+    habitat?: string | null;
     experience?: string | null;
     mealPlan?: string | null;
     dayType?: "trekking" | "arrival" | "departure" | "other" | null;
@@ -319,6 +322,9 @@ export async function getKilimanjaroRouteTrips(): Promise<Partial<Record<string,
           key: day._key || `route-day-${index + 1}`,
           title: day.title || `Day ${index + 1}`,
           summary: day.summary || "",
+          hikingTime: day.hikingTime || "",
+          distanceKm: day.distanceKm ?? null,
+          habitat: day.habitat || "",
           experience: day.experience || "",
           mealPlan: mealPlanLabels[day.mealPlan || ""] || day.mealPlan || "",
           dayType: day.dayType || "other",

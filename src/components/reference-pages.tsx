@@ -447,6 +447,66 @@ const routeFallbackFacts: Record<KilimanjaroRouteSlug, { days: string; difficult
   umbwe: { days: "6", difficulty: "Very hard", difficultyLevel: 5, distanceKm: 46.3, startingPrice: "$2,317" },
 };
 
+type RouteDailyFact = { hikingTime: string; distanceKm: number; habitat: string };
+
+const routeDailyFacts: Record<KilimanjaroRouteSlug, RouteDailyFact[]> = {
+  machame: [
+    { hikingTime: "Approximately 7 hours", distanceKm: 10.8, habitat: "Montane forest" },
+    { hikingTime: "Approximately 4–6 hours", distanceKm: 5.3, habitat: "Heath and moorland" },
+    { hikingTime: "Approximately 6–8 hours", distanceKm: 10, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 4–5 hours", distanceKm: 5, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 4–5 hours", distanceKm: 4, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 12–16 hours", distanceKm: 17, habitat: "Arctic summit and alpine desert" },
+    { hikingTime: "Approximately 3–4 hours", distanceKm: 10, habitat: "Montane forest" },
+  ],
+  lemosho: [
+    { hikingTime: "Approximately 3–4 hours", distanceKm: 7, habitat: "Montane forest" },
+    { hikingTime: "Approximately 5–6 hours", distanceKm: 8, habitat: "Heath and moorland" },
+    { hikingTime: "Approximately 3–4 hours", distanceKm: 7, habitat: "Heath and moorland" },
+    { hikingTime: "Approximately 6–8 hours", distanceKm: 10, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 4–5 hours", distanceKm: 5, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 4–5 hours", distanceKm: 4, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 12–16 hours", distanceKm: 17, habitat: "Arctic summit and alpine desert" },
+    { hikingTime: "Approximately 3–4 hours", distanceKm: 10, habitat: "Montane forest" },
+  ],
+  marangu: [
+    { hikingTime: "Approximately 4–5 hours", distanceKm: 8, habitat: "Montane forest" },
+    { hikingTime: "Approximately 6–8 hours", distanceKm: 12, habitat: "Heath and moorland" },
+    { hikingTime: "Approximately 4–5 hours", distanceKm: 10, habitat: "Heath and moorland" },
+    { hikingTime: "Approximately 6–8 hours", distanceKm: 10, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 12–17 hours", distanceKm: 22, habitat: "Arctic summit and alpine desert" },
+    { hikingTime: "Approximately 5–7 hours", distanceKm: 20, habitat: "Moorland and montane forest" },
+  ],
+  rongai: [
+    { hikingTime: "Approximately 3–4 hours", distanceKm: 7, habitat: "Montane forest" },
+    { hikingTime: "Approximately 6–7 hours", distanceKm: 9, habitat: "Heath and moorland" },
+    { hikingTime: "Approximately 3–4 hours", distanceKm: 6, habitat: "Heath and moorland" },
+    { hikingTime: "Approximately 4–5 hours", distanceKm: 5, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 5–6 hours", distanceKm: 8, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 12–16 hours", distanceKm: 20, habitat: "Arctic summit and alpine desert" },
+    { hikingTime: "Approximately 5–7 hours", distanceKm: 20, habitat: "Moorland and montane forest" },
+  ],
+  "northern-circuit": [
+    { hikingTime: "Approximately 3–4 hours", distanceKm: 7, habitat: "Montane forest" },
+    { hikingTime: "Approximately 5–6 hours", distanceKm: 8, habitat: "Heath and moorland" },
+    { hikingTime: "Approximately 3–4 hours", distanceKm: 7, habitat: "Heath and moorland" },
+    { hikingTime: "Approximately 5–7 hours", distanceKm: 8, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 5–7 hours", distanceKm: 12, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 5–7 hours", distanceKm: 8, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 4–5 hours", distanceKm: 5, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 12–16 hours", distanceKm: 20, habitat: "Arctic summit and alpine desert" },
+    { hikingTime: "Approximately 3–4 hours", distanceKm: 10, habitat: "Montane forest" },
+  ],
+  umbwe: [
+    { hikingTime: "Approximately 5–7 hours", distanceKm: 11, habitat: "Montane forest" },
+    { hikingTime: "Approximately 4–5 hours", distanceKm: 6, habitat: "Heath and moorland" },
+    { hikingTime: "Approximately 4–5 hours", distanceKm: 5, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 4–5 hours", distanceKm: 4, habitat: "Alpine desert" },
+    { hikingTime: "Approximately 12–16 hours", distanceKm: 17, habitat: "Arctic summit and alpine desert" },
+    { hikingTime: "Approximately 3–4 hours", distanceKm: 10, habitat: "Montane forest" },
+  ],
+};
+
 const kilimanjaroPriceNote = "All starting prices are USD per person and exclude hotel accommodation. Pre- or post-trip hotel stays can be arranged on request at an additional cost.";
 
 function routeDistanceLabel(distanceKm: number, approximate = false) {
@@ -509,7 +569,7 @@ const machameOverview = [
   "Its changing landscapes and climb-high, sleep-lower sections make Machame a popular choice for active trekkers who want a varied mountain journey. The route still involves consecutive hiking days, exposed high-altitude terrain and a long summit attempt, so good preparation and a deliberately slow pace are essential.",
 ];
 
-function RouteTripItinerary({ trip, routeName, imageSrc, fallbackDays = [], fallbackImages = [], imageOverrides = [], fallbackStay = "Mountain camping", fallbackNote }: { trip: CmsKilimanjaroRouteTrip | null; routeName: string; imageSrc: string; fallbackDays?: RouteDay[]; fallbackImages?: string[]; imageOverrides?: string[]; fallbackStay?: string; fallbackNote?: string }) {
+function RouteTripItinerary({ trip, route, routeName, imageSrc, fallbackDays = [], fallbackImages = [], imageOverrides = [], fallbackStay = "Mountain camping", fallbackNote }: { trip: CmsKilimanjaroRouteTrip | null; route: KilimanjaroRouteSlug; routeName: string; imageSrc: string; fallbackDays?: RouteDay[]; fallbackImages?: string[]; imageOverrides?: string[]; fallbackStay?: string; fallbackNote?: string }) {
   const trekkingDays = trip?.itinerary.filter((day) => day.dayType === "trekking") || [];
   const publishedDays = trekkingDays.length
     ? trekkingDays
@@ -518,6 +578,9 @@ function RouteTripItinerary({ trip, routeName, imageSrc, fallbackDays = [], fall
     key: `route-outline-day-${index + 1}`,
     title,
     summary: location,
+    hikingTime: "",
+    distanceKm: null,
+    habitat: "",
     experience: copy,
     mealPlan: "Mountain meals — confirm in quote",
     dayType: "trekking" as const,
@@ -541,6 +604,10 @@ function RouteTripItinerary({ trip, routeName, imageSrc, fallbackDays = [], fall
     <div className="route-days">
       {displayedDays.length ? displayedDays.map((day, index) => {
         const routeContext = fallbackDays[index]?.[3];
+        const fallbackFact = routeDailyFacts[route][index];
+        const hikingTime = day.hikingTime || fallbackFact?.hikingTime;
+        const distanceKm = day.distanceKm ?? fallbackFact?.distanceKm;
+        const habitat = day.habitat || fallbackFact?.habitat;
         const displayedImage = imageOverrides[index]
           ? { src: image(imageOverrides[index]), alt: `${routeName} — ${day.title}` }
           : day.image;
@@ -549,7 +616,12 @@ function RouteTripItinerary({ trip, routeName, imageSrc, fallbackDays = [], fall
         <div>
           <small>DAY {index + 1}</small>
           <h3>{day.title}</h3>
-          {day.summary && <p className="route-day-location">{day.summary}</p>}
+          {day.summary && <p className="route-day-location"><b>Route</b>{day.summary}</p>}
+          {(hikingTime || distanceKm != null || habitat) && <dl className="route-day-trail-facts">
+            {hikingTime && <div><dt>Hiking time</dt><dd>{hikingTime}</dd></div>}
+            {distanceKm != null && <div><dt>Distance</dt><dd>Approximately {distanceKm} km</dd></div>}
+            {habitat && <div><dt>Habitat</dt><dd>{habitat}</dd></div>}
+          </dl>}
           {day.experience && <p>{day.experience}</p>}
           {routeContext && <p>{routeContext}</p>}
           {(day.mealPlan || day.accommodations.length > 0) && <div className="route-day-facts">
@@ -582,7 +654,7 @@ export function MachameReferencePage({ trip }: { trip: CmsKilimanjaroRouteTrip |
   ];
   return <><ReferenceHero imageSrc={image("drive-library/machame-hero.webp")} eyebrow="KILIMANJARO ROUTE" title="Machame Route" lead="A scenic southern approach through five mountain environments." copy="Follow the Machame trail through rainforest, across the Shira Plateau and around the southern circuit toward Kilimanjaro’s summit." action="Plan This Climb" secondAction="View Itinerary" secondActionHref="#itinerary" active="Home" navVariant="classic" routeFacts={[trip ? `${trip.trekkingDays} trekking days` : `${routeFacts.days} trekking days`, routeDistanceLabel(distanceKm), `From ${trip?.startingPrice || routeFacts.startingPrice}`]} />
     <main className="route-detail-page"><section className="route-overview"><div className="shell route-overview-grid"><Photo src={image("drive-library/machame-giant-groundsel-stream.webp")} alt="Giant groundsels beside a mountain stream on the Machame Route" sizes="(max-width: 800px) 100vw, (max-width: 1100px) 45vw, 560px" /><div><Intro eyebrow={trip ? "PUBLISHED SANITY TRIP" : "ROUTE OVERVIEW"} title={trip ? trip.title : "Machame Route Overview"} /><div className="route-overview-copy">{machameOverview.map(paragraph => <p key={paragraph}>{paragraph}</p>)}<p className="route-callout">{kilimanjaroPriceNote}</p>{trip && <p className="route-callout">This page follows the published {trip.title} package. Its displayed duration counts {trip.trekkingDays} trekking days; arrival and departure are excluded.</p>}</div><dl className="route-facts">{[["Trekking duration",trip ? `${trip.trekkingDays} days` : `${routeFacts.days} days`],["Route distance",routeDistanceLabel(distanceKm)],["Starting price",trip?.startingPrice || routeFacts.startingPrice],["Trip focus",trip?.itineraryFor || "Machame Route"]].map(([term,value])=><div key={term}><dt>{term}</dt><dd>{value}</dd></div>)}</dl></div></div></section>
-      <RouteTripItinerary trip={trip} routeName="Machame Route" imageSrc="drive-library/machame-camp-mountain-view.webp" fallbackDays={machameFallbackItinerary} fallbackImages={routeItineraryImages.machame} imageOverrides={["", "", "drive-library/machame-rocky-alpine-hikers.webp", "drive-library/machame-betheli-porters.webp", "", "drive-library/machame-uhuru-peak-betheli-group.webp", "drive-library/machame-montane-rainforest.webp"]} fallbackNote="This is the standard seven-day Machame outline. A six-day variation combines part of the schedule; confirm the exact plan and package services in your quote." />
+      <RouteTripItinerary trip={trip} route="machame" routeName="Machame Route" imageSrc="drive-library/machame-camp-mountain-view.webp" fallbackDays={machameFallbackItinerary} fallbackImages={routeItineraryImages.machame} imageOverrides={["", "", "drive-library/machame-rocky-alpine-hikers.webp", "drive-library/machame-betheli-porters.webp", "", "drive-library/machame-uhuru-peak-betheli-group.webp", "drive-library/machame-montane-rainforest.webp"]} fallbackNote="This is the standard seven-day Machame outline. A six-day variation combines part of the schedule; confirm the exact plan and package services in your quote." />
       <RouteEnvironments />
       <section className="route-inclusions"><div className="shell"><Intro eyebrow="YOUR CLIMB, TAKEN CARE OF" title="What’s Included in Your Climb" copy="Use this package checklist when planning your enquiry. Hotel accommodation is separate from the climbing rate and can be added on request." /><div className="route-inclusion-stack">{[["01","PREPARATION","Before the climb","The arrangements around your journey.",[["figma-trips-inclusion-route.svg","Transfers","Pickup points and included transfers are still to confirm."],["figma-trips-inclusion-tent.svg","Accommodation","Mountain stays are confirmed in your quote. Add a pre- or post-climb hotel only if you need one."]]],["02","CLIMB & CAMP","On the mountain","Your team and everyday trail essentials.",[["figma-trips-inclusion-mountain.svg","Mountain","Climb services and camp setup details are still to confirm."],["figma-trips-inclusion-utensils.svg","Food","Meal plan, drinking water and dietary needs are still to confirm."],["figma-kili-value-users.svg","Guides & Crew","Guide and mountain crew arrangements are still to confirm."],["figma-trips-inclusion-ticket.svg","Park Fees","Park, camping and other fee coverage is still to confirm."]]],["03","ONGOING CARE","Support & safety","Discuss the plan before you commit.",[["figma-kili-value-shield.svg","Safety","Monitoring, emergency procedures and equipment are still to confirm."]]]].map(([num,label,title,copy,items])=><article key={String(num)}><header><small>{String(num)} / {String(label)}</small><h3>{String(title)}</h3><p>{String(copy)}</p></header><div>{(items as string[][]).map(([icon,itemTitle,itemCopy])=><section key={itemTitle}><Image src={image(icon)} alt="" width={28} height={28}/><div><h4>{itemTitle}</h4><p>{itemCopy}</p></div></section>)}</div></article>)}</div></div></section>
       <section className="route-summit"><div className="shell"><div><Intro eyebrow="THE MOUNTAIN’S MOST DEMANDING MOMENT" title="Summit Night" /><h3>Slow steps. Cold air. The possibility of sunrise above the clouds.</h3><p>A summit attempt usually means an early start in darkness, very cold temperatures and a slow, steady ascent. The aim is to reach Uhuru Peak, with sunrise a memorable part of the high-mountain experience when conditions allow.</p><p>Reaching the top is never guaranteed. Guides assess conditions and your ability along the way; turning around may be the right decision. A long descent follows any summit attempt.</p><PrimaryLink>Plan your climb</PrimaryLink></div></div></section>
@@ -748,7 +820,7 @@ export function KilimanjaroRouteDetailPage({ route, trip }: { route: Kilimanjaro
   return <><ReferenceHero imageSrc={image(detail.heroImage)} eyebrow="KILIMANJARO ROUTE" title={detail.name} lead={trip ? trip.title : "Explore this Kilimanjaro route with the local team."} copy={trip ? `Review the published ${trip.trekkingDays}-day mountain itinerary. Arrival and departure days are excluded from this climb duration.` : `Review the current ${detail.duration.toLowerCase()} mountain outline, then confirm the exact day-by-day plan for your dates.`} action="Plan This Climb" secondAction="View Itinerary" secondActionHref="#itinerary" active="Kilimanjaro" navVariant="classic" routeFacts={[trip ? `${trip.trekkingDays} trekking days` : `${routeFacts.days} trekking days`, distanceLabel, `From ${startingPrice}`]} />
     <main className="route-detail-page">
       <section className="route-overview"><div className="shell route-overview-grid"><Photo src={image(overviewImage)} alt={`${detail.name} landscape on Mount Kilimanjaro`} sizes="(max-width: 800px) 100vw, (max-width: 1100px) 45vw, 560px" /><div><Intro eyebrow={trip ? "PUBLISHED SANITY TRIP" : "ROUTE OVERVIEW"} title={trip ? trip.title : `${detail.name} Overview`} /><div className="route-overview-copy">{detail.overview.map(paragraph => <p key={paragraph}>{paragraph}</p>)}<p className="route-callout">{kilimanjaroPriceNote}</p>{trip && <p className="route-callout">This page follows the published {trip.title} package. The displayed duration counts {trip.trekkingDays} mountain days only; arrival and departure are not included.</p>}</div><dl className="route-facts">{[["Trekking duration",trip ? `${trip.trekkingDays} days` : `${routeFacts.days} days`],["Route distance",distanceLabel],["Starting price",startingPrice],["Accommodation options",routeStays.join(", ") || detail.accommodation]].map(([term,value])=><div key={term}><dt>{term}</dt><dd>{value}</dd></div>)}</dl></div></div></section>
-      <RouteTripItinerary trip={trip} routeName={detail.name} imageSrc={itineraryImage} fallbackDays={detail.itinerary} fallbackImages={routeItineraryImages[route]} imageOverrides={itineraryImageOverrides} fallbackStay={detail.accommodation} fallbackNote={detail.itineraryNote} />
+      <RouteTripItinerary trip={trip} route={route} routeName={detail.name} imageSrc={itineraryImage} fallbackDays={detail.itinerary} fallbackImages={routeItineraryImages[route]} imageOverrides={itineraryImageOverrides} fallbackStay={detail.accommodation} fallbackNote={detail.itineraryNote} />
       <RouteEnvironments />
       <section className="route-inclusions"><div className="shell"><Intro eyebrow="YOUR CLIMB, TAKEN CARE OF" title="What’s Included in Your Climb" copy="Use this package checklist when planning your enquiry. Hotel accommodation is separate from the climbing rate and can be added on request." /><div className="route-inclusion-stack">{[["01","PREPARATION","Before the climb","The arrangements around your journey.",[["figma-trips-inclusion-route.svg","Transfers","Pickup points and included transfers are confirmed in your quote."],["figma-trips-inclusion-tent.svg","Accommodation","Mountain stays are confirmed in your quote. Add a pre- or post-climb hotel only if you need one."]]],["02","ON THE MOUNTAIN","Climb & stay","Your team and everyday trail essentials.",[["figma-trips-inclusion-mountain.svg","Mountain","Climb services and overnight arrangements are confirmed before travel."],["figma-trips-inclusion-utensils.svg","Food","Meal plan, drinking water and dietary needs are confirmed in planning."],["figma-kili-value-users.svg","Guides & Crew","Guide and mountain crew arrangements are confirmed for your group."],["figma-trips-inclusion-ticket.svg","Park Fees","Park and applicable accommodation fee coverage is itemized in your quote."]]],["03","ONGOING CARE","Support & safety","Discuss the plan before you commit.",[["figma-kili-value-shield.svg","Safety","Monitoring, emergency procedures and equipment are confirmed with the team."]]]].map(([num,label,title,copy,items])=><article key={String(num)}><header><small>{String(num)} / {String(label)}</small><h3>{String(title)}</h3><p>{String(copy)}</p></header><div>{(items as string[][]).map(([icon,itemTitle,itemCopy])=><section key={itemTitle}><Image src={image(icon)} alt="" width={28} height={28}/><div><h4>{itemTitle}</h4><p>{itemCopy}</p></div></section>)}</div></article>)}</div></div></section>
       <section className="route-summit"><div className="shell"><div><Intro eyebrow="THE MOUNTAIN’S MOST DEMANDING MOMENT" title="Summit Night" /><h3>Slow steps. Cold air. The possibility of sunrise above the clouds.</h3><p>A summit attempt usually means an early start in darkness, very cold temperatures and a slow, steady ascent. The aim is Uhuru Peak, with sunrise a memorable part of the high-mountain experience when conditions allow.</p><p>Reaching the top is never guaranteed. Guides assess conditions and your ability along the way; turning around may be the right decision. A long descent follows any summit attempt.</p><PrimaryLink>Plan your climb</PrimaryLink></div></div></section>
