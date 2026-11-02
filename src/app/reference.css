@@ -2282,6 +2282,28 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 @media(max-width:800px){.route-overview>.shell,.route-benefits>.shell,.route-map>.shell,.route-itinerary>.shell,.route-environments>.shell,.route-fit>.shell,.route-faq>.shell{width:calc(100% - 40px)}.route-overview,.route-benefits,.route-map,.route-itinerary,.route-environments,.route-fit,.route-faq{padding:76px 0}.route-overview-grid,.route-map-grid,.route-itinerary-grid,.route-environment-grid{grid-template-columns:1fr;gap:38px}.route-overview-grid>img{height:460px}.route-overview-grid .ref-intro h2,.route-map .ref-intro h2,.route-environment-content .ref-intro h2,.route-fit>.shell>.ref-intro h2,.route-faq .ref-intro h2{font-size:39px}.route-map-image{height:500px}.route-itinerary aside{position:static}.route-itinerary aside>img{display:none}.route-environment-photo{height:460px}.route-fit-columns{gap:20px}}
 @media(max-width:600px){.route-overview-grid>img{height:360px}.route-overview-grid .ref-intro h2,.route-map .ref-intro h2,.route-itinerary aside .ref-intro h2,.route-environment-content .ref-intro h2,.route-fit>.shell>.ref-intro h2,.route-faq .ref-intro h2{font-size:34px}.route-detail-page .route-overview .route-facts{grid-template-columns:1fr}.route-detail-page .route-overview .route-facts>div{grid-template-columns:1fr;gap:4px}.route-facts dd{max-width:none;text-align:left}.route-benefit-grid{grid-template-columns:1fr}.route-benefit-grid article{min-height:0}.route-map-image{height:420px}.route-days article{grid-template-columns:40px minmax(0,1fr);gap:16px}.route-day-number{width:40px;height:40px;box-shadow:0 0 0 5px #f7f8f8}.route-days article:not(:last-child)::before{left:19px;top:40px}.route-days article img{height:220px}.route-environment-photo{height:360px}.route-environment-options button{min-height:70px;padding:15px 0}.route-fit-columns{grid-template-columns:1fr}.route-fit-columns>article{min-height:0;padding:24px 20px}.route-faq .accordion summary{min-height:68px;padding:19px 20px}.route-faq .accordion details p{padding:0 20px 21px}}
 
+/* Route photography keeps its natural proportions inside predictable frames.
+   This avoids stretched crops and lets Next.js serve a sharp responsive source. */
+.route-detail-page .route-overview-grid>img{
+  height:auto;
+  aspect-ratio:4/3;
+  object-fit:cover;
+  object-position:center;
+}
+.route-detail-page .route-itinerary aside>img,
+.route-detail-page .ref-safety-grid>div:first-child>img{
+  height:auto;
+  aspect-ratio:4/3;
+  object-fit:cover;
+  object-position:center;
+}
+.route-detail-page .route-days article img{
+  height:auto;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  object-position:center;
+}
+
 /* Safari page: restore the layered Figma compositions and their interactive
    states while keeping each frame fluid below the 1204px canvas. */
 .safari-page .ref-places{padding:104px 0 112px}
