@@ -77,6 +77,7 @@ export const inclusionCatalog: readonly InclusionCatalogGroup[] = [
     title: 'Your professional team',
     description: 'Local professionals supporting the journey.',
     items: [
+      {key: 'local-guides', icon: 'users', title: 'Local guides', description: 'Experienced local guides for the activities and destinations listed in the confirmed itinerary.'},
       {key: 'mountain-guide', icon: 'users', title: 'Professional mountain guide', description: 'An experienced mountain guide for the confirmed climbing route.'},
       {key: 'assistant-guides', icon: 'users', title: 'Assistant mountain guides', description: 'Assistant guides provided according to the group size and route requirements.'},
       {key: 'porters', icon: 'users', title: 'Mountain porters', description: 'A porter team supporting the climb and carrying expedition equipment.'},
