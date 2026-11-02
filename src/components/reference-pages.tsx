@@ -785,15 +785,51 @@ function TripCardList({ trips, grid = false }: { trips: TripCard[]; grid?: boole
   return <div className={`home-ref-adventure-cards${grid ? " trips-ref-card-grid" : ""}`}>{trips.map((trip) => <Link href={trip.href} key={`${trip.href}-${trip.title}`}><Photo src={contentImage(trip.src)} alt={trip.title} /><h3>{trip.title}</h3><small>{trip.days} {trip.days === 1 ? "DAY" : "DAYS"}</small><div className={`home-ref-trip-bottom${trip.price ? "" : " home-ref-trip-bottom-request"}`}><span className="home-ref-trip-price">{trip.price ? <>starts from<br /><b>{trip.price}</b><br />per person</> : <b>Price on request</b>}</span><span className="home-ref-trip-link">View Trip</span></div></Link>)}</div>;
 }
 
+function balancedHomepageTrips(trips: TripCard[]) {
+  const categoryOrder: TripCategory[] = ["Day Trips", "Safari", "Kilimanjaro", "Zanzibar"];
+  const selected: TripCard[] = [];
+  const selectedHrefs = new Set<string>();
+
+  for (const category of categoryOrder) {
+    const trip = trips.find((candidate) => (
+      candidate.categories.includes(category)
+      && (category === "Day Trips" || candidate.days > 1)
+      && !selectedHrefs.has(candidate.href)
+    ));
+    if (!trip) continue;
+    selected.push(trip);
+    selectedHrefs.add(trip.href);
+  }
+
+  const remainingTrips = [...trips].sort((a, b) => Number(a.days === 1) - Number(b.days === 1));
+  for (const trip of remainingTrips) {
+    if (selected.length >= 5) break;
+    if (selectedHrefs.has(trip.href)) continue;
+    selected.push(trip);
+    selectedHrefs.add(trip.href);
+  }
+
+  return selected.slice(0, 5);
+}
+
 function HomeAdventures({ trips }: { trips?: CmsTripCard[] }) {
   const [location, setLocation] = useState("All locations");
   const [price, setPrice] = useState("All prices");
   const [duration, setDuration] = useState("Any duration");
   const availableTrips = trips?.length ? trips : tripCards;
-  const prices = Array.from(new Set(availableTrips.map((trip) => trip.price))).filter(Boolean);
-  const durations = Array.from(new Set(availableTrips.map((trip) => trip.days))).sort((a, b) => a - b);
-  const visible = availableTrips.filter((trip) => (location === "All locations" || trip.categories.includes(location as TripCategory)) && (price === "All prices" || trip.price === price) && (duration === "Any duration" || `${trip.days} days` === duration)).slice(0, 5);
-  return <div className="shell home-ref-adventures"><div><div><h2>Day trips, Kilimanjaro, Safari and Zanzibar.</h2></div><div className="home-ref-adventure-filters"><select aria-label="Filter by location" value={location} onChange={e => setLocation(e.target.value)}>{["All locations","Day Trips","Kilimanjaro","Safari","Zanzibar"].map(x=><option key={x}>{x}</option>)}</select><select aria-label="Filter by price" value={price} onChange={e => setPrice(e.target.value)}><option>All prices</option>{prices.map(value => <option key={value}>{value}</option>)}</select><select aria-label="Filter by duration" value={duration} onChange={e => setDuration(e.target.value)}><option>Any duration</option>{durations.map(days => <option key={days} value={`${days} days`}>{days} {days === 1 ? "day" : "days"}</option>)}</select></div></div><TripCardList trips={visible} /><Link className="home-ref-view-trips" href="/trips">View all trips <ArrowIcon /></Link></div>;
+  const locationTrips = availableTrips.filter((trip) => location === "All locations" || trip.categories.includes(location as TripCategory));
+  const prices = Array.from(new Set(locationTrips.map((trip) => trip.price))).filter(Boolean);
+  const durations = Array.from(new Set(locationTrips.map((trip) => trip.days))).sort((a, b) => a - b);
+  const matchingTrips = locationTrips.filter((trip) => (price === "All prices" || trip.price === price) && (duration === "Any duration" || `${trip.days} days` === duration));
+  const visible = location === "All locations" && price === "All prices" && duration === "Any duration"
+    ? balancedHomepageTrips(availableTrips)
+    : matchingTrips.slice(0, 5);
+  const changeLocation = (nextLocation: string) => {
+    setLocation(nextLocation);
+    setPrice("All prices");
+    setDuration("Any duration");
+  };
+  return <div className="shell home-ref-adventures"><div><div><h2>Day trips, Kilimanjaro, Safari and Zanzibar.</h2></div><div className="home-ref-adventure-filters"><select aria-label="Filter by location" value={location} onChange={e => changeLocation(e.target.value)}>{["All locations","Day Trips","Kilimanjaro","Safari","Zanzibar"].map(x=><option key={x}>{x}</option>)}</select><select aria-label="Filter by price" value={price} onChange={e => setPrice(e.target.value)}><option>All prices</option>{prices.map(value => <option key={value}>{value}</option>)}</select><select aria-label="Filter by duration" value={duration} onChange={e => setDuration(e.target.value)}><option>Any duration</option>{durations.map(days => <option key={days} value={`${days} days`}>{days} {days === 1 ? "day" : "days"}</option>)}</select></div></div><TripCardList trips={visible} /><Link className="home-ref-view-trips" href="/trips">View all trips <ArrowIcon /></Link></div>;
 }
 
 function HomeAdventureSelector() {
