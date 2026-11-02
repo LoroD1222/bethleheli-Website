@@ -295,14 +295,18 @@ function EnvironmentIcon({ type }: { type: string }) {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{paths[type]}</svg>;
 }
 
-function RouteEnvironments() {
+function RouteEnvironments({ imageOverrides = {} }: { imageOverrides?: Partial<Record<string, string>> } = {}) {
   const [selected, setSelected] = useState(1);
-  const environment = kilimanjaroEnvironments[selected];
+  const environments = kilimanjaroEnvironments.map((item) => ({
+    ...item,
+    image: imageOverrides[item.title] || item.image,
+  }));
+  const environment = environments[selected];
 
   return <section className="route-environments" aria-labelledby="route-environments-title"><div className="shell route-environment-grid">
     <div className="route-environment-photo" aria-live="polite"><Photo key={environment.image} src={image(environment.image)} alt={environment.alt} /></div>
     <div className="route-environment-content"><div className="ref-intro"><span>A MOUNTAIN OF MANY WORLDS</span><h2 id="route-environments-title">Environments of Kilimanjaro</h2></div>
-      <div className="route-environment-options">{kilimanjaroEnvironments.map((item, index) => <button type="button" className={selected === index ? "active" : ""} aria-pressed={selected === index} onClick={() => setSelected(index)} key={item.title}>
+      <div className="route-environment-options">{environments.map((item, index) => <button type="button" className={selected === index ? "active" : ""} aria-pressed={selected === index} onClick={() => setSelected(index)} key={item.title}>
         <span className="route-environment-icon" aria-hidden="true"><EnvironmentIcon type={item.icon} /></span><span className="route-environment-copy"><strong>{item.title}</strong><small>{item.height}</small>{selected === index && <span className="route-environment-description">{item.copy}</span>}</span>
       </button>)}</div>
     </div>
@@ -772,6 +776,7 @@ export function KilimanjaroRouteDetailPage({ route, trip }: { route: Kilimanjaro
   const detail = routeDetailData[route];
   const isLemosho = route === "lemosho";
   const isNorthernCircuit = route === "northern-circuit";
+  const isMarangu = route === "marangu";
   const overviewImage = isNorthernCircuit ? "drive-library/northern-circuit-overview-mountain-camp.webp" : detail.overviewImage;
   const itineraryImage = isLemosho ? "drive-library/lemosho-hiker-resting.webp" : detail.itineraryImage;
   const itineraryImageOverrides = isLemosho
@@ -797,7 +802,16 @@ export function KilimanjaroRouteDetailPage({ route, trip }: { route: Kilimanjaro
           "",
           "drive-library/northern-circuit-camp-meal.webp",
         ]
-      : [];
+      : isMarangu
+        ? [
+            "drive-library/marangu-day-1-client.webp",
+            "drive-library/marangu-day-2-client.webp",
+            "drive-library/marangu-day-3-client.webp",
+            "",
+            "",
+            "drive-library/marangu-day-6-client.webp",
+          ]
+        : [];
   const routeFacts = routeFallbackFacts[route];
   const startingPrice = trip?.startingPrice || routeFacts.startingPrice;
   const distanceKm = trip?.routeDistanceKm ?? detail.distanceKm;
@@ -821,7 +835,11 @@ export function KilimanjaroRouteDetailPage({ route, trip }: { route: Kilimanjaro
     <main className="route-detail-page">
       <section className="route-overview"><div className="shell route-overview-grid"><Photo src={image(overviewImage)} alt={`${detail.name} landscape on Mount Kilimanjaro`} sizes="(max-width: 800px) 100vw, (max-width: 1100px) 45vw, 560px" /><div><Intro eyebrow={trip ? "PUBLISHED SANITY TRIP" : "ROUTE OVERVIEW"} title={trip ? trip.title : `${detail.name} Overview`} /><div className="route-overview-copy">{detail.overview.map(paragraph => <p key={paragraph}>{paragraph}</p>)}<p className="route-callout">{kilimanjaroPriceNote}</p>{trip && <p className="route-callout">This page follows the published {trip.title} package. The displayed duration counts {trip.trekkingDays} mountain days only; arrival and departure are not included.</p>}</div><dl className="route-facts">{[["Trekking duration",trip ? `${trip.trekkingDays} days` : `${routeFacts.days} days`],["Route distance",distanceLabel],["Starting price",startingPrice],["Accommodation options",routeStays.join(", ") || detail.accommodation]].map(([term,value])=><div key={term}><dt>{term}</dt><dd>{value}</dd></div>)}</dl></div></div></section>
       <RouteTripItinerary trip={trip} route={route} routeName={detail.name} imageSrc={itineraryImage} fallbackDays={detail.itinerary} fallbackImages={routeItineraryImages[route]} imageOverrides={itineraryImageOverrides} fallbackStay={detail.accommodation} fallbackNote={detail.itineraryNote} />
-      <RouteEnvironments />
+      <RouteEnvironments imageOverrides={isMarangu ? {
+        "Cultivation Zone": "drive-library/marangu-environment-cultivation-colobus-client.webp",
+        "Montane Forest": "drive-library/marangu-environments-forest-client.webp",
+        "Heath & Moorland": "drive-library/marangu-environment-heath-moorland-client.webp",
+      } : undefined} />
       <section className="route-inclusions"><div className="shell"><Intro eyebrow="YOUR CLIMB, TAKEN CARE OF" title="What’s Included in Your Climb" copy="Use this package checklist when planning your enquiry. Hotel accommodation is separate from the climbing rate and can be added on request." /><div className="route-inclusion-stack">{[["01","PREPARATION","Before the climb","The arrangements around your journey.",[["figma-trips-inclusion-route.svg","Transfers","Pickup points and included transfers are confirmed in your quote."],["figma-trips-inclusion-tent.svg","Accommodation","Mountain stays are confirmed in your quote. Add a pre- or post-climb hotel only if you need one."]]],["02","ON THE MOUNTAIN","Climb & stay","Your team and everyday trail essentials.",[["figma-trips-inclusion-mountain.svg","Mountain","Climb services and overnight arrangements are confirmed before travel."],["figma-trips-inclusion-utensils.svg","Food","Meal plan, drinking water and dietary needs are confirmed in planning."],["figma-kili-value-users.svg","Guides & Crew","Guide and mountain crew arrangements are confirmed for your group."],["figma-trips-inclusion-ticket.svg","Park Fees","Park and applicable accommodation fee coverage is itemized in your quote."]]],["03","ONGOING CARE","Support & safety","Discuss the plan before you commit.",[["figma-kili-value-shield.svg","Safety","Monitoring, emergency procedures and equipment are confirmed with the team."]]]].map(([num,label,title,copy,items])=><article key={String(num)}><header><small>{String(num)} / {String(label)}</small><h3>{String(title)}</h3><p>{String(copy)}</p></header><div>{(items as string[][]).map(([icon,itemTitle,itemCopy])=><section key={itemTitle}><Image src={image(icon)} alt="" width={28} height={28}/><div><h4>{itemTitle}</h4><p>{itemCopy}</p></div></section>)}</div></article>)}</div></div></section>
       <section className="route-summit"><div className="shell"><div><Intro eyebrow="THE MOUNTAIN’S MOST DEMANDING MOMENT" title="Summit Night" /><h3>Slow steps. Cold air. The possibility of sunrise above the clouds.</h3><p>A summit attempt usually means an early start in darkness, very cold temperatures and a slow, steady ascent. The aim is Uhuru Peak, with sunrise a memorable part of the high-mountain experience when conditions allow.</p><p>Reaching the top is never guaranteed. Guides assess conditions and your ability along the way; turning around may be the right decision. A long descent follows any summit attempt.</p><PrimaryLink>Plan your climb</PrimaryLink></div></div></section>
       <section className="route-packing"><div className="shell"><Intro eyebrow="PREPARE FOR CHANGING CONDITIONS" title="What Should You Bring?" copy="Pack for a progression from lower trails to a cold, exposed summit environment." /><div className="route-packing-grid"><Photo src={image("figma-machame-packing-expedition-photograph.png")} alt="Mountain equipment" /><div>{routePacking.map(([icon,title,copy])=><article key={title}><Image src={image(icon)} alt="" width={28} height={28}/><h3>{title}</h3><p>{copy}</p></article>)}<PrimaryLink>Ask for a packing list</PrimaryLink></div></div></div></section>
