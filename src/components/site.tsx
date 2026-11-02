@@ -44,8 +44,8 @@ const photos = {
   plan: "/images/figma-plan-hero.png",
 };
 
-export function Photo({ src, alt, className = "", priority = false, sizes }: { src: string; alt: string; className?: string; priority?: boolean; sizes?: string }) {
-  return <Image className={className} src={src} alt={alt} width={1200} height={800} sizes={sizes || (className.includes("hero") ? "100vw" : "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw")} loading={priority ? "eager" : "lazy"} />;
+export function Photo({ src, alt, className = "", priority = false, sizes, quality }: { src: string; alt: string; className?: string; priority?: boolean; sizes?: string; quality?: number }) {
+  return <Image className={className} src={src} alt={alt} width={1200} height={800} sizes={sizes || (className.includes("hero") ? "100vw" : "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw")} quality={quality} loading={priority ? "eager" : "lazy"} />;
 }
 
 export function ArrowIcon() { return <svg className="arrow-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M6 5h9v9" /></svg>; }
