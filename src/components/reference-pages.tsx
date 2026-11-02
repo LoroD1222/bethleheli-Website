@@ -381,7 +381,14 @@ const safariParks: Card[] = [
   title: title as string,
   copy: copy as string,
   note: note as string,
-  image: image(["drive-library/safari-migration.webp", "drive-library/safari-crater-road.webp", "drive-library/safari-vehicle.webp", "drive-library/safari-flamingos.webp", "drive-library/safari-viewpoint.webp", "drive-library/safari-road.webp"][Number(n)]),
+  image: image([
+    "drive-library/safari-migration.webp",
+    "drive-library/safari-crater-road.webp",
+    "figma-safari-destinations-destination-photograph2.png",
+    "drive-library/safari-flamingos.webp",
+    "figma-safari-destinations-destination-photograph4.png",
+    "figma-safari-destinations-destination-photograph5.png",
+  ][Number(n)]),
 }));
 
 const zanzibarPlaces: Card[] = [
