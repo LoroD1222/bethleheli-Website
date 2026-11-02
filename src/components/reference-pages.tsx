@@ -699,10 +699,33 @@ export function KilimanjaroRouteDetailPage({ route, trip }: { route: Kilimanjaro
   if (route === "machame") return <MachameReferencePage trip={trip} />;
   const detail = routeDetailData[route];
   const isLemosho = route === "lemosho";
+  const isNorthernCircuit = route === "northern-circuit";
+  const overviewImage = isNorthernCircuit ? "drive-library/northern-circuit-overview-mountain-camp.webp" : detail.overviewImage;
   const itineraryImage = isLemosho ? "drive-library/lemosho-hiker-resting.webp" : detail.itineraryImage;
   const itineraryImageOverrides = isLemosho
-    ? ["", "", "", "drive-library/lemosho-trail-sign.webp", "drive-library/lemosho-trail-sign.webp", "", "drive-library/machame-uhuru-peak-betheli-group.webp", ""]
-    : [];
+    ? [
+        "drive-library/lemosho-rainforest-hikers.webp",
+        "drive-library/lemosho-foggy-alpine-descent.webp",
+        "",
+        "drive-library/lemosho-trail-sign.webp",
+        "drive-library/lemosho-trail-sign.webp",
+        "",
+        "drive-library/machame-uhuru-peak-betheli-group.webp",
+        "drive-library/lemosho-colobus-monkey.webp",
+      ]
+    : isNorthernCircuit
+      ? [
+          "",
+          "",
+          "drive-library/northern-circuit-trail-meal.webp",
+          "drive-library/lemosho-trail-sign.webp",
+          "drive-library/northern-circuit-northern-slope-hikers.webp",
+          "drive-library/northern-circuit-giant-groundsels-hiker.webp",
+          "",
+          "",
+          "drive-library/northern-circuit-camp-meal.webp",
+        ]
+      : [];
   const routeFacts = routeFallbackFacts[route];
   const startingPrice = trip?.startingPrice || routeFacts.startingPrice;
   const distanceKm = trip?.routeDistanceKm ?? detail.distanceKm;
@@ -724,7 +747,7 @@ export function KilimanjaroRouteDetailPage({ route, trip }: { route: Kilimanjaro
   const otherRoutes = kilimanjaroRoutes.filter(card => card.title !== detail.name).slice(0, 4);
   return <><ReferenceHero imageSrc={image(detail.heroImage)} eyebrow="KILIMANJARO ROUTE" title={detail.name} lead={trip ? trip.title : "Explore this Kilimanjaro route with the local team."} copy={trip ? `Review the published ${trip.trekkingDays}-day mountain itinerary. Arrival and departure days are excluded from this climb duration.` : `Review the current ${detail.duration.toLowerCase()} mountain outline, then confirm the exact day-by-day plan for your dates.`} action="Plan This Climb" secondAction="View Itinerary" secondActionHref="#itinerary" active="Kilimanjaro" navVariant="classic" routeFacts={[trip ? `${trip.trekkingDays} trekking days` : `${routeFacts.days} trekking days`, distanceLabel, `From ${startingPrice}`]} />
     <main className="route-detail-page">
-      <section className="route-overview"><div className="shell route-overview-grid"><Photo src={image(detail.overviewImage)} alt={`${detail.name} landscape on Mount Kilimanjaro`} sizes="(max-width: 800px) 100vw, (max-width: 1100px) 45vw, 560px" /><div><Intro eyebrow={trip ? "PUBLISHED SANITY TRIP" : "ROUTE OVERVIEW"} title={trip ? trip.title : `${detail.name} Overview`} /><div className="route-overview-copy">{detail.overview.map(paragraph => <p key={paragraph}>{paragraph}</p>)}<p className="route-callout">{kilimanjaroPriceNote}</p>{trip && <p className="route-callout">This page follows the published {trip.title} package. The displayed duration counts {trip.trekkingDays} mountain days only; arrival and departure are not included.</p>}</div><dl className="route-facts">{[["Trekking duration",trip ? `${trip.trekkingDays} days` : `${routeFacts.days} days`],["Route distance",distanceLabel],["Starting price",startingPrice],["Accommodation options",routeStays.join(", ") || detail.accommodation]].map(([term,value])=><div key={term}><dt>{term}</dt><dd>{value}</dd></div>)}</dl></div></div></section>
+      <section className="route-overview"><div className="shell route-overview-grid"><Photo src={image(overviewImage)} alt={`${detail.name} landscape on Mount Kilimanjaro`} sizes="(max-width: 800px) 100vw, (max-width: 1100px) 45vw, 560px" /><div><Intro eyebrow={trip ? "PUBLISHED SANITY TRIP" : "ROUTE OVERVIEW"} title={trip ? trip.title : `${detail.name} Overview`} /><div className="route-overview-copy">{detail.overview.map(paragraph => <p key={paragraph}>{paragraph}</p>)}<p className="route-callout">{kilimanjaroPriceNote}</p>{trip && <p className="route-callout">This page follows the published {trip.title} package. The displayed duration counts {trip.trekkingDays} mountain days only; arrival and departure are not included.</p>}</div><dl className="route-facts">{[["Trekking duration",trip ? `${trip.trekkingDays} days` : `${routeFacts.days} days`],["Route distance",distanceLabel],["Starting price",startingPrice],["Accommodation options",routeStays.join(", ") || detail.accommodation]].map(([term,value])=><div key={term}><dt>{term}</dt><dd>{value}</dd></div>)}</dl></div></div></section>
       <RouteTripItinerary trip={trip} routeName={detail.name} imageSrc={itineraryImage} fallbackDays={detail.itinerary} fallbackImages={routeItineraryImages[route]} imageOverrides={itineraryImageOverrides} fallbackStay={detail.accommodation} fallbackNote={detail.itineraryNote} />
       <RouteEnvironments />
       <section className="route-inclusions"><div className="shell"><Intro eyebrow="YOUR CLIMB, TAKEN CARE OF" title="What’s Included in Your Climb" copy="Use this package checklist when planning your enquiry. Hotel accommodation is separate from the climbing rate and can be added on request." /><div className="route-inclusion-stack">{[["01","PREPARATION","Before the climb","The arrangements around your journey.",[["figma-trips-inclusion-route.svg","Transfers","Pickup points and included transfers are confirmed in your quote."],["figma-trips-inclusion-tent.svg","Accommodation","Mountain stays are confirmed in your quote. Add a pre- or post-climb hotel only if you need one."]]],["02","ON THE MOUNTAIN","Climb & stay","Your team and everyday trail essentials.",[["figma-trips-inclusion-mountain.svg","Mountain","Climb services and overnight arrangements are confirmed before travel."],["figma-trips-inclusion-utensils.svg","Food","Meal plan, drinking water and dietary needs are confirmed in planning."],["figma-kili-value-users.svg","Guides & Crew","Guide and mountain crew arrangements are confirmed for your group."],["figma-trips-inclusion-ticket.svg","Park Fees","Park and applicable accommodation fee coverage is itemized in your quote."]]],["03","ONGOING CARE","Support & safety","Discuss the plan before you commit.",[["figma-kili-value-shield.svg","Safety","Monitoring, emergency procedures and equipment are confirmed with the team."]]]].map(([num,label,title,copy,items])=><article key={String(num)}><header><small>{String(num)} / {String(label)}</small><h3>{String(title)}</h3><p>{String(copy)}</p></header><div>{(items as string[][]).map(([icon,itemTitle,itemCopy])=><section key={itemTitle}><Image src={image(icon)} alt="" width={28} height={28}/><div><h4>{itemTitle}</h4><p>{itemCopy}</p></div></section>)}</div></article>)}</div></div></section>

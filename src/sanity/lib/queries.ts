@@ -86,7 +86,7 @@ export const TRIP_PAGE_QUERY = defineQuery(/* groq */ `
 `);
 
 export const KILIMANJARO_ROUTE_TRIPS_QUERY = defineQuery(/* groq */ `
-  *[_type == "trip" && "kilimanjaro" in categories && defined(slug.current)] | order(trekkingDays asc, title asc) {
+  *[_type == "trip" && "kilimanjaro" in categories && !("dayTrip" in categories) && defined(slug.current)] | order(trekkingDays asc, title asc) {
     _id,
     title,
     "slug": slug.current,
