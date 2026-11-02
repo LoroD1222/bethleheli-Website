@@ -410,6 +410,16 @@ const sourcedTripCardImages: Record<string, string> = {
   "east-african-safari-and-beach-bliss": "/images/trips/east-african-safari-beach-bliss.webp",
 };
 
+// These packages were imported from the client-approved Day Trips source.
+// Keep their website classification stable even if a later Sanity migration
+// replaces the editable categories array with a broader destination category.
+const importedDayTripSlugs = new Set([
+  "chemka-hot-springs-day-trip",
+  "kilimanjaro-day-trip-via-marangu-route",
+  "materuni-waterfall-and-coffee-day-trip",
+  "serval-wildlife-day-trip",
+]);
+
 export async function getTripCards(): Promise<CmsTripCard[]> {
   try {
     const raw: TRIP_CARDS_QUERY_RESULT = await fetchSanity(TRIP_CARDS_QUERY, {}, ["sanity", "trip"]);
@@ -420,6 +430,9 @@ export async function getTripCards(): Promise<CmsTripCard[]> {
       const categories = (trip.categories || [])
         .map((category) => categoryLabels[category])
         .filter((category): category is CmsTripCard["categories"][number] => Boolean(category));
+      if (trip.slug && importedDayTripSlugs.has(trip.slug) && !categories.includes("Day Trips")) {
+        categories.unshift("Day Trips");
+      }
       const sourcedCardImage = trip.slug ? sourcedTripCardImages[trip.slug] : undefined;
       const days = categories.includes("Kilimanjaro")
         ? trip.trekkingDays || trip.durationDays
