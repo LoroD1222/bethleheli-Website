@@ -430,19 +430,20 @@ export async function getTripCards(): Promise<CmsTripCard[]> {
       const categories = (trip.categories || [])
         .map((category) => categoryLabels[category])
         .filter((category): category is CmsTripCard["categories"][number] => Boolean(category));
-      if (trip.slug && importedDayTripSlugs.has(trip.slug) && !categories.includes("Day Trips")) {
-        categories.unshift("Day Trips");
-      }
       const sourcedCardImage = trip.slug ? sourcedTripCardImages[trip.slug] : undefined;
       const days = categories.includes("Kilimanjaro")
         ? trip.trekkingDays || trip.durationDays
         : trip.durationDays;
-      if (!trip.slug || !trip.title || !days || (!sourcedCardImage && !cardImage) || !categories.length) return [];
+      const normalizedCategories: CmsTripCard["categories"] = categories.filter((category) => category !== "Day Trips");
+      if (days === 1 || (trip.slug && importedDayTripSlugs.has(trip.slug))) {
+        normalizedCategories.unshift("Day Trips");
+      }
+      if (!trip.slug || !trip.title || !days || (!sourcedCardImage && !cardImage) || !normalizedCategories.length) return [];
       return [{
         title: trip.title,
         src: sourcedCardImage || cardImage!.src,
         href: `/trips/${trip.slug}`,
-        categories,
+        categories: normalizedCategories,
         days,
         price: formatMoney(trip.startingPrice),
       } satisfies CmsTripCard];

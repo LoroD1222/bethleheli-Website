@@ -605,7 +605,9 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .home-ref-adventures>div:first-child{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px}
 .home-ref-adventures h2{font-size:38px}
 .home-ref-adventures>div:first-child>div{display:flex;gap:10px}
-.home-ref-adventure-filters select{appearance:none;border:1px solid rgba(255,255,255,.3);border-radius:30px;padding:10px 30px 10px 16px;font-size:12px;color:#fff;background:rgba(255,255,255,.12) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='white'/%3E%3C/svg%3E") no-repeat right 12px center;background-size:10px;cursor:pointer}
+.home-ref-adventure-filters select{appearance:none;border:1px solid rgba(255,255,255,.3);border-radius:30px;outline:0;padding:10px 30px 10px 16px;font-size:12px;color:#fff;background:rgba(255,255,255,.12) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='white'/%3E%3C/svg%3E") no-repeat right 12px center;background-size:10px;cursor:pointer;transition:border-color .2s ease,background-color .2s ease,box-shadow .2s ease}
+.home-ref-adventure-filters select:hover{border-color:rgba(255,255,255,.58);background-color:rgba(255,255,255,.17)}
+.home-ref-adventure-filters select:focus-visible{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.18)}
 .home-ref-adventure-filters option{color:#243138}
 .home-ref-adventure-cards{display:flex;gap:20px;overflow-x:auto;padding-bottom:17px;scrollbar-color:rgba(255,255,255,.65) transparent;scrollbar-width:thin}
 .home-ref-adventure-cards::-webkit-scrollbar{height:3px}

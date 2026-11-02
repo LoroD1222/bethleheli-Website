@@ -817,7 +817,10 @@ function HomeAdventures({ trips }: { trips?: CmsTripCard[] }) {
   const [price, setPrice] = useState("All prices");
   const [duration, setDuration] = useState("Any duration");
   const availableTrips = trips?.length ? trips : tripCards;
-  const locationTrips = availableTrips.filter((trip) => location === "All locations" || trip.categories.includes(location as TripCategory));
+  const locationTrips = availableTrips.filter((trip) => (
+    location === "All locations"
+    || (location === "Day Trips" ? trip.days === 1 : trip.categories.includes(location as TripCategory))
+  ));
   const prices = Array.from(new Set(locationTrips.map((trip) => trip.price))).filter(Boolean);
   const durations = Array.from(new Set(locationTrips.map((trip) => trip.days))).sort((a, b) => a - b);
   const matchingTrips = locationTrips.filter((trip) => (price === "All prices" || trip.price === price) && (duration === "Any duration" || `${trip.days} days` === duration));
