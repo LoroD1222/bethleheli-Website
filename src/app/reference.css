@@ -2863,3 +2863,48 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
     gap:24px;
   }
 }
+
+@media(max-width:900px){
+  .home-ref-adventures>div:first-child{
+    display:flex;
+    align-items:flex-start;
+    flex-direction:column;
+    gap:24px;
+  }
+  .home-ref-adventures>div:first-child>div{
+    margin-top:0;
+  }
+  .home-ref-adventure-filters{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    width:100%;
+  }
+  .home-ref-adventure-filters select{
+    min-width:0;
+    width:100%;
+  }
+  .home-ref-adventures .home-ref-trip-bottom-request{
+    align-items:stretch;
+    flex-direction:column;
+    gap:12px;
+  }
+  .home-ref-adventures .home-ref-trip-bottom-request .home-ref-trip-price{
+    white-space:normal;
+  }
+  .home-ref-adventures .home-ref-trip-bottom-request .home-ref-trip-link{
+    width:100%;
+    margin:0;
+  }
+}
+
+@media(max-width:650px){
+  .home-ref-adventures h2{
+    line-height:1.15;
+  }
+  .home-ref-adventure-filters{
+    grid-template-columns:1fr;
+  }
+  .home-ref-adventure-cards>a{
+    flex-basis:min(86vw,340px);
+  }
+}
