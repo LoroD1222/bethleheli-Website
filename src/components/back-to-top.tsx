@@ -1,21 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export function BackToTop() {
   const [visible, setVisible] = useState(false);
-  const previousScrollY = useRef(0);
 
   useEffect(() => {
-    previousScrollY.current = window.scrollY;
-
     const updateVisibility = () => {
-      const currentScrollY = window.scrollY;
-      const scrollingUp = currentScrollY < previousScrollY.current;
-      setVisible(currentScrollY > 480 && scrollingUp);
-      previousScrollY.current = currentScrollY;
+      setVisible(window.scrollY > 480);
     };
 
+    updateVisibility();
     window.addEventListener("scroll", updateVisibility, { passive: true });
     return () => window.removeEventListener("scroll", updateVisibility);
   }, []);

@@ -2833,8 +2833,8 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 .legal-layout>aside strong{margin-bottom:6px;font-size:16px}.legal-layout>aside a{color:#e94a30;overflow-wrap:anywhere}
 .legal-layout>article{display:grid;gap:38px}.legal-layout article section{padding-bottom:38px;border-bottom:1px solid rgba(36,49,56,.14)}
 .legal-layout article h2{font-size:25px;line-height:1.3}.legal-layout article p{margin-top:14px;color:#5e696f;font-size:15px;line-height:1.8}
-.whatsapp-widget{position:fixed;right:24px;bottom:24px;z-index:80;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
-.whatsapp-widget a{text-decoration:none}
+.whatsapp-widget{position:fixed;right:24px;bottom:24px;z-index:80;display:flex;flex-direction:column;align-items:flex-end;gap:12px;pointer-events:none}
+.whatsapp-widget a{text-decoration:none;pointer-events:auto}
 .whatsapp-widget-prompt{visibility:hidden;padding:11px 17px;border-radius:999px;background:#101312;color:#fff;font-size:14px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.2);transform:translateX(20px);opacity:0;animation:whatsapp-prompt-cycle 7.8s ease both}
 .whatsapp-widget-button{display:grid;place-items:center;width:62px;height:62px;border-radius:50%;background:#25d366;color:#fff;box-shadow:0 10px 28px rgba(17,92,49,.34);animation:whatsapp-pulse 2.2s ease-out infinite}
 .whatsapp-widget-button svg{width:34px;height:34px}
