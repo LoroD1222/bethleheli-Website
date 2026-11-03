@@ -35,6 +35,9 @@ export type CmsTripPageData = {
     key: string;
     title: string;
     summary: string;
+    hikingTime: string;
+    distanceKm: number | null;
+    habitat: string;
     image: CmsImage | null;
     experience: string;
     mealPlan: string;

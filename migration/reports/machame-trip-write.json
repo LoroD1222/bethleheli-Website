@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-11-03T09:33:29.008Z",
+  "mode": "production-write",
+  "projectId": "ife51h63",
+  "dataset": "production",
+  "scope": "One published seven-day Machame Route trip document and its referenced image assets.",
+  "slug": "machame-route",
+  "counts": {
+    "trips": 1,
+    "itineraryDays": 7,
+    "trekkingDays": 7,
+    "uniqueImages": 12
+  },
+  "qualityIssues": [],
+  "status": "published",
+  "documentId": "8UVaFG3qu5yvjBXT3Flj8f",
+  "verification": {
+    "_id": "8UVaFG3qu5yvjBXT3Flj8f",
+    "canonicalPath": "/trips/machame-route",
+    "daysWithAccommodation": 7,
+    "daysWithFacts": 7,
+    "daysWithImages": 7,
+    "durationDays": 7,
+    "heroImageResolved": true,
+    "itineraryDays": 7,
+    "routeDistanceKm": 56.7,
+    "slug": "machame-route",
+    "title": "7-Day Kilimanjaro Machame Route",
+    "trekkingDays": 7
+  }
+}

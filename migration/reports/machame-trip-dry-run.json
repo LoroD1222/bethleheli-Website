@@ -1,0 +1,16 @@
+{
+  "generatedAt": "2026-11-03T09:28:15.773Z",
+  "mode": "dry-run",
+  "projectId": "ife51h63",
+  "dataset": "production",
+  "scope": "One published seven-day Machame Route trip document and its referenced image assets.",
+  "slug": "machame-route",
+  "counts": {
+    "trips": 1,
+    "itineraryDays": 7,
+    "trekkingDays": 7,
+    "uniqueImages": 12
+  },
+  "qualityIssues": [],
+  "status": "ready-for-review"
+}

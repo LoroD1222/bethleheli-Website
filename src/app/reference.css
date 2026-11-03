@@ -409,6 +409,10 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
 .trip-ref-itinerary summary .trip-ref-day-chevron{display:block;flex:none;height:50px;margin-left:auto;transform:rotate(180deg);transition:transform .2s;width:50px}
 .trip-ref-itinerary details[open] summary .trip-ref-day-chevron{transform:rotate(0deg)}
 .trip-ref-itinerary details>p{margin:20px 0 28px;color:#111;font-family:Inter,Arial,sans-serif;font-size:18px;font-weight:500;line-height:28px}
+.trip-ref-day-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 24px}
+.trip-ref-day-facts>div{padding:14px 16px;border-radius:12px;background:#f1f4f5}
+.trip-ref-day-facts dt{color:#667178;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.trip-ref-day-facts dd{margin:5px 0 0;color:#243138;font-size:13px;font-weight:600;line-height:1.45}
 .trip-ref-day-meta{align-items:center;border-top:1px solid #e2e6e6;display:flex;gap:20px;justify-content:space-between;padding:20px 0 28px}
 .trip-ref-accommodation-label{align-items:center;color:#111;display:inline-flex;font-family:Inter,Arial,sans-serif;font-size:20px;font-weight:500;gap:15px;line-height:28px}
 .trip-ref-accommodation-label img{flex:none;height:45px;width:45px}
@@ -471,6 +475,7 @@ body:has(.trip-subnav) .hero-content>p:not(.eyebrow){max-width:840px;font-size:1
   .trip-ref-overview-expand{top:12px;right:12px;width:38px;height:38px}.trip-ref-overview-lightbox{padding:18px}.trip-ref-overview-lightbox-panel{width:94vw;height:86vh}.trip-ref-overview-close{top:12px;right:12px;width:42px;height:42px;font-size:29px}
   .trip-ref-itinerary summary{min-height:72px;padding:14px 8px;font-size:16px;line-height:1.35;gap:8px}
   .trip-ref-itinerary details>p{font-size:16px;line-height:1.55}
+  .trip-ref-day-facts{grid-template-columns:1fr;gap:8px}
   .trip-ref-accommodation-label{font-size:16px;line-height:1.4}.trip-ref-meal{font-size:16px;line-height:1.4;white-space:normal}
   .trip-ref-day-meta{flex-wrap:wrap;gap:8px 18px}
   .trip-ref-day-extra>img{height:220px}
