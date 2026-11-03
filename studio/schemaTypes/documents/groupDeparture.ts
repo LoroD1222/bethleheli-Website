@@ -63,6 +63,15 @@ export const groupDeparture = defineType({
       validation: (rule) => rule.required().min(1).unique(),
     }),
     defineField({
+      name: 'minimumParticipants',
+      title: 'Minimum Participants',
+      type: 'number',
+      description: 'Minimum confirmed participants required for this scheduled departure to operate.',
+      group: 'departure',
+      initialValue: 4,
+      validation: (rule) => rule.required().integer().min(1).max(100),
+    }),
+    defineField({
       name: 'price',
       title: 'Price Per Person',
       type: 'money',

@@ -861,7 +861,17 @@ function HomeFaq() {
 type TripCategory = "Day Trips" | "Zanzibar" | "Safari" | "Kilimanjaro";
 type TripCard = CmsTripCard;
 
+const machamePackageCard: TripCard = {
+  title: "7-Day Machame Route",
+  src: "drive-library/machame-hero.webp",
+  href: "/kilimanjaro/machame-route",
+  categories: ["Kilimanjaro"],
+  days: 7,
+  price: "$2,399",
+};
+
 const tripCards: TripCard[] = [
+  machamePackageCard,
   { title: "Family Safari & Beach Escape", src: "figma-zanzibar-hero.png", href: "/trips/northern-serengeti", categories: ["Zanzibar"], days: 8, price: "$2,286" },
   { title: "Kilimanjaro Summit Journey", src: "figma-home-hero.png", href: "/trips/northern-serengeti", categories: ["Kilimanjaro"], days: 8, price: "$2,286" },
   { title: "Serengeti Family Adventure", src: "home-15.jpg", href: "/trips/northern-serengeti", categories: ["Safari"], days: 8, price: "$2,286" },
@@ -1169,7 +1179,10 @@ export function TripsReferencePage({ trips, initialCategory }: { trips?: CmsTrip
   const categories: ("All" | TripCategory)[] = ["All", "Day Trips", "Zanzibar", "Safari", "Kilimanjaro"];
   const normalizedInitialCategory = categories.find(item => item.toLowerCase() === initialCategory?.toLowerCase()) ?? "All";
   const [category, setCategory] = useState<"All" | TripCategory>(normalizedInitialCategory);
-  const availableTrips = trips?.length ? trips : tripCards;
+  const baseTrips = trips?.length ? trips : tripCards;
+  const availableTrips = baseTrips.some((trip) => trip.href === machamePackageCard.href || /machame/i.test(trip.title))
+    ? baseTrips
+    : [...baseTrips, machamePackageCard];
   const durationOptions = Array.from(new Set(availableTrips.map((trip) => trip.days))).sort((a, b) => a - b);
   const visibleTrips = availableTrips.filter((trip) => (category === "All" || trip.categories.includes(category)) && (duration === "Any duration" || `${trip.days} days` === duration));
   const selectCategory = (nextCategory: "All" | TripCategory) => {

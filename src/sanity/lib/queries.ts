@@ -123,6 +123,7 @@ export const GROUP_DEPARTURES_QUERY = defineQuery(/* groq */ `
     startDate,
     endDate,
     highlights,
+    "minimumParticipants": coalesce(minimumParticipants, 4),
     price { amount, currency },
     deposit { amount, currency },
     promotionStatus,

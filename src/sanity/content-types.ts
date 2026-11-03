@@ -121,6 +121,7 @@ export type CmsGroupDeparture = {
   title: string;
   range: string;
   highlights: string[];
+  minimumParticipants: number;
   price: string;
   deposit: string;
   originalPrice?: string;

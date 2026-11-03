@@ -381,6 +381,7 @@ export async function getGroupDepartures(): Promise<CmsGroupDeparture[]> {
         title: [routeName, duration].filter(Boolean).join(" — "),
         range,
         highlights: (departure.highlights || []).map(item => item.trim()).filter(Boolean).slice(0, 4),
+        minimumParticipants: departure.minimumParticipants || 4,
         price: formatMoney(departure.price, false),
         deposit: formatMoney(departure.deposit, false),
         originalPrice: originalPrice ? formatMoney(departure.originalPrice, false) : undefined,
