@@ -3,7 +3,7 @@ export type PageKey = "home" | "kilimanjaro" | "machame" | "lemosho" | "marangu"
 type Meta = { title: string; description: string; path: string; image: string };
 
 export const pageMeta: Record<PageKey, Meta> = {
-  home: { title: "Tanzania journeys made personal", description: "Kilimanjaro climbs, Tanzania safaris and Zanzibar journeys from Betheli Expeditions.", path: "/", image: "/images/figma-home-hero.png" },
+  home: { title: "Tanzania journeys made personal", description: "Kilimanjaro climbs, Tanzania safaris and Zanzibar journeys from Betheli Expeditions.", path: "/", image: "/images/figma-home-hero-hd.webp" },
   kilimanjaro: { title: "Climb Mount Kilimanjaro", description: "Explore Kilimanjaro routes, the journey and tailored climb planning.", path: "/kilimanjaro", image: "/images/drive-library/lemosho-hero.webp" },
   machame: { title: "Machame Route Kilimanjaro | Itinerary & Distance", description: "Explore the Machame Route day by day, including its 56.7 km distance, rainforest, Shira Plateau, Barranco Wall and summit approach.", path: "/kilimanjaro/machame-route", image: "/images/drive-library/machame-hero.webp" },
   lemosho: { title: "Lemosho Route Kilimanjaro | 8-Day Itinerary", description: "Explore the scenic Lemosho Route itinerary, from western rainforest and Shira Plateau to Barranco, Barafu and the summit attempt.", path: "/kilimanjaro/lemosho-route", image: "/images/drive-library/lemosho-hero.webp" },
