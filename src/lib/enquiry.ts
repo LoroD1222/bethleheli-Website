@@ -1,8 +1,5 @@
 type SubmissionResult = { ok: boolean; message: string };
-type PortalResult = { ok: boolean; skipped?: boolean; error?: string };
-
 const fallbackError = "Your enquiry could not be sent. Please try again later.";
-const successMessage = "Your enquiry was sent. The team will be in touch.";
 const web3FormsEndpoint = "https://api.web3forms.com/submit";
 const portalUrl = process.env.NEXT_PUBLIC_PORTAL_URL || "https://safari-digital-portal.vercel.app";
 const portalKey = process.env.NEXT_PUBLIC_PORTAL_FORM_KEY || "sdf_oFw6oahp09bJbfeelcJ10za7";
@@ -75,7 +72,7 @@ function portalPayload(fields: Record<string, string>, extras: Record<string, st
   };
 }
 
-async function sendToPortal(fields: Record<string, string>, extras: Record<string, string>): Promise<PortalResult> {
+async function sendToPortal(fields: Record<string, string>, extras: Record<string, string>) {
   try {
     const response = await fetch(`${portalUrl.replace(/\/$/, "")}/api/inquiries`, {
       method: "POST",
@@ -83,11 +80,9 @@ async function sendToPortal(fields: Record<string, string>, extras: Record<strin
       body: JSON.stringify(portalPayload(fields, extras, portalKey)),
       signal: AbortSignal.timeout(10000),
     });
-    const result: unknown = await response.json().catch(() => null);
-    const error = result && typeof result === "object" && "error" in result && typeof result.error === "string" ? result.error : undefined;
-    return { ok: response.ok, error };
+    await response.body?.cancel();
   } catch {
-    return { ok: false };
+    // The portal is a non-blocking lead mirror. Email delivery remains the source of truth.
   }
 }
 
@@ -113,6 +108,14 @@ function web3FormsPayload(kind: "contact" | "trip", fields: Record<string, strin
   return submission;
 }
 
+function providerMessage(result: unknown) {
+  if (!result || typeof result !== "object") return "";
+  const direct = "message" in result && typeof result.message === "string" ? result.message : "";
+  if (direct) return direct;
+  const body = "body" in result ? result.body : null;
+  return body && typeof body === "object" && "message" in body && typeof body.message === "string" ? body.message : "";
+}
+
 async function sendToWeb3Forms(kind: "contact" | "trip", fields: Record<string, string>, extras: Record<string, string>, accessKey: string): Promise<SubmissionResult> {
   if (!accessKey) return { ok: false, message: "Enquiries cannot be sent yet. Please connect Web3Forms before publishing." };
 
@@ -125,8 +128,10 @@ async function sendToWeb3Forms(kind: "contact" | "trip", fields: Record<string, 
     });
     const result: unknown = await response.json().catch(() => null);
     const success = Boolean(result && typeof result === "object" && "success" in result && result.success === true);
-    const message = result && typeof result === "object" && "message" in result && typeof result.message === "string" ? result.message : fallbackError;
-    return { ok: response.ok && success, message: response.status === 429 ? "Too many requests. Please try again shortly." : message };
+    const message = providerMessage(result);
+    if (response.status === 429) return { ok: false, message: "Too many requests. Please try again shortly." };
+    if (response.status === 403) return { ok: false, message: "This form is not yet authorized for this website. Please email or WhatsApp us while we reconnect it." };
+    return { ok: response.ok && success, message: message || fallbackError };
   } catch {
     return { ok: false, message: fallbackError };
   }
@@ -137,13 +142,7 @@ export async function sendEnquiry(kind: "contact" | "trip", form: HTMLFormElemen
   if (!fields.name || (!fields.email && !fields.phone && !fields.whatsapp)) {
     return { ok: false, message: "Please enter your name and either an email address or phone number." };
   }
-  const [existing, portal] = await Promise.all([
-    sendToWeb3Forms(kind, fields, extras, web3FormsAccessKey),
-    sendToPortal(fields, extras),
-  ]);
-
-  if (existing.ok) return existing;
-  if (portal.ok) return { ok: true, message: successMessage };
-  if (!portal.skipped && portal.error) return { ok: false, message: portal.error };
-  return existing;
+  // Keep the portal up to date without delaying or changing the email-delivery result.
+  void sendToPortal(fields, extras);
+  return sendToWeb3Forms(kind, fields, extras, web3FormsAccessKey);
 }

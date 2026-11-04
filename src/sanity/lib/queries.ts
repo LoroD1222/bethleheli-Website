@@ -151,6 +151,7 @@ export const TRIP_CARDS_QUERY = defineQuery(/* groq */ `
     durationDays,
     trekkingDays,
     startingPrice { amount, currency },
+    heroSummary,
     heroImage { ${imageFields} },
     "overviewImage": overviewImages[0] { ${imageFields} },
     "legacyCardImage": cardImage { ${imageFields} }

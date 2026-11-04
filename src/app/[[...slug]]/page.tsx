@@ -48,7 +48,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
     case "rongai": return <KilimanjaroRouteDetailPage route="rongai" trip={await getKilimanjaroRouteTrip("rongai")} />;
     case "northernCircuit": return <KilimanjaroRouteDetailPage route="northern-circuit" trip={await getKilimanjaroRouteTrip("northern-circuit")} />;
     case "umbwe": return <KilimanjaroRouteDetailPage route="umbwe" trip={await getKilimanjaroRouteTrip("umbwe")} />;
-    case "safari": return <SafariReferencePage />;
+    case "safari": return <SafariReferencePage trips={await getTripCards()} />;
     case "zanzibar": return <ZanzibarReferencePage />;
     case "trips": {
       const initialCategory = typeof category === "string" ? category : undefined;

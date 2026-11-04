@@ -462,6 +462,7 @@ export async function getTripCards(): Promise<CmsTripCard[]> {
       if (!trip.slug || !trip.title || !days || (!sourcedCardImage && !cardImage) || !normalizedCategories.length) return [];
       return [{
         title: trip.title,
+        summary: trip.heroSummary || "",
         src: sourcedCardImage || cardImage!.src,
         href: `/trips/${trip.slug}`,
         categories: normalizedCategories,

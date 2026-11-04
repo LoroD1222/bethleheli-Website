@@ -530,18 +530,15 @@ const groupBenefitIcons: Record<string, string> = {
 export function GroupsPage({ departures, web3FormsAccessKey = "" }: { departures?: CmsGroupDeparture[]; web3FormsAccessKey?: string } = {}) {
   const trips = departures?.length ? departures : fallbackGroupDepartures;
   const [year, setYear] = useState(() => trips[0]?.year || "2026");
-  const [month, setMonth] = useState(() => trips[0]?.month || "Oct");
+  const [month, setMonth] = useState("All months");
   const [selectedDeparture, setSelectedDeparture] = useState<string | null>(null);
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const months = ["All months", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const years = Array.from(new Set(trips.map(trip => trip.year))).sort();
-  const visibleTrips = trips.filter(trip => trip.year === year && trip.month === month);
+  const visibleTrips = trips.filter(trip => trip.year === year && (month === "All months" || trip.month === month));
   const selectedTrip = trips.find(trip => trip.id === selectedDeparture);
   const selectYear = (nextYear: string) => {
     setYear(nextYear);
-    const firstDeparture = trips
-      .filter((trip) => trip.year === nextYear)
-      .sort((a, b) => a.monthIndex - b.monthIndex || a.dateTime.localeCompare(b.dateTime))[0];
-    if (firstDeparture) setMonth(firstDeparture.month);
+    setMonth("All months");
   };
   const benefits = [
     { key: "small-groups", iconKey: "users", title: "Small groups", description: "Shared pace, personal support" },
@@ -553,9 +550,9 @@ export function GroupsPage({ departures, web3FormsAccessKey = "" }: { departures
     <p className="eyebrow">UPCOMING DEPARTURES</p><h2>Climb Kilimanjaro with free airport transfers; accommodation available at extra cost!</h2>
     <p className="group-departure-terms"><strong>Departure terms:</strong> Scheduled group climbs operate with a minimum of 4 confirmed participants. Submitting an enquiry does not confirm a place; the team will confirm availability and booking terms with you.</p>
     <div className="year-tabs" role="group" aria-label="Departure year">{years.map(value => <button type="button" aria-pressed={year === value} onClick={() => selectYear(value)} className={year === value ? "active" : ""} key={value}>{value}</button>)}</div>
-    <div className="months" role="group" aria-label="Departure month">{months.map(value => <button type="button" aria-pressed={month === value} onClick={() => setMonth(value)} className={month === value ? "active" : ""} key={value}>{value}{trips.some(trip => trip.year === year && trip.month === value && trip.seasonLabel) ? " ☔" : ""}</button>)}</div>
+    <div className="months" role="group" aria-label="Departure month">{months.map(value => <button type="button" aria-pressed={month === value} onClick={() => setMonth(value)} className={month === value ? "active" : ""} key={value}>{value}{value !== "All months" && trips.some(trip => trip.year === year && trip.month === value && trip.seasonLabel) ? " ☔" : ""}</button>)}</div>
   </header>
-  <section className="group-list" aria-live="polite" aria-label={`Departures for ${month} ${year}`}>
+  <section className="group-list" aria-live="polite" aria-label={month === "All months" ? `All departures for ${year}` : `Departures for ${month} ${year}`}>
     {visibleTrips.length ? visibleTrips.map(trip => <article key={trip.id}><time dateTime={trip.dateTime}><b>{trip.day}</b><span>{trip.month}</span></time><div className="group-title"><h2>{trip.title}</h2><p>{trip.range}</p>{trip.seasonLabel && <small>☔ {trip.seasonLabel}</small>}</div><ul className="group-highlights">{trip.highlights.map(x => <li key={x}>{x}</li>)}</ul><strong className="group-price">{trip.originalPrice && <del>{trip.originalPrice}</del>}{trip.price}{trip.discountPercent && <em>{trip.discountPercent}%</em>}</strong><div className="group-action"><button type="button" className={trip.originalPrice ? "join secondary" : "join"} onClick={() => setSelectedDeparture(trip.id)}>JOIN GROUP</button><span>Deposit {trip.deposit}</span><span>Minimum {trip.minimumParticipants} participants</span></div></article>) :
       <div className="group-empty"><h2>{`No published departures for ${month} ${year} yet.`}</h2><p>Ask our team about group dates or a private Kilimanjaro climb that fits your calendar.</p><Link className="join" href="/plan-your-trip">Ask about dates <Arrow /></Link></div>}
   </section></section><div className="group-advisor-wrap shell"><AdvisorCard /></div><Testimonials groupClimbsOnly title="Stories from the mountain" text="Hear from travellers who shared the trail, supported one another and climbed with the Betheli mountain team." /></main><Footer />{selectedTrip && <GroupJoinForm departure={selectedTrip} web3FormsAccessKey={web3FormsAccessKey} onClose={() => setSelectedDeparture(null)} />}</>;

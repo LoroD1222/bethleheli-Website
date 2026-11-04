@@ -107,6 +107,7 @@ export type CmsKilimanjaroRouteTrip = {
 
 export type CmsTripCard = {
   title: string;
+  summary?: string;
   src: string;
   href: string;
   categories: Array<"Day Trips" | "Kilimanjaro" | "Safari" | "Zanzibar">;

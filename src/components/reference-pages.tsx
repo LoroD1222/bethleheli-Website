@@ -404,16 +404,27 @@ const zanzibarPlaces: Card[] = [
   ["Prison Island","A short boat trip from Stone Town with giant tortoises, a historic prison and a beautiful beach for a day visit.","Best known for: Giant tortoises and island history",5],
 ].map(([title,copy,note,n]) => ({ title: title as string, copy: copy as string, note: note as string, image: image(`figma-zanzibar-mosaic-destination-photograph${n || ""}.png`) }));
 
-export function SafariReferencePage() {
-  const safaris: Card[] = [
-    {title:"3-day Serengeti",copy:"A focused Serengeti idea for travelers with limited time.",note:"3 DAYS",image:image("drive-library/safari-migration.webp"),href:"/trips"},
-    {title:"4-day Northern Tanzania",copy:"A short journey through contrasting northern parks.",note:"4 DAYS",image:image("drive-library/safari-crater-road.webp"),href:"/trips"},
-    {title:"5-day Tanzania Safari",copy:"More time in the wild, at a pace that works for you.",note:"5 DAYS",image:image("drive-library/safari-picnic.webp"),href:"/trips"},
-    {title:"7-day Tanzania Safari",copy:"A longer itinerary with room to slow down.",note:"7 DAYS",image:image("drive-library/safari-community.webp"),href:"/trips"},
-  ];
+const fallbackSafariCards: Card[] = [
+  {title:"4-Day Lake Natron & Oldoinyo Lengai Adventure",copy:"A safari itinerary that pairs the Lake Natron landscape with Oldoinyo Lengai.",note:"4 DAYS",image:image("drive-library/safari-crater-road.webp"),href:"/trips/4-day-lake-natron-and-oldoinyo-lengai-adventure"},
+  {title:"7-Day Northern Tanzania Safari Experience",copy:"A Northern Tanzania safari with a full day around the Mara River.",note:"7 DAYS",image:image("drive-library/safari-migration.webp"),href:"/trips/7-day-northern-tanzania-safari-mara-river-crossing"},
+  {title:"African Nights & Circle of Life Safari",copy:"A longer Tanzania safari itinerary shaped around wildlife and diverse landscapes.",note:"10 DAYS",image:image("drive-library/safari-picnic.webp"),href:"/trips/african-nights-and-circle-of-life-safari"},
+  {title:"East African Safari & Beach Bliss",copy:"A combined safari and beach itinerary across East Africa.",note:"16 DAYS",image:image("drive-library/safari-community.webp"),href:"/trips/east-african-safari-and-beach-bliss"},
+];
+
+export function SafariReferencePage({ trips = [] }: { trips?: CmsTripCard[] }) {
+  const safaris: Card[] = trips
+    .filter((trip) => trip.categories.includes("Safari") && trip.days > 1)
+    .map((trip) => ({
+      title: trip.title,
+      copy: trip.summary || "View the published itinerary, destinations and planning details.",
+      note: `${trip.days} ${trip.days === 1 ? "DAY" : "DAYS"}`,
+      image: trip.src,
+      href: trip.href,
+    }));
+  const safariCards = safaris.length ? safaris : fallbackSafariCards;
   return <><ReferenceHero imageSrc={image("drive-library/safari-hero.webp")} eyebrow="TANZANIA SAFARIS" title="Experience the Wild Side of Tanzania" copy="Explore Serengeti, Ngorongoro, Tarangire and beyond. Your pace, your interests — shaped by a local Tanzanian team that knows these places well." action="Explore Safaris" actionHref="#explore" secondAction="Plan My Safari" secondActionHref="/plan-your-trip" active="Safari" />
     <main className="safari-page"><PlaceGrid eyebrow="FROM ICONIC PLAINS TO QUIETER WILDERNESS" title="Where Will Your Safari Take You?" copy="Get to know the places before choosing a route. Each destination brings its own landscape, rhythm and possibilities." cards={safariParks} variant="safari" />
-      <ImageCards eyebrow="POPULAR PLANNING IDEAS" title="Choose Your Safari" copy="Four starting points, not fixed departures. Itinerary, availability and pricing are confirmed when you plan with us." cards={safaris} />
+      <ImageCards eyebrow="PUBLISHED SAFARI ITINERARIES" title="Choose Your Safari" copy="Open a safari to see its published itinerary, destinations and planning details. Availability and pricing are confirmed when you plan with us." cards={safariCards} />
       <SafariStory />
       <SafariVehicles />
       <StaySelector eyebrow="FEATURED SAFARI ACCOMMODATION" title="Choose the stay that fits your safari" copy="Compare real properties across comfort levels. Final availability, room type and pricing are confirmed in your tailored quote." items={safariStayChoices} />
