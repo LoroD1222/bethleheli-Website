@@ -60,7 +60,7 @@ export function PrimaryLink({ href = "/plan-your-trip", children = "Start planni
 }
 
 function Logo({ onClick }: { onClick?: () => void } = {}) {
-  return <Link href="/" className="logo" aria-label="Betheli Expeditions home" onClick={onClick}><Image src="/images/logo.png" alt="Betheli Expeditions" width={1672} height={940} loading="eager" /></Link>;
+  return <Link href="/" className="logo" aria-label="Betheli Expeditions home" onClick={onClick}><Image src="/images/logo.png" alt="Betheli Expeditions" width={2248} height={1249} loading="eager" /></Link>;
 }
 
 export function TripadvisorLogo({ light = false, compact = false }: { light?: boolean; compact?: boolean }) {
