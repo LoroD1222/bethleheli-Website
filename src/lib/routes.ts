@@ -14,7 +14,7 @@ export const pageMeta: Record<PageKey, Meta> = {
   safari: { title: "Tanzania Safari", description: "Explore Tanzania safari parks, wildlife and itinerary ideas.", path: "/safari", image: "/images/drive-library/safari-hero.webp" },
   zanzibar: { title: "Discover Zanzibar", description: "Explore Zanzibar beaches, Stone Town and island journeys.", path: "/zanzibar", image: "/images/figma-zanzibar-hero.png" },
   plan: { title: "Plan Your Tanzania Adventure", description: "Share your travel interests and begin planning a Tanzania journey.", path: "/plan-your-trip", image: "/images/figma-plan-hero.png" },
-  contact: { title: "Contact Bathiel Expeditions", description: "Start a conversation with the Bathiel Expeditions team.", path: "/contact", image: "/images/figma-contact-hero.jpg" },
+  contact: { title: "Contact Betheli Expeditions", description: "Start a conversation with the Betheli Expeditions team.", path: "/contact", image: "/images/figma-contact-hero.jpg" },
   faq: { title: "Tanzania Travel Questions", description: "Answers to common Kilimanjaro, safari, Zanzibar and booking questions.", path: "/faq", image: "/images/figma-faq-hero.jpg" },
   trips: { title: "Tanzania Trips", description: "Explore thoughtfully designed Kilimanjaro, safari and Zanzibar journeys.", path: "/trips", image: "/images/trips-hero-serengeti.webp" },
   northernSerengeti: { title: "Northern Serengeti River Crossing Safari", description: "View a six-day Northern Serengeti River Crossing Safari itinerary.", path: "/trips/northern-serengeti", image: "/images/northern-serengeti-migration.webp" },
