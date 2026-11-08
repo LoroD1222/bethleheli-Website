@@ -81,8 +81,9 @@ async function sendToPortal(fields: Record<string, string>, extras: Record<strin
       signal: AbortSignal.timeout(10000),
     });
     await response.body?.cancel();
+    return response.ok;
   } catch {
-    // The portal is a non-blocking lead mirror. Email delivery remains the source of truth.
+    return false;
   }
 }
 
@@ -142,7 +143,13 @@ export async function sendEnquiry(kind: "contact" | "trip", form: HTMLFormElemen
   if (!fields.name || (!fields.email && !fields.phone && !fields.whatsapp)) {
     return { ok: false, message: "Please enter your name and either an email address or phone number." };
   }
-  // Keep the portal up to date without delaying or changing the email-delivery result.
+  if (!web3FormsAccessKey) {
+    const portalAccepted = await sendToPortal(fields, extras);
+    return portalAccepted
+      ? { ok: true, message: "Your enquiry was sent. The team will be in touch." }
+      : { ok: false, message: fallbackError };
+  }
+  // When email delivery is configured, keep the portal up to date without delaying it.
   void sendToPortal(fields, extras);
   return sendToWeb3Forms(kind, fields, extras, web3FormsAccessKey);
 }
