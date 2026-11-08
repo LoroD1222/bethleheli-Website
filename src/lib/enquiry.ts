@@ -35,6 +35,28 @@ function cookieValue(name: string) {
   }
 }
 
+function recordLeadConversion(fields: Record<string, string>) {
+  if (typeof window === "undefined") return;
+  const eventId = crypto.randomUUID();
+  const fbq = (window as typeof window & { fbq?: (...args: unknown[]) => void }).fbq;
+  fbq?.("track", "Lead", {}, { eventID: eventId });
+
+  void fetch("/api/meta-conversion", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      eventId,
+      eventSourceUrl: window.location.href,
+      name: fields.name,
+      email: fields.email,
+      phone: fields.phone || fields.whatsapp,
+      fbp: cookieValue("_fbp"),
+      fbc: cookieValue("_fbc"),
+    }),
+    keepalive: true,
+  }).catch(() => undefined);
+}
+
 function portalPayload(fields: Record<string, string>, extras: Record<string, string>, key: string) {
   const email = fields.email;
   const phone = fields.phone || fields.whatsapp;
@@ -145,11 +167,14 @@ export async function sendEnquiry(kind: "contact" | "trip", form: HTMLFormElemen
   }
   if (!web3FormsAccessKey) {
     const portalAccepted = await sendToPortal(fields, extras);
+    if (portalAccepted) recordLeadConversion(fields);
     return portalAccepted
       ? { ok: true, message: "Your enquiry was sent. The team will be in touch." }
       : { ok: false, message: fallbackError };
   }
   // When email delivery is configured, keep the portal up to date without delaying it.
   void sendToPortal(fields, extras);
-  return sendToWeb3Forms(kind, fields, extras, web3FormsAccessKey);
+  const result = await sendToWeb3Forms(kind, fields, extras, web3FormsAccessKey);
+  if (result.ok) recordLeadConversion(fields);
+  return result;
 }
