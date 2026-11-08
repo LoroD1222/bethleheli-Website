@@ -59,8 +59,8 @@ export function PrimaryLink({ href = "/plan-your-trip", children = "Start planni
   return <Link href={href} className={`button ${dark ? "button-dark" : ""}`} onClick={onClick}>{children}<Arrow /></Link>;
 }
 
-function Logo({ onClick }: { onClick?: () => void } = {}) {
-  return <Link href="/" className="logo" aria-label="Betheli Expeditions home" onClick={onClick}><Image src="/images/logo.png" alt="Betheli Expeditions" width={1800} height={983} loading="eager" /></Link>;
+function Logo({ onClick, navbar = false }: { onClick?: () => void; navbar?: boolean } = {}) {
+  return <Link href="/" className="logo" aria-label="Betheli Expeditions home" onClick={onClick}><Image src={navbar ? "/images/logo-navbar.png" : "/images/logo.png"} alt="Betheli Expeditions" width={navbar ? 900 : 1800} height={navbar ? 500 : 983} loading="eager" /></Link>;
 }
 
 export function TripadvisorLogo({ light = false, compact = false }: { light?: boolean; compact?: boolean }) {
@@ -132,7 +132,7 @@ export function Header({ overlay = true, variant }: { overlay?: boolean; active?
 
   return <><header className={`site-header ${overlay ? "site-header-overlay" : "site-header-solid"}${variant ? ` site-header-${variant}` : ""}`}>
     <div className="shell header-inner">
-      <Logo />
+      <Logo navbar />
       <button ref={toggleRef} type="button" className="menu-toggle" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(value => !value)}><span /><span /><span /></button>
       <nav id="main-nav" className="main-nav" aria-label="Main navigation">
         {items.map(([label, href]) => {
@@ -147,7 +147,7 @@ export function Header({ overlay = true, variant }: { overlay?: boolean; active?
   </header>{open && createPortal(<div className="mobile-menu">
     <button type="button" className="mobile-menu-backdrop" aria-label="Close navigation" tabIndex={-1} onClick={() => { setOpen(false); toggleRef.current?.focus(); }} />
     <div className="mobile-menu-drawer" ref={drawerRef} id="mobile-nav" role="dialog" aria-modal="true" aria-label="Mobile navigation">
-      <div className="mobile-menu-head"><Logo onClick={() => setOpen(false)} /><button ref={closeRef} type="button" className="mobile-menu-close" aria-label="Close navigation" onClick={() => { setOpen(false); toggleRef.current?.focus(); }}><span /><span /></button></div>
+      <div className="mobile-menu-head"><Logo navbar onClick={() => setOpen(false)} /><button ref={closeRef} type="button" className="mobile-menu-close" aria-label="Close navigation" onClick={() => { setOpen(false); toggleRef.current?.focus(); }}><span /><span /></button></div>
       <p className="mobile-menu-eyebrow">Explore Betheli</p>
       <nav className="mobile-menu-links" aria-label="Mobile navigation links">
         {mobileNavItems.map(([label, href], index) => {
