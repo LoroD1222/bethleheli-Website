@@ -84,7 +84,7 @@ function ReferenceHero({
   trustItems?: string[]; routeFacts?: string[]; heroClass?: string;
 }) {
   return <section className={`ref-hero ${heroClass}`}>
-    <Photo src={imageSrc} alt="" priority className="ref-hero-image" sizes="100vw" quality={90} />
+    <Photo src={imageSrc} alt="" priority className="ref-hero-image" sizes={heroClass === "ref-hero-kilimanjaro" ? "(max-width: 700px) 200vw, 100vw" : "100vw"} quality={90} />
     <div className="ref-hero-scrim" />
     <Header active={active} variant={navVariant} />
     <div className="shell ref-hero-body">
