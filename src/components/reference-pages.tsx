@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { HomeFooter } from "@/components/home-footer";
+import { sendEnquiry } from "@/lib/enquiry";
 import { whatsappHref } from "@/lib/whatsapp";
 import type { CmsImage, CmsKilimanjaroRouteTrip, CmsTripCard, CmsTripPageData } from "@/sanity/content-types";
 import {
@@ -95,8 +96,66 @@ function ReferenceHero({
       <div className="ref-actions"><PrimaryLink href={actionHref}>{action}</PrimaryLink><Link className="ghost-button" href={secondActionHref}>{secondAction}<span className="arrow" aria-hidden="true"><ArrowIcon /></span></Link></div>
       {routeFacts && <div className="ref-hero-route-facts">{routeFacts.map((fact, index) => <span key={fact}><b aria-hidden="true">{["▣", "△", "▧", "◇"][index]}</b>{fact}</span>)}</div>}
     </div>
-    {!routeFacts && <div className="shell ref-hero-trust"><div className="ref-hero-rating"><TripadvisorLogo light compact /><small>5.0 {heroClass === "ref-hero-zanzibar" ? <span className="ref-zanzibar-hero-stars" role="img" aria-label="5 out of 5 stars">{Array.from({ length: 5 }, (_, i) => <span key={i}><Image src={image("figma-zanzibar-hero-star.svg")} alt="" width={16.6309} height={15.915} /></span>)}</span> : <RatingStars size={14} />}</small></div>{(trustItems || ["Local Tanzanian team", "Personal trip planning", "Your journey, your pace"]).map(item => <span key={item}><b aria-hidden="true">✓</b>{item}</span>)}<span className="sr-only">Current section: {active}</span></div>}
+    {!routeFacts && <div className="shell ref-hero-trust"><div className="ref-hero-rating"><TripadvisorLogo light compact /><small>5.0 {heroClass === "ref-hero-zanzibar" ? <span className="ref-zanzibar-hero-stars" role="img" aria-label="5 out of 5 stars">{Array.from({ length: 5 }, (_, i) => <span key={i}><Image src={image("figma-zanzibar-hero-star.svg")} alt="" width={16.6309} height={15.915} /></span>)}</span> : <RatingStars size={14} />}</small></div>{(trustItems || ["Local Tanzanian team", "Personal trip planning", "Your journey, your pace"]).map(item => <span key={item}><b aria-hidden="true">✓</b>{item}</span>)}</div>}
   </section>;
+}
+
+function quoteMonthOptions() {
+  const now = new Date();
+  const options: Array<{ value: string; label: string }> = [];
+  const cursor = new Date(now.getFullYear(), now.getMonth(), 1);
+  const end = new Date(2028, 11, 1);
+  while (cursor <= end) {
+    options.push({
+      value: `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, "0")}`,
+      label: cursor.toLocaleDateString("en-US", { month: "long", year: "numeric" }),
+    });
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+  return options;
+}
+
+function MobileKilimanjaroQuote({ web3FormsAccessKey }: { web3FormsAccessKey: string }) {
+  const months = useMemo(() => quoteMonthOptions(), []);
+  const [sending, setSending] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [sent, setSent] = useState(false);
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!form.reportValidity()) return;
+    setSending(true);
+    setNotice("Sending your quote request…");
+    const result = await sendEnquiry("trip", form, {}, web3FormsAccessKey);
+    if (result.ok) {
+      setSent(true);
+      setNotice("Thank you! We'll reply within 24 hours.");
+      form.reset();
+    } else {
+      setNotice(result.message);
+    }
+    setSending(false);
+  }
+
+  return <section className="mobile-kili-quote" aria-labelledby="mobile-kili-quote-title"><div className="shell">
+    <div className="mobile-kili-quote-card">
+      <header><p>PERSONALISED CLIMB PLANNING</p><h2 id="mobile-kili-quote-title">Get Your Free Kilimanjaro Quote</h2><span>{"Tell us a few details and we'll reply within 24 hours. No obligation."}</span></header>
+      {sent ? <p className="mobile-kili-quote-success" role="status">{"Thank you! We'll reply within 24 hours."}</p> : <form onSubmit={submit} data-sd-ignore>
+        <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="mobile-kili-quote-honeypot" />
+        <input type="hidden" name="notes" value="Mobile Kilimanjaro quote request" />
+        <label>Full name *<input name="name" required autoComplete="name" placeholder="Your full name" /></label>
+        <label>Email *<input name="email" required type="email" autoComplete="email" placeholder="you@example.com" /></label>
+        <label>WhatsApp number <small>(optional)</small><input name="whatsapp" type="tel" autoComplete="tel" placeholder="Include country code" /></label>
+        <label>Preferred route<select name="interest" defaultValue="Not sure yet"><option>Not sure yet</option>{["Machame", "Lemosho", "Marangu", "Rongai", "Northern Circuit", "Umbwe"].map(route => <option key={route}>{route}</option>)}</select></label>
+        <label>When do you want to climb?<select name="timing" defaultValue="Flexible"><option>Flexible</option>{months.map(month => <option value={month.label} key={month.value}>{month.label}</option>)}</select></label>
+        <label>Number of climbers<select name="adults" defaultValue="2">{["1", "2", "3", "4", "5+"].map(count => <option key={count}>{count}</option>)}</select></label>
+        <button type="submit" disabled={sending}>{sending ? "Sending…" : "Get My Free Quote"}<span aria-hidden="true">↗</span></button>
+        <p className="mobile-kili-quote-trust">★ 5.0 on TripAdvisor · AMREF evacuation cover · TATO member</p>
+        {notice && <p className="mobile-kili-quote-notice" role="status">{notice}</p>}
+      </form>}
+    </div>
+  </div></section>;
 }
 
 function Intro({ eyebrow, title, copy }: { eyebrow: string; title: string; copy?: string }) {
@@ -258,12 +317,12 @@ function Seasons({ eyebrow, title, copy, items, imageSrc }: { eyebrow: string; t
 
 function Safety({ imageSrc = "drive-library/lemosho-barranco.webp" }: { imageSrc?: string } = {}) {
   const items = [
-    { title: "Experienced mountain guides", copy: "Ask about your guide team’s experience and the support available on your chosen route.", icon: "users", photo: imageSrc },
-    { title: "Acclimatization strategy", copy: "Discuss the daily altitude profile, rest opportunities and a pace that suits your itinerary.", icon: "chart", photo: "figma-kili-journey-journey-landscape2.png" },
-    { title: "Emergency procedures", copy: "Before booking, confirm communication, evacuation arrangements and insurance requirements.", icon: "shield", photo: "figma-kili-journey-summit-panorama.png" },
-    { title: "Guide-to-client ratios", copy: "Request the confirmed guide-to-client ratio and group size for your departure.", icon: "group", photo: "figma-kili-group-trip-landscape3.png" },
-    { title: "Mountain equipment", copy: "Confirm the equipment provided, rental options and what you will need to bring.", icon: "equipment", photo: "figma-kili-journey-journey-landscape1.png" },
-    { title: "Health monitoring", copy: "Discuss check-ins and how the team responds to symptoms. Seek personal medical advice before travel.", icon: "heart", photo: "figma-kili-journey-journey-landscape3.png" },
+    { title: "Experienced mountain guides", copy: "Our Tanzanian guides are licensed by Kilimanjaro National Park and have led climbers for over a decade.", icon: "users", photo: imageSrc },
+    { title: "Acclimatization strategy", copy: "Our itineraries follow 'climb high, sleep low', with a slow 'pole pole' pace.", icon: "chart", photo: "figma-kili-journey-journey-landscape2.png" },
+    { title: "Emergency procedures", copy: "We are covered by AMREF Flying Doctors for emergency evacuation. Guides carry a first-aid kit.", icon: "shield", photo: "figma-kili-journey-summit-panorama.png" },
+    { title: "Guide-to-client ratios", copy: "Small groups with assistant guides, so someone can always walk down with a climber who needs to descend.", icon: "group", photo: "figma-kili-group-trip-landscape3.png" },
+    { title: "Mountain equipment", copy: "Tents and full-board meals are taken care of. Rental gear is available in Arusha.", icon: "equipment", photo: "figma-kili-journey-journey-landscape1.png" },
+    { title: "Health monitoring", copy: "Your guide checks in with you at every camp and watches for signs of altitude sickness.", icon: "heart", photo: "figma-kili-journey-journey-landscape3.png" },
   ];
   const paths: Record<string, React.ReactNode> = {
     users: <><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2"/><path d="M17 5a3 3 0 0 1 0 6m2 3a5 5 0 0 1 2 4v2"/></>,
@@ -273,7 +332,7 @@ function Safety({ imageSrc = "drive-library/lemosho-barranco.webp" }: { imageSrc
     equipment: <><path d="M3 9h18v11H3zM8 9V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3M3 14h18m-11-2v4h4v-4"/></>,
     heart: <><path d="M20.8 8.4c0 4.7-8.8 11.2-8.8 11.2S3.2 13.1 3.2 8.4a4.4 4.4 0 0 1 8.8-.4 4.4 4.4 0 0 1 8.8.4Z"/><path d="M5 12h4l2-3 2 6 2-3h4"/></>,
   };
-  return <section className="ref-section ref-dark ref-safety" id="safety"><div className="shell ref-safety-grid"><div><Intro eyebrow="CARE BEFORE THE SUMMIT" title="Your Safety Comes First" copy="The mountain deserves respect. So do your questions. Talk to us about the support and arrangements for your climb before you book." /><Photo src={image(items[0].photo)} alt="Experienced mountain guides on Kilimanjaro" sizes="(max-width: 900px) 100vw, 465px" /><p>Reaching the summit is never more important than returning safely. No itinerary can remove the risks of high altitude.</p></div><div className="ref-safety-list">{items.map((item) => <div className="ref-safety-topic" key={item.title}><span className="ref-safety-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[item.icon]}</svg></span><span><strong>{item.title}</strong><small>{item.copy}</small></span></div>)}<Link className="ref-safety-cta" href="/contact">Talk to a Guide <span aria-hidden="true">↗</span></Link></div></div></section>;
+  return <section className="ref-section ref-dark ref-safety" id="safety"><div className="shell ref-safety-grid"><div><Intro eyebrow="CARE BEFORE THE SUMMIT" title="Your Safety Comes First" copy="Reaching the summit is never more important than coming home safely. Here's how we look after you." /><Photo src={image(items[0].photo)} alt="Experienced mountain guides on Kilimanjaro" sizes="(max-width: 900px) 100vw, 465px" /></div><div className="ref-safety-list">{items.map((item) => <div className="ref-safety-topic" key={item.title}><span className="ref-safety-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[item.icon]}</svg></span><span><strong>{item.title}</strong><small>{item.copy}</small></span></div>)}<Link className="ref-safety-cta" href="/contact">Talk to a Guide <span aria-hidden="true">↗</span></Link></div></div></section>;
 }
 
 const kilimanjaroEnvironments = [
@@ -314,14 +373,14 @@ function RouteEnvironments({ imageOverrides = {} }: { imageOverrides?: Partial<R
 }
 
 function FaqPreview({ title, items, openCount = 1, id, variant }: { title: string; items?: string[][]; openCount?: number; id?: string; variant?: "kilimanjaro" }) {
-  return <section className={`ref-section ref-faq ${variant === "kilimanjaro" ? "ref-kili-faq" : ""}`} id={id}><div className="shell"><Intro eyebrow={variant === "kilimanjaro" ? "GOOD QUESTIONS. HONEST ANSWERS." : "GOOD QUESTIONS"} title={title} copy={variant === "kilimanjaro" ? "A little clarity before a big adventure. Talk to our team about the details of your own climb." : "Useful answers for the first conversation and the planning that follows."} /><Accordion items={items} openCount={openCount} />{variant === "kilimanjaro" ? <p className="ref-kili-faq-note">Before booking, confirm your packing list, seasonal conditions, total cost and altitude support arrangements. This layout shows the first answer expanded.</p> : <Link className="ref-text-link" href="/faq">Explore all questions ↗</Link>}</div></section>;
+  return <section className={`ref-section ref-faq ${variant === "kilimanjaro" ? "ref-kili-faq" : ""}`} id={id}><div className="shell"><Intro eyebrow={variant === "kilimanjaro" ? "GOOD QUESTIONS. HONEST ANSWERS." : "GOOD QUESTIONS"} title={title} copy={variant === "kilimanjaro" ? "A little clarity before a big adventure. Talk to our team about the details of your own climb." : "Useful answers for the first conversation and the planning that follows."} /><Accordion items={items} openCount={openCount} />{variant !== "kilimanjaro" && <Link className="ref-text-link" href="/faq">Explore all questions ↗</Link>}</div></section>;
 }
 
 function KilimanjaroStyleCards() {
   const styles = [
-    { title: "SOLO", subtitle: "Travel your way", badge: "Travel Independently", copy: "A personalised safari designed around your interests, pace and plans.", best: "independent travellers", imageSrc: "figma-home-style1.png", href: "/plan-your-trip", action: "Start planning" },
-    { title: "PRIVATE GROUP", subtitle: "Travel with your people", badge: "Just Your People", copy: "A private vehicle and itinerary for your partner, family or friends.", best: "couples, family, friends", imageSrc: "figma-home-style2.png", href: "/plan-your-trip", action: "Start planning" },
-    { title: "JOIN A GROUP", subtitle: "Meet new people", badge: "Social & Shared", copy: "Join a small group and share the safari experience with other travellers.", best: "solo travellers & social travellers", imageSrc: "figma-home-style3.png", href: "/groups", action: "Check group dates" },
+    { title: "SOLO", subtitle: "Travel your way", badge: "Travel Independently", copy: "A personalised climb designed around your dates, pace and experience.", best: "independent travellers", imageSrc: "figma-home-style1.png", href: "/plan-your-trip", action: "Start planning" },
+    { title: "PRIVATE GROUP", subtitle: "Travel with your people", badge: "Just Your People", copy: "A private climb with your own guide team for your partner, family or friends.", best: "couples, family, friends", imageSrc: "figma-home-style2.png", href: "/plan-your-trip", action: "Start planning" },
+    { title: "JOIN A GROUP", subtitle: "Meet new people", badge: "Social & Shared", copy: "Join a small group on a scheduled departure and share the climb with other travellers.", best: "solo travellers & social travellers", imageSrc: "figma-home-style3.png", href: "/groups", action: "Check group dates" },
   ];
   return <div className="ref-kili-style-grid">{styles.map(item => <article className="ref-kili-style-card" key={item.title}>
     <div className="ref-kili-style-photo"><Photo src={image(item.imageSrc)} alt="" /><span className="ref-kili-style-badge">{item.badge}</span><div className="ref-kili-style-name"><h3>{item.title}</h3><p>{item.subtitle}</p></div></div>
@@ -458,7 +517,7 @@ const routeFallbackFacts: Record<KilimanjaroRouteSlug, { days: string; difficult
   lemosho: { days: "8", difficulty: "Moderate–hard", difficultyLevel: 3, distanceKm: 64.7, startingPrice: "$2,499" },
   marangu: { days: "6", difficulty: "Moderate–hard", difficultyLevel: 3, distanceKm: 66.9, startingPrice: "$2,050" },
   rongai: { days: "7", difficulty: "Moderate–hard", difficultyLevel: 3, distanceKm: 68, startingPrice: "$2,534" },
-  "northern-circuit": { days: "9", difficulty: "Challenging", difficultyLevel: 4, distanceKm: 97, startingPrice: "$3,265", approximateDistance: true },
+  "northern-circuit": { days: "9", difficulty: "Moderate–hard", difficultyLevel: 3, distanceKm: 97, startingPrice: "$3,265", approximateDistance: true },
   umbwe: { days: "6", difficulty: "Very hard", difficultyLevel: 5, distanceKm: 46.3, startingPrice: "$2,317" },
 };
 
@@ -537,7 +596,7 @@ const routeTripSlugs: Array<[KilimanjaroRouteSlug, string]> = [
   ["umbwe", "Umbwe Route"],
 ];
 
-export function KilimanjaroReferencePage({ routeTrips }: { routeTrips: Partial<Record<KilimanjaroRouteSlug, CmsKilimanjaroRouteTrip>> }) {
+export function KilimanjaroReferencePage({ routeTrips, web3FormsAccessKey }: { routeTrips: Partial<Record<KilimanjaroRouteSlug, CmsKilimanjaroRouteTrip>>; web3FormsAccessKey: string }) {
   const routeCards = kilimanjaroRoutes.map((card, index) => {
     const route = routeTripSlugs[index][0];
     const trip = routeTrips[route];
@@ -546,16 +605,28 @@ export function KilimanjaroReferencePage({ routeTrips }: { routeTrips: Partial<R
     return { ...card, note: trip ? `${trip.trekkingDays} trekking days · ${distance} km` : card.note, price: trip?.startingPrice || facts.startingPrice };
   });
   return <><ReferenceHero imageSrc={image("drive-library/lemosho-hero-hq.webp")} eyebrow="TANZANIA • THE ROOF OF AFRICA" title="Climb Mount Kilimanjaro" copy="Reach the Roof of Africa with experienced local guides, carefully planned routes and a team that knows the mountain from the ground up." action="Plan My Climb" secondAction="Explore Routes" active="Kilimanjaro" navVariant="classic" heroClass="ref-hero-kilimanjaro" trustItems={["Local Tanzanian guides", "Safety-focused", "Personal support", "Small groups"]} />
+    <MobileKilimanjaroQuote web3FormsAccessKey={web3FormsAccessKey} />
     <main><section className="ref-section ref-kili-intro"><div className="shell ref-intro-split"><div><Intro eyebrow="THE MOUNTAIN, AND EVERYTHING BETWEEN" title="More Than a Summit" copy="Kilimanjaro is a journey through worlds. Walk beneath a rainforest canopy, emerge into open moorland and cross the quiet, rocky alpine desert before reaching the Arctic summit." /><p>With Betheli Expeditions, the climb begins with a conversation about you: your time, your experience and the kind of mountain journey you want.</p><p className="ref-kili-accent">One mountain. A different landscape every day.</p></div><Photo src={image("kilimanjaro-climbers-above-clouds-enhanced.webp")} alt="Climbers above the clouds on Kilimanjaro" sizes="(max-width: 700px) 100vw, 50vw" quality={90} /></div><div className="shell ref-kili-facts">{[["figma-kili-fact-mountain.svg","5,895 m","Above sea level"],["figma-kili-fact-layers.svg","5 ecological zones","From forest to ice"],["figma-kili-fact-map.svg","6+ climbing routes","Find your own path"],["figma-kili-fact-star.svg","1 unforgettable experience","More than the summit"]].map(([icon,title,copy])=><div key={title}><span><Image src={image(icon)} alt="" width={24} height={24} /></span><div><b>{title}</b><small>{copy}</small></div></div>)}</div></section>
-      <WhyGrid title="Why Climb Kilimanjaro With Us?" imageSrc={image("kilimanjaro-team-original.webp")} className="ref-kili-why-grid" items={[["Small Groups","Space to find your rhythm. Confirm group size for your departure."],["Personal Support","Real people to help with route choices, preparation and travel plans."],["Quality Equipment","Ask us for the current mountain equipment list and what to bring."],["Experienced Local Guides","Local knowledge, mountain experience and a warm Tanzanian welcome."],["Safety First","A thoughtful pace and clear conversations about your wellbeing."],["High Summit Success","Verified summit-success rate: rate pending verification. No summit is guaranteed."]]} />
+      <WhyGrid title="Why Climb Kilimanjaro With Us?" imageSrc={image("kilimanjaro-team-original.webp")} className="ref-kili-why-grid" items={[["Small Groups","Small groups and private climbs, so you can walk at your own pace."],["Personal Support","Real people to help with route choices, preparation and travel plans."],["Quality Equipment","Mountain camping equipment and full-board meals on the mountain. Rental gear is available in Arusha."],["Experienced Local Guides","Local knowledge, mountain experience and a warm Tanzanian welcome."],["Safety First","A thoughtful pace and clear conversations about your wellbeing."],["Itineraries Built for the Summit","We recommend 7–8 day routes. Extra days to acclimatize give you the best chance of standing on Uhuru Peak."]]} />
       <PlaceGrid eyebrow="SIX WAYS TO THE ROOF OF AFRICA" title="Which Kilimanjaro Route Is Right For You?" copy="Explore the routes, then compare the current trekking-day durations, distances and starting rates." cards={routeCards} variant="kilimanjaro" />
       <section className="ref-section ref-comparison"><div className="shell"><Intro eyebrow="ROUTE FACTS" title="Compare Kilimanjaro Routes" copy="Compare route difficulty, trekking-day duration, distance and starting price. Arrival and departure days are excluded; distances are gate to gate and include the descent." /><div className="ref-table-wrap"><table><thead><tr><th>Route</th><th>Difficulty</th><th>Trekking days</th><th>Route distance</th><th>Starting price</th></tr></thead><tbody>{routeTripSlugs.map(([slug, label])=>{const trip=routeTrips[slug];const facts=routeFallbackFacts[slug];return <tr key={slug}><th>{label}</th><td><span className="ref-difficulty"><span>{facts.difficulty}</span><span aria-hidden="true">{Array.from({length:5},(_,index)=><i key={index} className={index<facts.difficultyLevel?"active":""} />)}</span></span></td><td>{trip ? `${trip.trekkingDays} days` : `${facts.days} days`}</td><td>{routeDistanceLabel(trip?.routeDistanceKm ?? facts.distanceKm, Boolean(!trip?.routeDistanceKm && facts.approximateDistance))}</td><td>{trip?.startingPrice || facts.startingPrice}</td></tr>;})}</tbody></table><p className="route-callout">{kilimanjaroPriceNote}</p></div></div></section>
       <section id="journey" className="ref-section ref-dark ref-kili-journey"><div className="shell"><Intro eyebrow="RAINFOREST → MOORLAND → ALPINE DESERT → SUMMIT → DESCENT" title="What the Journey Looks Like" copy="Not just an ascent. A remarkable passage through changing landscapes, one step at a time." /><div className="ref-journey">{[["01 / RAINFOREST","The world turns green.","The trail begins in the forest: damp earth, moss and tall trees. Slow down and let the mountain set the pace.","drive-library/machame-rainforest.webp"],["02 / MOORLAND","Step into the open.","Heather gives way to wide horizons and giant groundsels. The summit feels closer, but the days remain unhurried.","drive-library/lemosho-moorland.webp"],["03 / ALPINE DESERT","A quieter kind of wilderness.","Vegetation thins, the air cools and volcanic rock stretches toward the sky. Every step becomes a little more deliberate.","drive-library/umbwe-alpine.webp"],["04 / SUMMIT • 5,895 M","A summit you carry home.","The final ascent is cold, slow and demanding. At Uhuru Peak, the African continent unfolds below the clouds.","drive-library/marangu-summit-hq.webp"],["05 / DESCENT","Back through the worlds you crossed.","Return to warmer air and greener trails. There is time to rest, share stories and appreciate the whole journey.","drive-library/marangu-trail-hq.webp"]].map(([step,title,copy,src],index)=><article key={step}><Photo src={image(src)} alt={title} sizes={index === 3 ? "(max-width: 700px) calc(100vw - 44px), 1200px" : "(max-width: 700px) calc(100vw - 44px), (max-width: 1100px) 50vw, 600px"} quality={90} /><div><small>{step}</small>{index === 3 ? <div className="ref-journey-summit-title"><Image src={image("figma-kili-journey-summit-mountain.svg")} alt="" width={53} height={45} /><h3>{title}</h3></div> : <h3>{title}</h3>}<p>{copy}</p></div></article>)}</div></div></section>
-      <section className="ref-section ref-kili-styles"><div className="shell"><div className="ref-kili-style-intro"><h2>Choose your travel style</h2><p>Whether you want to meet new people, travel privately with your people, or explore Tanzania independently, choose the safari style that fits your journey.</p></div><KilimanjaroStyleCards /></div></section>
-      <section className="ref-section ref-life-section"><div className="shell"><Intro eyebrow="BEFORE YOU LACE UP YOUR BOOTS" title="What Is Climbing Kilimanjaro Really Like?" copy="A practical picture of the experience, from preparing at home to your last day on the trail." /><div className="ref-fact-grid ref-life-grid">{[["Training & Preparation","Build walking endurance on hills, practise with your daypack and wear in your boots. Leave time to prepare."],["Arrival in Tanzania","Allow time for arrival, rest and a briefing. Confirm your transfers, accommodation and equipment check with us."],["First Days on the Mountain","Expect steady walking, changing weather and a slower pace than at home. Settle into life on the trail."],["Altitude & Acclimatization","More time can help you adapt, but altitude affects everyone differently. Tell your guide how you feel."],["Summit Night","Often a pre-dawn start, with cold temperatures and a long climb. Take it step by step; turning back is always valid."],["Descent & Celebration","The descent takes effort too. Rest afterwards and celebrate the journey, whether or not you reached the summit."]].map(([title,copy],i)=><article key={title}><small>{String(i+1).padStart(2,"0")}</small><h3>{title}</h3><p>{copy}</p></article>)}</div></div></section>
+      <section className="ref-section ref-kili-styles"><div className="shell"><div className="ref-kili-style-intro"><h2>Choose your travel style</h2><p>Whether you want to meet new people, climb privately with your people, or travel independently, choose the climbing style that fits you.</p></div><KilimanjaroStyleCards /></div></section>
+      <section className="ref-section ref-life-section"><div className="shell"><Intro eyebrow="BEFORE YOU LACE UP YOUR BOOTS" title="What Is Climbing Kilimanjaro Really Like?" copy="A practical picture of the experience, from preparing at home to your last day on the trail." /><div className="ref-fact-grid ref-life-grid">{[["Training & Preparation","Build walking endurance on hills, practise with your daypack and wear in your boots. Leave time to prepare."],["Arrival in Tanzania","We meet you at Kilimanjaro Airport and take you to your hotel. The day before the climb, your guide holds a briefing and checks your equipment."],["First Days on the Mountain","Expect steady walking, changing weather and a slower pace than at home. Settle into life on the trail."],["Altitude & Acclimatization","More time can help you adapt, but altitude affects everyone differently. Tell your guide how you feel."],["Summit Night","Often a pre-dawn start, with cold temperatures and a long climb. Take it step by step; turning back is always valid."],["Descent & Celebration","The descent takes effort too. Rest afterwards and celebrate the journey, whether or not you reached the summit."]].map(([title,copy],i)=><article key={title}><small>{String(i+1).padStart(2,"0")}</small><h3>{title}</h3><p>{copy}</p></article>)}</div></div></section>
       <Safety />
       <section className="ref-section"><div className="shell"><Intro eyebrow="SCHEDULED DEPARTURES" title="Prefer to join a group?" copy="See the actual upcoming group departures and route details."/><PrimaryLink href="/groups">View group departures</PrimaryLink></div></section>
-      <Testimonials /><FaqPreview variant="kilimanjaro" title="Kilimanjaro Frequently Asked Questions" items={[["How difficult is Kilimanjaro?","Kilimanjaro is a demanding high-altitude trek, not a technical climb on the usual trekking routes. Long walking days, cold weather and thinner air make it challenging, even for fit walkers. Prepare with regular hikes, choose an itinerary with time to acclimatize and tell your guide promptly if you feel unwell. Reaching the summit is never guaranteed."],...["Which route is best for beginners?","How many days should I spend on Kilimanjaro?","What is the best time to climb?","What should I pack?","What happens if I struggle with altitude?","How fit do I need to be?","Can I climb Kilimanjaro without previous mountain experience?","How much does it cost?","What happens after I reach the summit?"].map(q=>[q,"Discuss the details of your climb with the Betheli team before booking."])]} /><CtaBanner title="Ready to Climb Kilimanjaro?" image={image("figma-kili-group-trip-landscape3.png")} /></main><Footer /></>;
+      <Testimonials /><FaqPreview variant="kilimanjaro" title="Kilimanjaro Frequently Asked Questions" items={[
+        ["How difficult is Kilimanjaro?","Kilimanjaro is a demanding high-altitude trek, not a technical climb on the usual trekking routes. Long walking days, cold weather and thinner air make it challenging, even for fit walkers. Prepare with regular hikes, choose an itinerary with time to acclimatize and tell your guide promptly if you feel unwell. Reaching the summit is never guaranteed."],
+        ["Which route is best for beginners?","Lemosho (8 days) or Machame (7 days). Both follow the 'climb high, sleep low' pattern that helps your body adjust to altitude. Marangu is shorter but gives less time to acclimatize."],
+        ["How many days should I spend on Kilimanjaro?","We recommend at least 7 trekking days. Every extra day on the mountain improves your chance of reaching the summit."],
+        ["What is the best time to climb?","The driest months are late June to October and January to early March. April–May is the long rainy season and November brings short rains. Climbs run year-round."],
+        ["What should I pack?","Thermal base layers, fleece, a warm down jacket, waterproof jacket and trousers, gloves, a warm hat, broken-in hiking boots and a 30–40L daypack. We send a full packing list when you enquire, and rental gear is available in Arusha."],
+        ["What happens if I struggle with altitude?","Your guides check in with every climber at each camp. Tell them early about headaches, nausea or unusual tiredness. If symptoms become serious, you descend with a guide straight away. We are covered by AMREF Flying Doctors for emergency evacuation."],
+        ["How fit do I need to be?","You don't need to be an athlete, but you should be comfortable walking 5–7 hours a day for several days. Regular hikes in the 2–3 months before your climb are the best preparation."],
+        ["Can I climb Kilimanjaro without previous mountain experience?","Yes. Most climbers are first-timers. The standard routes are trekking, not technical climbing, so no ropes or climbing skills are needed."],
+        ["How much does it cost?","Climbs start from $2,050 per person (Marangu, 6 days). Machame from $2,399 (7 days), Lemosho from $2,499 (8 days), Rongai from $2,534 (7 days) and Northern Circuit from $3,265 (9 days). Meals on the mountain are full board. Ask for a free quote with everything included."],
+        ["What happens after I reach the summit?","You descend to a lower camp the same day and finish the trek the next morning. You receive your summit certificate at the park gate, then return to Moshi or Arusha to rest and celebrate."],
+      ]} /><CtaBanner title="Ready to Climb Kilimanjaro?" image={image("figma-kili-group-trip-landscape3.png")} /></main><Footer /></>;
 }
 
 type RouteDay = [title: string, location: string, copy: string, context?: string];
@@ -583,6 +654,26 @@ const machameOverview = [
   "The Machame Route is a scenic camping approach on Kilimanjaro’s south-western side. It begins in montane rainforest, climbs onto the Shira Plateau and follows the mountain’s southern circuit through Lava Tower, Barranco and Karanga before reaching Barafu high camp.",
   "Its changing landscapes and climb-high, sleep-lower sections make Machame a popular choice for active trekkers who want a varied mountain journey. The route still involves consecutive hiking days, exposed high-altitude terrain and a long summit attempt, so good preparation and a deliberately slow pace are essential.",
 ];
+
+const routeInclusionSections = [
+  ["01", "PREPARATION", "Before the climb", "The arrangements around your journey.", [
+    ["figma-trips-inclusion-route.svg", "Transfers", "Transfers between your hotel in Moshi or Arusha and the park gate."],
+    ["figma-trips-inclusion-tent.svg", "Accommodation", "Mountain camps for every night of the climb. Hotels before or after can be added."],
+  ]],
+  ["02", "CLIMB & CAMP", "On the mountain", "Your team and everyday trail essentials.", [
+    ["figma-trips-inclusion-mountain.svg", "Mountain", "A full mountain crew sets up and packs down camp each day."],
+    ["figma-trips-inclusion-utensils.svg", "Food", "Full-board meals on the mountain, cooked fresh by our cook."],
+    ["figma-kili-value-users.svg", "Guides & Crew", "Licensed Kilimanjaro guides, assistant guides, porters and a cook."],
+    ["figma-trips-inclusion-ticket.svg", "Park Fees", "Kilimanjaro National Park fees are shown in your written quote."],
+  ]],
+  ["03", "ONGOING CARE", "Support & safety", "Support throughout your climb.", [
+    ["figma-kili-value-shield.svg", "Safety", "Daily check-ins with your guide and AMREF Flying Doctors evacuation cover."],
+  ]],
+] as const;
+
+function RouteInclusions() {
+  return <section className="route-inclusions"><div className="shell"><Intro eyebrow="YOUR CLIMB, TAKEN CARE OF" title="What’s Included in Your Climb" copy="Use this package checklist when planning your enquiry. Hotel accommodation is separate from the climbing rate and can be added on request." /><div className="route-inclusion-stack">{routeInclusionSections.map(([num,label,title,copy,items])=><article key={num}><header><small>{num} / {label}</small><h3>{title}</h3><p>{copy}</p></header><div>{items.map(([icon,itemTitle,itemCopy])=><section key={itemTitle}><Image src={image(icon)} alt="" width={28} height={28}/><div><h4>{itemTitle}</h4><p>{itemCopy}</p></div></section>)}</div></article>)}</div></div></section>;
+}
 
 function RouteTripItinerary({ trip, route, routeName, imageSrc, fallbackDays = [], fallbackImages = [], imageOverrides = [], fallbackStay = "Mountain camping", fallbackNote }: { trip: CmsKilimanjaroRouteTrip | null; route: KilimanjaroRouteSlug; routeName: string; imageSrc: string; fallbackDays?: RouteDay[]; fallbackImages?: string[]; imageOverrides?: string[]; fallbackStay?: string; fallbackNote?: string }) {
   const trekkingDays = trip?.itinerary.filter((day) => day.dayType === "trekking") || [];
@@ -651,32 +742,25 @@ function RouteTripItinerary({ trip, route, routeName, imageSrc, fallbackDays = [
   </div></section>;
 }
 
-export function MachameReferencePage({ trip }: { trip: CmsKilimanjaroRouteTrip | null }) {
+export function MachameReferencePage({ trip, web3FormsAccessKey }: { trip: CmsKilimanjaroRouteTrip | null; web3FormsAccessKey: string }) {
   const routeFacts = routeFallbackFacts.machame;
   const distanceKm = trip?.routeDistanceKm ?? routeFacts.distanceKm;
-  const packing = [
-    ["figma-machame-packing-clothing.svg","Clothing","Layers, warm insulation and weather protection."],
-    ["figma-machame-packing-footwear.svg","Footwear","Broken-in hiking boots and suitable socks."],
-    ["figma-machame-packing-sleeping.svg","Sleeping","Check the sleeping bag and mat requirements."],
-    ["figma-machame-packing-personal.svg","Personal Items","Sun protection, toiletries and personal medication."],
-    ["figma-machame-packing-documents.svg","Documents","Travel documents, insurance and any required permits."],
-    ["figma-machame-packing-camera.svg","Optional Gear","Discuss poles, a camera and other useful extras."],
-  ];
   const machameFaq = [
-    ["Is there a Machame itinerary?", trip ? `Yes. The current Sanity trip is ${trip.title}, with ${trip.trekkingDays} trekking days.` : "Yes. The page shows the complete standard seven-day Machame route outline. Confirm the final dates, camps and package services in your written proposal."],
-    ["What is included in the package?", "Package inclusions depend on the dates and proposal. Ask for a written quote showing inclusions and exclusions."],
+    ["Is there a Machame itinerary?", "Yes. Our Machame climb is 7 trekking days, from Machame Gate to Mweka Gate."],
+    ["What is included in the package?", "Guides, porters, cook, full-board meals on the mountain, camping and transfers to the gate. Your free quote lists everything for your dates."],
     ["How much does it cost?", `The seven-day Machame Route starts from ${trip?.startingPrice || routeFacts.startingPrice} USD per person. Hotel accommodation is excluded; ask the team to arrange a pre- or post-trip stay if you need one.`],
   ];
   return <><ReferenceHero imageSrc={image("drive-library/machame-hero.webp")} eyebrow="KILIMANJARO ROUTE" title="Machame Route" lead="A scenic southern approach through five mountain environments." copy="Follow the Machame trail through rainforest, across the Shira Plateau and around the southern circuit toward Kilimanjaro’s summit." action="Plan This Climb" secondAction="View Itinerary" secondActionHref="#itinerary" active="Home" navVariant="classic" routeFacts={[trip ? `${trip.trekkingDays} trekking days` : `${routeFacts.days} trekking days`, routeDistanceLabel(distanceKm), `From ${trip?.startingPrice || routeFacts.startingPrice}`]} />
+    <MobileKilimanjaroQuote web3FormsAccessKey={web3FormsAccessKey} />
     <main className="route-detail-page"><section className="route-overview"><div className="shell route-overview-grid"><Photo src={image("drive-library/machame-giant-groundsel-stream.webp")} alt="Giant groundsels beside a mountain stream on the Machame Route" sizes="(max-width: 800px) 100vw, (max-width: 1100px) 45vw, 560px" /><div><Intro eyebrow={trip ? "PUBLISHED SANITY TRIP" : "ROUTE OVERVIEW"} title={trip ? trip.title : "Machame Route Overview"} /><div className="route-overview-copy">{machameOverview.map(paragraph => <p key={paragraph}>{paragraph}</p>)}<p className="route-callout">{kilimanjaroPriceNote}</p>{trip && <p className="route-callout">This page follows the published {trip.title} package. Its displayed duration counts {trip.trekkingDays} trekking days; arrival and departure are excluded.</p>}</div><dl className="route-facts">{[["Trekking duration",trip ? `${trip.trekkingDays} days` : `${routeFacts.days} days`],["Route distance",routeDistanceLabel(distanceKm)],["Starting price",trip?.startingPrice || routeFacts.startingPrice],["Trip focus",trip?.itineraryFor || "Machame Route"]].map(([term,value])=><div key={term}><dt>{term}</dt><dd>{value}</dd></div>)}</dl></div></div></section>
       <RouteTripItinerary trip={trip} route="machame" routeName="Machame Route" imageSrc="drive-library/machame-camp-mountain-view.webp" fallbackDays={machameFallbackItinerary} fallbackImages={routeItineraryImages.machame} imageOverrides={["", "", "drive-library/machame-rocky-alpine-hikers.webp", "drive-library/machame-betheli-porters.webp", "", "drive-library/machame-uhuru-peak-betheli-group.webp", "drive-library/machame-montane-rainforest.webp"]} fallbackNote="This is the standard seven-day Machame outline. A six-day variation combines part of the schedule; confirm the exact plan and package services in your quote." />
       <RouteEnvironments />
-      <section className="route-inclusions"><div className="shell"><Intro eyebrow="YOUR CLIMB, TAKEN CARE OF" title="What’s Included in Your Climb" copy="Use this package checklist when planning your enquiry. Hotel accommodation is separate from the climbing rate and can be added on request." /><div className="route-inclusion-stack">{[["01","PREPARATION","Before the climb","The arrangements around your journey.",[["figma-trips-inclusion-route.svg","Transfers","Pickup points and included transfers are still to confirm."],["figma-trips-inclusion-tent.svg","Accommodation","Mountain stays are confirmed in your quote. Add a pre- or post-climb hotel only if you need one."]]],["02","CLIMB & CAMP","On the mountain","Your team and everyday trail essentials.",[["figma-trips-inclusion-mountain.svg","Mountain","Climb services and camp setup details are still to confirm."],["figma-trips-inclusion-utensils.svg","Food","Meal plan, drinking water and dietary needs are still to confirm."],["figma-kili-value-users.svg","Guides & Crew","Guide and mountain crew arrangements are still to confirm."],["figma-trips-inclusion-ticket.svg","Park Fees","Park, camping and other fee coverage is still to confirm."]]],["03","ONGOING CARE","Support & safety","Discuss the plan before you commit.",[["figma-kili-value-shield.svg","Safety","Monitoring, emergency procedures and equipment are still to confirm."]]]].map(([num,label,title,copy,items])=><article key={String(num)}><header><small>{String(num)} / {String(label)}</small><h3>{String(title)}</h3><p>{String(copy)}</p></header><div>{(items as string[][]).map(([icon,itemTitle,itemCopy])=><section key={itemTitle}><Image src={image(icon)} alt="" width={28} height={28}/><div><h4>{itemTitle}</h4><p>{itemCopy}</p></div></section>)}</div></article>)}</div></div></section>
+      <RouteInclusions />
       <section className="route-summit"><div className="shell"><div><Intro eyebrow="THE MOUNTAIN’S MOST DEMANDING MOMENT" title="Summit Night" /><h3>Slow steps. Cold air. The possibility of sunrise above the clouds.</h3><p>A summit attempt usually means an early start in darkness, very cold temperatures and a slow, steady ascent. The aim is to reach Uhuru Peak, with sunrise a memorable part of the high-mountain experience when conditions allow.</p><p>Reaching the top is never guaranteed. Guides assess conditions and your ability along the way; turning around may be the right decision. A long descent follows any summit attempt.</p><PrimaryLink>Plan your climb</PrimaryLink></div></div></section>
-      <section className="route-packing"><div className="shell"><Intro eyebrow="PREPARE FOR CHANGING CONDITIONS" title="What Should You Bring?" copy="Pack for a progression from forest trails to a cold, exposed summit environment." /><div className="route-packing-grid"><Photo src={image("drive-library/machame-rainforest.webp")} alt="Trekkers carrying mountain equipment through the Machame rainforest" /><div>{packing.map(([icon,title,copy])=><article key={title}><Image src={image(icon)} alt="" width={28} height={28}/><h3>{title}</h3><p>{copy}</p></article>)}<PrimaryLink>Ask for a packing list</PrimaryLink></div></div></div></section>
+      <section className="route-packing"><div className="shell"><Intro eyebrow="PREPARE FOR CHANGING CONDITIONS" title="What Should You Bring?" copy="Pack for a progression from forest trails to a cold, exposed summit environment." /><div className="route-packing-grid"><Photo src={image("drive-library/machame-rainforest.webp")} alt="Trekkers carrying mountain equipment through the Machame rainforest" /><div>{routePacking.map(([icon,title,copy])=><article key={title}><Image src={image(icon)} alt="" width={28} height={28}/><h3>{title}</h3><p>{copy}</p></article>)}<PrimaryLink>Ask for a packing list</PrimaryLink></div></div></div></section>
       <Safety imageSrc="drive-library/machame-betheli-porters.webp" />
       <section className="route-fit"><div className="shell"><Intro eyebrow="CHOOSE THE CLIMB THAT FITS YOU" title="Is This Route Right For You?" copy="Machame is a rewarding option for people who enjoy the journey and are willing to prepare for a serious mountain challenge." /><div className="route-fit-columns"><article><h3>Good for</h3>{[["figma-machame-fit-hiker.svg","Experienced hikers"],["figma-machame-fit-active.svg","Active travelers"],["figma-machame-fit-scenic.svg","Travelers wanting scenic landscapes"],["figma-machame-fit-long-days.svg","People comfortable with longer hiking days"]].map(([icon,text])=><p key={text}><Image src={image(icon)} alt="" width={24} height={24}/>{text}</p>)}</article><article><h3>Consider carefully</h3>{[["figma-machame-fit-altitude.svg","Altitude","Fitness alone does not predict how you will feel at altitude."],["figma-machame-fit-summit.svg","Long summit day","Expect a demanding combination of ascent and descent."],["figma-machame-fit-weather.svg","Weather","Be prepared for cold, wind, rain and changing conditions."],["figma-machame-fit-endurance.svg","Physical demands","Build endurance and practice sustained hiking before travel."]].map(([icon,title,copy])=><p key={title}><Image src={image(icon)} alt="" width={24} height={24}/><span><b>{title}</b><small>{copy}</small></span></p>)}</article></div><div className="route-fit-cta"><div><h3>Not sure which route is right for you?</h3><p>Compare the journey, pace and landscape before choosing.</p></div><PrimaryLink href="/kilimanjaro">Compare All Routes</PrimaryLink></div></div></section>
-      <Testimonials /><ImageCards eyebrow="COMPARE YOUR OPTIONS" title="Compare other routes" cards={kilimanjaroRoutes.slice(0,4)} /><section className="route-faq"><div className="shell"><Intro eyebrow="BEFORE YOU CHOOSE YOUR CLIMB" title="Machame Route Frequently Asked Questions" copy="Answers based on what is currently published; confirm package-specific details with the team."/><Accordion items={machameFaq} openCount={2}/></div></section><CtaBanner title="Ready to climb Machame?" image={image("figma-kili-group-trip-landscape3.png")} /></main><Footer /></>;
+      <Testimonials /><ImageCards eyebrow="COMPARE YOUR OPTIONS" title="Compare other routes" cards={kilimanjaroRoutes.slice(0,4)} /><section className="route-faq"><div className="shell"><Intro eyebrow="BEFORE YOU CHOOSE YOUR CLIMB" title="Machame Route Frequently Asked Questions"/><Accordion items={machameFaq} openCount={2}/></div></section><CtaBanner title="Ready to climb Machame?" image={image("figma-kili-group-trip-landscape3.png")} /></main><Footer /></>;
 }
 
 export type KilimanjaroRouteSlug = "machame" | "lemosho" | "marangu" | "rongai" | "northern-circuit" | "umbwe";
@@ -776,14 +860,14 @@ const routeDetailData: Record<Exclude<KilimanjaroRouteSlug, "machame">, Kilimanj
 const routePacking = [
   ["figma-machame-packing-clothing.svg","Clothing","Layers, warm insulation and weather protection."],
   ["figma-machame-packing-footwear.svg","Footwear","Broken-in hiking boots and suitable socks."],
-  ["figma-machame-packing-sleeping.svg","Sleeping","Check the sleeping bag and mat requirements."],
+  ["figma-machame-packing-sleeping.svg","Sleeping","A warm sleeping bag (rated to about -10°C) and a mat. Both can be rented in Arusha."],
   ["figma-machame-packing-personal.svg","Personal Items","Sun protection, toiletries and personal medication."],
   ["figma-machame-packing-documents.svg","Documents","Travel documents, insurance and any required permits."],
-  ["figma-machame-packing-camera.svg","Optional Gear","Discuss poles, a camera and other useful extras."],
+  ["figma-machame-packing-camera.svg","Optional Gear","Trekking poles, a camera and other useful extras."],
 ];
 
-export function KilimanjaroRouteDetailPage({ route, trip }: { route: KilimanjaroRouteSlug; trip: CmsKilimanjaroRouteTrip | null }) {
-  if (route === "machame") return <MachameReferencePage trip={trip} />;
+export function KilimanjaroRouteDetailPage({ route, trip, web3FormsAccessKey }: { route: KilimanjaroRouteSlug; trip: CmsKilimanjaroRouteTrip | null; web3FormsAccessKey: string }) {
+  if (route === "machame") return <MachameReferencePage trip={trip} web3FormsAccessKey={web3FormsAccessKey} />;
   const detail = routeDetailData[route];
   const isLemosho = route === "lemosho";
   const isNorthernCircuit = route === "northern-circuit";
@@ -843,6 +927,7 @@ export function KilimanjaroRouteDetailPage({ route, trip }: { route: Kilimanjaro
   ];
   const otherRoutes = kilimanjaroRoutes.filter(card => card.title !== detail.name).slice(0, 4);
   return <><ReferenceHero imageSrc={image(detail.heroImage)} eyebrow="KILIMANJARO ROUTE" title={detail.name} lead={trip ? trip.title : "Explore this Kilimanjaro route with the local team."} copy={trip ? `Review the published ${trip.trekkingDays}-day mountain itinerary. Arrival and departure days are excluded from this climb duration.` : `Review the current ${detail.duration.toLowerCase()} mountain outline, then confirm the exact day-by-day plan for your dates.`} action="Plan This Climb" secondAction="View Itinerary" secondActionHref="#itinerary" active="Kilimanjaro" navVariant="classic" routeFacts={[trip ? `${trip.trekkingDays} trekking days` : `${routeFacts.days} trekking days`, distanceLabel, `From ${startingPrice}`]} />
+    <MobileKilimanjaroQuote web3FormsAccessKey={web3FormsAccessKey} />
     <main className="route-detail-page">
       <section className="route-overview"><div className="shell route-overview-grid"><Photo src={image(overviewImage)} alt={`${detail.name} landscape on Mount Kilimanjaro`} sizes="(max-width: 800px) 100vw, (max-width: 1100px) 45vw, 560px" /><div><Intro eyebrow={trip ? "PUBLISHED SANITY TRIP" : "ROUTE OVERVIEW"} title={trip ? trip.title : `${detail.name} Overview`} /><div className="route-overview-copy">{detail.overview.map(paragraph => <p key={paragraph}>{paragraph}</p>)}<p className="route-callout">{kilimanjaroPriceNote}</p>{trip && <p className="route-callout">This page follows the published {trip.title} package. The displayed duration counts {trip.trekkingDays} mountain days only; arrival and departure are not included.</p>}</div><dl className="route-facts">{[["Trekking duration",trip ? `${trip.trekkingDays} days` : `${routeFacts.days} days`],["Route distance",distanceLabel],["Starting price",startingPrice],["Accommodation options",routeStays.join(", ") || detail.accommodation]].map(([term,value])=><div key={term}><dt>{term}</dt><dd>{value}</dd></div>)}</dl></div></div></section>
       <RouteTripItinerary trip={trip} route={route} routeName={detail.name} imageSrc={itineraryImage} fallbackDays={detail.itinerary} fallbackImages={routeItineraryImages[route]} imageOverrides={itineraryImageOverrides} fallbackStay={detail.accommodation} fallbackNote={detail.itineraryNote} />
@@ -851,7 +936,7 @@ export function KilimanjaroRouteDetailPage({ route, trip }: { route: Kilimanjaro
         "Montane Forest": "drive-library/marangu-environments-forest-client.webp",
         "Heath & Moorland": "drive-library/marangu-environment-heath-moorland-client.webp",
       } : undefined} />
-      <section className="route-inclusions"><div className="shell"><Intro eyebrow="YOUR CLIMB, TAKEN CARE OF" title="What’s Included in Your Climb" copy="Use this package checklist when planning your enquiry. Hotel accommodation is separate from the climbing rate and can be added on request." /><div className="route-inclusion-stack">{[["01","PREPARATION","Before the climb","The arrangements around your journey.",[["figma-trips-inclusion-route.svg","Transfers","Pickup points and included transfers are confirmed in your quote."],["figma-trips-inclusion-tent.svg","Accommodation","Mountain stays are confirmed in your quote. Add a pre- or post-climb hotel only if you need one."]]],["02","ON THE MOUNTAIN","Climb & stay","Your team and everyday trail essentials.",[["figma-trips-inclusion-mountain.svg","Mountain","Climb services and overnight arrangements are confirmed before travel."],["figma-trips-inclusion-utensils.svg","Food","Meal plan, drinking water and dietary needs are confirmed in planning."],["figma-kili-value-users.svg","Guides & Crew","Guide and mountain crew arrangements are confirmed for your group."],["figma-trips-inclusion-ticket.svg","Park Fees","Park and applicable accommodation fee coverage is itemized in your quote."]]],["03","ONGOING CARE","Support & safety","Discuss the plan before you commit.",[["figma-kili-value-shield.svg","Safety","Monitoring, emergency procedures and equipment are confirmed with the team."]]]].map(([num,label,title,copy,items])=><article key={String(num)}><header><small>{String(num)} / {String(label)}</small><h3>{String(title)}</h3><p>{String(copy)}</p></header><div>{(items as string[][]).map(([icon,itemTitle,itemCopy])=><section key={itemTitle}><Image src={image(icon)} alt="" width={28} height={28}/><div><h4>{itemTitle}</h4><p>{itemCopy}</p></div></section>)}</div></article>)}</div></div></section>
+      <RouteInclusions />
       <section className="route-summit"><div className="shell"><div><Intro eyebrow="THE MOUNTAIN’S MOST DEMANDING MOMENT" title="Summit Night" /><h3>Slow steps. Cold air. The possibility of sunrise above the clouds.</h3><p>A summit attempt usually means an early start in darkness, very cold temperatures and a slow, steady ascent. The aim is Uhuru Peak, with sunrise a memorable part of the high-mountain experience when conditions allow.</p><p>Reaching the top is never guaranteed. Guides assess conditions and your ability along the way; turning around may be the right decision. A long descent follows any summit attempt.</p><PrimaryLink>Plan your climb</PrimaryLink></div></div></section>
       <section className="route-packing"><div className="shell"><Intro eyebrow="PREPARE FOR CHANGING CONDITIONS" title="What Should You Bring?" copy="Pack for a progression from lower trails to a cold, exposed summit environment." /><div className="route-packing-grid"><Photo src={image("figma-machame-packing-expedition-photograph.png")} alt="Mountain equipment" /><div>{routePacking.map(([icon,title,copy])=><article key={title}><Image src={image(icon)} alt="" width={28} height={28}/><h3>{title}</h3><p>{copy}</p></article>)}<PrimaryLink>Ask for a packing list</PrimaryLink></div></div></div></section>
       <Safety imageSrc={isLemosho ? "drive-library/lemosho-climbers-mountain-camp.webp" : undefined} />

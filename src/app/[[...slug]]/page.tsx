@@ -41,13 +41,13 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   const web3FormsAccessKey = process.env.WEB3FORMS_ACCESS_KEY || "";
   switch (key) {
     case "home": return <HomeReferencePage trips={await getTripCards()} />;
-    case "kilimanjaro": return <KilimanjaroReferencePage routeTrips={await getKilimanjaroRouteTrips()} />;
-    case "machame": return <KilimanjaroRouteDetailPage route="machame" trip={await getKilimanjaroRouteTrip("machame")} />;
-    case "lemosho": return <KilimanjaroRouteDetailPage route="lemosho" trip={await getKilimanjaroRouteTrip("lemosho")} />;
-    case "marangu": return <KilimanjaroRouteDetailPage route="marangu" trip={await getKilimanjaroRouteTrip("marangu")} />;
-    case "rongai": return <KilimanjaroRouteDetailPage route="rongai" trip={await getKilimanjaroRouteTrip("rongai")} />;
-    case "northernCircuit": return <KilimanjaroRouteDetailPage route="northern-circuit" trip={await getKilimanjaroRouteTrip("northern-circuit")} />;
-    case "umbwe": return <KilimanjaroRouteDetailPage route="umbwe" trip={await getKilimanjaroRouteTrip("umbwe")} />;
+    case "kilimanjaro": return <KilimanjaroReferencePage routeTrips={await getKilimanjaroRouteTrips()} web3FormsAccessKey={web3FormsAccessKey} />;
+    case "machame": return <KilimanjaroRouteDetailPage route="machame" trip={await getKilimanjaroRouteTrip("machame")} web3FormsAccessKey={web3FormsAccessKey} />;
+    case "lemosho": return <KilimanjaroRouteDetailPage route="lemosho" trip={await getKilimanjaroRouteTrip("lemosho")} web3FormsAccessKey={web3FormsAccessKey} />;
+    case "marangu": return <KilimanjaroRouteDetailPage route="marangu" trip={await getKilimanjaroRouteTrip("marangu")} web3FormsAccessKey={web3FormsAccessKey} />;
+    case "rongai": return <KilimanjaroRouteDetailPage route="rongai" trip={await getKilimanjaroRouteTrip("rongai")} web3FormsAccessKey={web3FormsAccessKey} />;
+    case "northernCircuit": return <KilimanjaroRouteDetailPage route="northern-circuit" trip={await getKilimanjaroRouteTrip("northern-circuit")} web3FormsAccessKey={web3FormsAccessKey} />;
+    case "umbwe": return <KilimanjaroRouteDetailPage route="umbwe" trip={await getKilimanjaroRouteTrip("umbwe")} web3FormsAccessKey={web3FormsAccessKey} />;
     case "safari": return <SafariReferencePage trips={await getTripCards()} />;
     case "zanzibar": return <ZanzibarReferencePage />;
     case "trips": {

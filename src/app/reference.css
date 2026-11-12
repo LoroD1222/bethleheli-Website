@@ -1899,6 +1899,29 @@ body:has(.contact-main) .contact-main{width:min(1200px,calc(100% - 48px));paddin
 @media(max-width:650px){.home-ref-moment-controls{gap:8px}.home-ref-moment-controls button{width:38px;height:38px}.home-ref-moment-controls input[type="range"]{width:min(210px,calc(100vw - 120px))}.ref-safety{padding:72px 0}.ref-safety .ref-intro h2{font-size:36px}.ref-safety .ref-intro p{font-size:14px}.ref-safety-grid>div:first-child>img{height:280px}.ref-safety-topic{min-height:0;padding:19px 0}.ref-safety-topic strong{font-size:16px}.ref-safety-topic small{font-size:12px}.ref-card-section:has(.ref-climb-cards){padding:72px 0}.ref-card-section:has(.ref-climb-cards) .ref-intro h2{font-size:36px}.ref-card-section:has(.ref-climb-cards) .ref-intro p{font-size:14px}.ref-climb-cards{display:flex;gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding:0 2px 24px}.ref-climb-cards .ref-image-card{flex:0 0 min(82vw,320px);height:460px;min-height:460px;scroll-snap-align:start}.ref-zanzibar-faq .accordion summary{min-height:68px;padding:20px 0;font-size:15px}.ref-zanzibar-faq .accordion details p{font-size:14px}.contact-layout form .input-row{grid-template-columns:1fr;gap:20px}.contact-layout form .chips{gap:8px}.contact-layout form .chips button{min-height:42px;padding:10px 14px}.contact-aside>section h2{font-size:27px}.contact-aside>section p{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.ref-safety-grid>div:first-child>img{animation:none}.ref-climb-cards .ref-image-card,.ref-safety-topic{transition:none}}
 
+.mobile-kili-quote{display:none;background:#f7f5f1}
+@media(max-width:700px){
+  .mobile-kili-quote{display:block;padding:28px 0 34px}
+  .mobile-kili-quote .shell{width:min(100% - 28px,1280px)}
+  .mobile-kili-quote-card{overflow:hidden;border:1px solid rgba(36,49,56,.12);border-radius:22px;background:#fff;box-shadow:0 18px 48px rgba(36,49,56,.11)}
+  .mobile-kili-quote-card>header{padding:24px 22px 20px;background:#243138;color:#fff}
+  .mobile-kili-quote-card>header>p{margin:0 0 7px;color:#ff5a3c;font-family:Poppins,Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:.09em}
+  .mobile-kili-quote-card h2{margin:0;font-family:Inter,Arial,sans-serif;font-size:28px;font-weight:600;line-height:1.12}
+  .mobile-kili-quote-card>header>span{display:block;margin-top:10px;color:rgba(255,255,255,.78);font-family:Poppins,Arial,sans-serif;font-size:13px;line-height:1.55}
+  .mobile-kili-quote form{display:grid;gap:15px;padding:22px}
+  .mobile-kili-quote label{display:grid;gap:7px;color:#243138;font-family:Poppins,Arial,sans-serif;font-size:13px;font-weight:600}
+  .mobile-kili-quote label small{display:inline;font-size:11px;font-weight:400;color:#667178}
+  .mobile-kili-quote input,.mobile-kili-quote select{width:100%;min-height:48px;padding:0 14px;border:1px solid rgba(36,49,56,.18);border-radius:12px;background:#fff;color:#243138;font:500 14px/1.3 Poppins,Arial,sans-serif;outline:none}
+  .mobile-kili-quote input:focus,.mobile-kili-quote select:focus{border-color:#ea4729;box-shadow:0 0 0 3px rgba(234,71,41,.12)}
+  .mobile-kili-quote button{display:flex;align-items:center;justify-content:space-between;min-height:52px;margin-top:3px;padding:5px 6px 5px 18px;border:0;border-radius:999px;background:#ea4729;color:#fff;font:700 15px/1 Poppins,Arial,sans-serif;cursor:pointer}
+  .mobile-kili-quote button span{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#fff;color:#ea4729;font-size:20px}
+  .mobile-kili-quote button:disabled{cursor:wait;opacity:.7}
+  .mobile-kili-quote-honeypot{display:none!important}
+  .mobile-kili-quote-trust{margin:0;color:#667178;text-align:center;font-family:Poppins,Arial,sans-serif;font-size:10px;line-height:1.5}
+  .mobile-kili-quote-notice{margin:0;color:#243138;text-align:center;font-family:Poppins,Arial,sans-serif;font-size:12px;line-height:1.5}
+  .mobile-kili-quote-success{margin:0;padding:32px 22px;color:#243138;text-align:center;font-family:Poppins,Arial,sans-serif;font-size:18px;font-weight:600;line-height:1.5}
+}
+
 /* Planning form: Figma's six editorial stages, now with usable navigation. */
 .plan-main{padding:96px 0;background:#fafafa}
 .plan-main>.shell>.section-intro{max-width:none}
